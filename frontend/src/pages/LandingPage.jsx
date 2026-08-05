@@ -516,10 +516,28 @@ export default function LandingPage({ isAuthenticated }) {
             />
           )}
 
-          {/* STAGE 05: OUTPUTS & REPORTS VIEWPORT (GPS & FINAL MAPS) */}
+          {/* STAGE 05: OUTPUTS & REPORTS VIEWPORT (EXECUTIVE TELEMETRY DASHBOARD & GPS ROVER TRAVERSAL) */}
           {pipelineStage === 'outputs' && (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* EXECUTIVE METRICS: ICE PROBABILITY, VOLUME, MASS & ROVER DISTANCE */}
+              <div style={{ background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '16px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#00f3ff', fontFamily: 'JetBrains Mono', margin: '0 0 14px 0', textTransform: 'uppercase' }}>
+                  📊 MISSION CONTROL EXECUTIVE METRICS & ICE INVENTORY
+                </h3>
+                <TelemetryDashboard
+                  metrics={analysisData?.metrics}
+                  landingSite={analysisData?.landing_site}
+                  roverPath={analysisData?.rover_path}
+                />
+              </div>
+
+              {/* TACTICAL LUNAR GPS & ROVER TRAVERSAL VECTORS */}
+              <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '16px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 14px 0', textTransform: 'uppercase' }}>
+                  🗺️ TACTICAL LUNAR GPS & A* ROVER PATH VECTORS
+                </h3>
+                <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
+              </div>
             </div>
           )}
         </main>

@@ -65,6 +65,22 @@ TARGET_CRATERS = {
         "diameter_km": 50.0,
         "depth_km": 4.5,
         "description": "Large south polar impact structure holding extensive volatile deposits."
+    },
+    "faustini": {
+        "id": "faustini",
+        "name": "Faustini Crater",
+        "coordinates": {"lat": -87.3, "lon": 87.0},
+        "diameter_km": 39.0,
+        "depth_km": 3.4,
+        "description": "South polar highland crater with localized high-CPR radar ice signatures."
+    },
+    "cabeus": {
+        "id": "cabeus",
+        "name": "Cabeus Crater",
+        "coordinates": {"lat": -84.9, "lon": -35.5},
+        "diameter_km": 100.0,
+        "depth_km": 4.0,
+        "description": "LCROSS impact site with confirmed massive subsurface water ice deposits."
     }
 }
 
