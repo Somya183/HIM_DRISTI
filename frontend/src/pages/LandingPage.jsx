@@ -283,17 +283,16 @@ export default function LandingPage({ isAuthenticated }) {
               boxShadow: '0 30px 90px rgba(0, 0, 0, 0.98), 0 0 65px rgba(0, 243, 255, 0.45), inset 0 0 40px rgba(0, 0, 0, 0.85)'
             }}>
               <iframe
-                src="https://sketchfab.com/models/2d228fdd647c4383a152345591eb1380/embed?autostart=1&internal=1&tracking=0&ui_ar=0&ui_infos=0&ui_snapshots=0&ui_stop=0&ui_theme=dark&ui_watermark=0"
-                title="NASA CGI Moon Kit Photorealistic 3D Model (Open Source)"
+                src="https://solarsystem.nasa.gov/gltf_embed/2366/"
+                title="Official NASA Photorealistic 3D Moon Model"
                 width="100%"
                 height="100%"
                 style={{
                   border: 'none',
                   background: 'transparent',
-                  transform: 'scale(1.22)',
+                  transform: 'scale(1.36)',
                   transformOrigin: 'center center'
                 }}
-                allow="autoplay; fullscreen; vr"
                 allowFullScreen
               />
 
