@@ -40,48 +40,58 @@ export default function LandingPage({ isAuthenticated }) {
     }
   };
 
+  const [stageProcessing, setStageProcessing] = useState(false);
+  const [currentTaskDetail, setCurrentTaskDetail] = useState('');
+
   const handleExecuteFullPipeline = () => {
     if (isExecuting) return;
     setIsExecuting(true);
+    setStageProcessing(true);
 
-    // STAGE 01: DATA ACQUISITION (2 SECONDS)
+    // STAGE 01: DATA ACQUISITION (5 SECONDS)
     setPipelineStage('acquisition');
     setScanProgress(20);
-    setStageStatusMessage('[STAGE 1/5] INGESTING MULTI-SOURCE OPTICAL, RADAR CPR & DEM DATA...');
+    setStageStatusMessage('[STAGE 1/5] DATA ACQUISITION IN PROGRESS...');
+    setCurrentTaskDetail('Ingesting LROC Optical Albedo, DFSAR Radar CPR, LOLA DEM Topography & PSR Shadow Maps...');
 
     setTimeout(() => {
-      // STAGE 02: DATA PREPROCESSING (2 SECONDS)
+      // STAGE 02: DATA PREPROCESSING (5 SECONDS)
       setPipelineStage('preprocessing');
       setScanProgress(40);
-      setStageStatusMessage('[STAGE 2/5] PREPROCESSING, ALIGNING & FILTERING SPECKLE NOISE...');
+      setStageStatusMessage('[STAGE 2/5] DATA PREPROCESSING IN PROGRESS...');
+      setCurrentTaskDetail('Applying Min-Max Normalization, Geo-Registration Alignment & Radiometric Speckle Noise Filtering...');
 
       setTimeout(() => {
-        // STAGE 03: FEATURE EXTRACTION (2 SECONDS)
+        // STAGE 03: FEATURE EXTRACTION (5 SECONDS)
         setPipelineStage('extraction');
         setScanProgress(60);
-        setStageStatusMessage('[STAGE 3/5] EXTRACTING HIGH-CPR ANOMALIES & TERRAIN SLOPES...');
+        setStageStatusMessage('[STAGE 3/5] FEATURE EXTRACTION IN PROGRESS...');
+        setCurrentTaskDetail('Isolating High-CPR Radar Anomalies (CPR > 1.2), Slope Gradients (<15°) & PSR Thermal Boundaries...');
 
         setTimeout(() => {
-          // STAGE 04: AI DETECTION & DECISION (2 SECONDS)
+          // STAGE 04: AI DETECTION & DECISION (5 SECONDS)
           setPipelineStage('ai_detection');
           setScanProgress(80);
-          setStageStatusMessage('[STAGE 4/5] EXECUTING PYTORCH UNET ICE SEGMENTATION...');
+          setStageStatusMessage('[STAGE 4/5] PYTORCH UNET AI SEGMENTATION IN PROGRESS...');
+          setCurrentTaskDetail('Executing PyTorch Multi-Modal Fusion Model & Computing Touchdown Suitability Scores...');
 
           setTimeout(() => {
-            // STAGE 05: OUTPUTS & REPORTS (2 SECONDS)
+            // STAGE 05: OUTPUTS & REPORTS (5 SECONDS)
             setPipelineStage('outputs');
             setScanProgress(100);
-            setStageStatusMessage('[STAGE 5/5] GENERATING ICE MAPS & A* ROVER PATH VECTORS...');
+            setStageStatusMessage('[STAGE 5/5] GENERATING MISSION OUTPUTS & ROVER PATH...');
+            setCurrentTaskDetail('Computing Final 2D/3D Ice Probability Heatmaps, Touchdown Maps & A* Rover Traversal Vectors...');
 
             setTimeout(() => {
               setIsExecuting(false);
+              setStageProcessing(false);
               setStageStatusMessage('PIPELINE EXECUTION COMPLETE');
               fetchAnalysis();
-            }, 2000);
-          }, 2000);
-        }, 2000);
-      }, 2000);
-    }, 2000);
+            }, 5000);
+          }, 5000);
+        }, 5000);
+      }, 5000);
+    }, 5000);
   };
 
   const handleDownloadPDF = () => {
@@ -128,15 +138,14 @@ export default function LandingPage({ isAuthenticated }) {
         {/* BRAND TITLE & VERSION */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <h1 style={{
-            fontSize: '20px',
+            fontSize: '22px',
             fontWeight: '900',
             fontFamily: "'Space Grotesk', sans-serif",
             color: '#00f3ff',
-            letterSpacing: '1.5px',
-            margin: 0,
-            textTransform: 'uppercase'
+            letterSpacing: '1px',
+            margin: 0
           }}>
-            LUNAR_OPS_CMD
+            HimDristi
           </h1>
           <span style={{
             fontSize: '10px',
@@ -436,114 +445,176 @@ export default function LandingPage({ isAuthenticated }) {
           flexDirection: 'column',
           gap: '16px'
         }}>
-          {/* STAGE 01: DATA ACQUISITION VIEWPORT */}
-          {pipelineStage === 'acquisition' && (
-            <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h3 style={{ fontSize: '15px', color: '#00f3ff', margin: 0, fontFamily: 'Space Grotesk' }}>
-                  📡 DATA ACQUISITION — Multi-Source Sensor Ingestion
+          {/* HIGH-TECH 5-SECOND STAGE PROCESSING LOADER CARD */}
+          {stageProcessing && (
+            <div style={{
+              flex: 1,
+              background: '#050a14',
+              border: '1px solid #00f3ff',
+              borderRadius: '10px',
+              padding: '30px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '20px',
+              boxShadow: '0 0 40px rgba(0, 243, 255, 0.2)',
+              position: 'relative'
+            }}>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                border: '3px solid rgba(0, 243, 255, 0.2)',
+                borderTop: '3px solid #00f3ff',
+                animation: 'spin 1s linear infinite'
+              }} />
+
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#00f3ff', fontFamily: 'Space Grotesk', margin: '0 0 8px 0', letterSpacing: '1px' }}>
+                  {stageStatusMessage}
                 </h3>
-                <span className="neon-badge badge-cyan">4 SENSOR CHANNELS READY</span>
+                <p style={{ fontSize: '12px', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: 0, maxWidth: '540px', lineHeight: '1.6' }}>
+                  {currentTaskDetail}
+                </p>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                {[
-                  { title: 'OPTICAL IMAGE (LROC)', key: 'optical', type: 'Albedo Imagery (0.5m/px)' },
-                  { title: 'RADAR IMAGE (DFSAR CPR)', key: 'radar', type: 'Circular Polarization Ratio (>1.0)' },
-                  { title: 'DEM (TERRAIN ELEVATION)', key: 'dem', type: 'LOLA Topographic Relief Map' },
-                  { title: 'SHADOW MAP (PSR)', key: 'shadow', type: 'Thermal Cold Trap (<100K)' }
-                ].map(item => (
-                  <div key={item.key} style={{
-                    background: '#070f20',
-                    border: activeLayer === item.key ? '2px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '8px',
-                    padding: '14px',
-                    cursor: 'pointer'
-                  }} onClick={() => setActiveLayer(item.key)}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
-                      <strong style={{ color: activeLayer === item.key ? '#00f3ff' : '#ffffff' }}>{item.title}</strong>
-                      <span style={{ color: '#00ff9d' }}>INGESTED</span>
-                    </div>
-                    <div style={{ height: '160px', borderRadius: '6px', overflow: 'hidden', background: '#020408', border: '1px solid rgba(0,243,255,0.2)' }}>
-                      {analysisData?.images?.preprocessed?.[item.key] ? (
-                        <img src={analysisData.images.preprocessed[item.key]} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      ) : (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#64748b', fontSize: '11px' }}>
-                          Loading Multi-Modal Ingestion Channel...
+              {/* STAGE EXECUTION COUNTDOWN COUNTER */}
+              <div style={{
+                background: 'rgba(0, 243, 255, 0.08)',
+                border: '1px solid rgba(0, 243, 255, 0.3)',
+                borderRadius: '8px',
+                padding: '8px 16px',
+                fontSize: '11px',
+                fontFamily: 'JetBrains Mono',
+                color: '#00ff9d',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <Loader2 size={14} className="animate-spin" />
+                PROCESSING STAGE TASK • WAITING 5 SECONDS PER STEP ({scanProgress}%)
+              </div>
+            </div>
+          )}
+          {/* STAGE VIEWPORTS (RENDERED WHEN NOT PROCESSING) */}
+          {!stageProcessing && (
+            <>
+              {/* STAGE 01: DATA ACQUISITION VIEWPORT */}
+              {pipelineStage === 'acquisition' && (
+                <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <h3 style={{ fontSize: '15px', color: '#00f3ff', margin: 0, fontFamily: 'Space Grotesk' }}>
+                      📡 DATA ACQUISITION — Multi-Source Sensor Ingestion
+                    </h3>
+                    <span className="neon-badge badge-cyan">4 SENSOR CHANNELS READY</span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    {[
+                      { title: 'OPTICAL IMAGE (LROC)', key: 'optical', type: 'Albedo Imagery (0.5m/px)' },
+                      { title: 'RADAR IMAGE (DFSAR CPR)', key: 'radar', type: 'Circular Polarization Ratio (>1.0)' },
+                      { title: 'DEM (TERRAIN ELEVATION)', key: 'dem', type: 'LOLA Topographic Relief Map' },
+                      { title: 'SHADOW MAP (PSR)', key: 'shadow', type: 'Thermal Cold Trap (<100K)' }
+                    ].map(item => (
+                      <div key={item.key} style={{
+                        background: '#070f20',
+                        border: activeLayer === item.key ? '2px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '8px',
+                        padding: '14px',
+                        cursor: 'pointer'
+                      }} onClick={() => setActiveLayer(item.key)}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
+                          <strong style={{ color: activeLayer === item.key ? '#00f3ff' : '#ffffff' }}>{item.title}</strong>
+                          <span style={{ color: '#00ff9d' }}>INGESTED</span>
                         </div>
-                      )}
+                        <div style={{ height: '160px', borderRadius: '6px', overflow: 'hidden', background: '#020408', border: '1px solid rgba(0,243,255,0.2)' }}>
+                          {analysisData?.images?.preprocessed?.[item.key] ? (
+                            <img src={analysisData.images.preprocessed[item.key]} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#64748b', fontSize: '11px' }}>
+                              Loading Multi-Modal Ingestion Channel...
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* STAGE 02: DATA PREPROCESSING VIEWPORT */}
+              {pipelineStage === 'preprocessing' && (
+                <PreprocessingPanel
+                  images={analysisData?.images}
+                  onRunAnalysis={fetchAnalysis}
+                  isAnalyzing={isExecuting}
+                />
+              )}
+
+              {/* STAGE 03: FEATURE EXTRACTION VIEWPORT */}
+              {pipelineStage === 'extraction' && (
+                <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <h3 style={{ fontSize: '15px', color: '#38bdf8', margin: 0, fontFamily: 'Space Grotesk' }}>
+                      📊 FEATURE EXTRACTION — High-CPR Anomaly & Slope Extraction
+                    </h3>
+                    <span className="neon-badge badge-blue">EXTRACTED 128-PPD FEATURES</span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
+                      <h4 style={{ fontSize: '12px', color: '#00f3ff', fontFamily: 'JetBrains Mono', margin: '0 0 10px 0' }}>
+                        Radar CPR Anomaly Overlay (CPR {'> 1.2'})
+                      </h4>
+                      <div style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden' }}>
+                        {analysisData?.images?.results?.ice_confidence && (
+                          <img src={analysisData.images.results.ice_confidence} alt="CPR Anomaly" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        )}
+                      </div>
+                    </div>
+
+                    <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
+                      <h4 style={{ fontSize: '12px', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 10px 0' }}>
+                        Terrain Slope Hazard Boundary ({'<15°'})
+                      </h4>
+                      <div style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden' }}>
+                        {(analysisData?.images?.results?.slope_map || analysisData?.images?.results?.landing_suitability || analysisData?.images?.preprocessed?.dem) && (
+                          <img
+                            src={analysisData?.images?.results?.slope_map || analysisData?.images?.results?.landing_suitability || analysisData?.images?.preprocessed?.dem}
+                            alt="Slope Hazard Boundary"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                </div>
+              )}
 
-          {/* STAGE 02: DATA PREPROCESSING VIEWPORT */}
-          {pipelineStage === 'preprocessing' && (
-            <PreprocessingPanel
-              images={analysisData?.images}
-              onRunAnalysis={fetchAnalysis}
-              isAnalyzing={isExecuting}
-            />
-          )}
+              {/* STAGE 04: AI DETECTION & DECISION VIEWPORT (3D MOON ROTATION & HEATMAP) */}
+              {pipelineStage === 'ai_detection' && (
+                <Moon3DViewer
+                  selectedTarget={selectedTarget}
+                  targetInfo={analysisData?.target}
+                  iceGrid={analysisData?.ice_grid}
+                  analysisData={analysisData}
+                />
+              )}
 
-          {/* STAGE 03: FEATURE EXTRACTION VIEWPORT */}
-          {pipelineStage === 'extraction' && (
-            <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h3 style={{ fontSize: '15px', color: '#38bdf8', margin: 0, fontFamily: 'Space Grotesk' }}>
-                  📊 FEATURE EXTRACTION — High-CPR Anomaly & Slope Extraction
-                </h3>
-                <span className="neon-badge badge-blue">EXTRACTED 128-PPD FEATURES</span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
-                  <h4 style={{ fontSize: '12px', color: '#00f3ff', fontFamily: 'JetBrains Mono', margin: '0 0 10px 0' }}>
-                    Radar CPR Anomaly Overlay (CPR {'> 1.2'})
-                  </h4>
-                  <div style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden' }}>
-                    {analysisData?.images?.results?.ice_confidence && (
-                      <img src={analysisData.images.results.ice_confidence} alt="CPR Anomaly" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    )}
+              {/* STAGE 05: OUTPUTS & REPORTS VIEWPORT (GPS & ROVER TRAVERSAL VECTORS) */}
+              {pipelineStage === 'outputs' && (
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '16px' }}>
+                    <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 14px 0', textTransform: 'uppercase' }}>
+                      🗺️ TACTICAL LUNAR GPS & A* ROVER PATH VECTORS
+                    </h3>
+                    <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
                   </div>
                 </div>
-
-                <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
-                  <h4 style={{ fontSize: '12px', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 10px 0' }}>
-                    Terrain Slope Hazard Boundary ({'<15°'})
-                  </h4>
-                  <div style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden' }}>
-                    {analysisData?.images?.results?.landing_zones && (
-                      <img src={analysisData.images.results.landing_zones} alt="Slope Hazard" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* STAGE 04: AI DETECTION & DECISION VIEWPORT (3D MOON ROTATION & HEATMAP) */}
-          {pipelineStage === 'ai_detection' && (
-            <Moon3DViewer
-              selectedTarget={selectedTarget}
-              targetInfo={analysisData?.target}
-              iceGrid={analysisData?.ice_grid}
-              analysisData={analysisData}
-            />
-          )}
-
-          {/* STAGE 05: OUTPUTS & REPORTS VIEWPORT (GPS & ROVER TRAVERSAL VECTORS) */}
-          {pipelineStage === 'outputs' && (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '16px' }}>
-                <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 14px 0', textTransform: 'uppercase' }}>
-                  🗺️ TACTICAL LUNAR GPS & A* ROVER PATH VECTORS
-                </h3>
-                <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
-              </div>
-            </div>
+              )}
+            </>
           )}
         </main>
 

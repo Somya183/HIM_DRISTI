@@ -214,28 +214,6 @@ export default function LunarGPSMap({ analysisData, selectedTarget = 'shackleton
           <strong style={{ color: '#00f3ff', width: '32px' }}>{Math.round(iceOpacity * 100)}%</strong>
         </div>
 
-        {/* GPS Path Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              checked={showPath}
-              onChange={(e) => setShowPath(e.target.checked)}
-              style={{ accentColor: '#00f3ff' }}
-            />
-            <span style={{ color: '#38bdf8', fontWeight: '600' }}>A* Safe Rover Traversal Path</span>
-          </label>
-
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              checked={showWaypoints}
-              onChange={(e) => setShowWaypoints(e.target.checked)}
-              style={{ accentColor: '#00f3ff' }}
-            />
-            <span>Waypoints ({waypoints.length})</span>
-          </label>
-        </div>
       </div>
 
       {/* MAIN INTERACTIVE MAP CANVAS CONTAINER */}

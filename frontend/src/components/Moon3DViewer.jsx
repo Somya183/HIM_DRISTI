@@ -149,40 +149,20 @@ export default function Moon3DViewer({ selectedTarget = 'shackleton', targetInfo
         </div>
       </div>
 
-      {/* HEATMAP & TENSOR VISUALIZATIONS */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        {/* HEATMAP 1: WATER ICE DETECTED TENSOR MAP */}
-        <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'JetBrains Mono', marginBottom: '10px' }}>
-            <strong style={{ color: '#00f3ff' }}>🧊 WATER ICE CONFIDENCE HEATMAP</strong>
-            <span style={{ color: '#00ff9d' }}>94.2% PEAK</span>
-          </div>
-          <div style={{ height: '220px', background: '#020408', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {analysisData?.images?.results?.ice_confidence ? (
-              <img src={analysisData.images.results.ice_confidence} alt="Ice Confidence" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              <div style={{ fontSize: '11px', color: '#64748b', fontFamily: 'JetBrains Mono' }}>
-                Rendering PyTorch UNet Segmented Confidence Tensor...
-              </div>
-            )}
-          </div>
+      {/* HEATMAP & TENSOR VISUALIZATION */}
+      <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'JetBrains Mono', marginBottom: '10px' }}>
+          <strong style={{ color: '#00f3ff' }}>🧊 WATER ICE CONFIDENCE HEATMAP</strong>
+          <span style={{ color: '#00ff9d' }}>94.2% PEAK</span>
         </div>
-
-        {/* HEATMAP 2: SAFE LANDING & TERRAIN SLOPE MAP */}
-        <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'JetBrains Mono', marginBottom: '10px' }}>
-            <strong style={{ color: '#38bdf8' }}>🎯 SAFE TOUCHDOWN & SLOPE MAP</strong>
-            <span style={{ color: '#38bdf8' }}>SAFE SLOPE &lt; 8°</span>
-          </div>
-          <div style={{ height: '220px', background: '#020408', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {analysisData?.images?.results?.landing_suitability ? (
-              <img src={analysisData.images.results.landing_suitability} alt="Landing Suitability" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              <div style={{ fontSize: '11px', color: '#64748b', fontFamily: 'JetBrains Mono' }}>
-                Rendering Terrain Slope & Touchdown Zones...
-              </div>
-            )}
-          </div>
+        <div style={{ height: '260px', background: '#020408', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {analysisData?.images?.results?.ice_confidence ? (
+            <img src={analysisData.images.results.ice_confidence} alt="Ice Confidence" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          ) : (
+            <div style={{ fontSize: '11px', color: '#64748b', fontFamily: 'JetBrains Mono' }}>
+              Rendering PyTorch UNet Segmented Confidence Tensor...
+            </div>
+          )}
         </div>
       </div>
     </div>
