@@ -118,19 +118,18 @@ export default function LandingPage({ isAuthenticated }) {
 
       {/* HERO SECTION */}
       <main style={{
-        maxWidth: '1440px',
+        maxWidth: '1200px',
         margin: '0 auto',
         width: '100%',
-        padding: '40px 64px 80px',
-        display: 'grid',
-        gridTemplateColumns: '1.2fr 1fr',
-        alignItems: 'center',
-        gap: '60px',
+        padding: '60px 64px 100px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
         position: 'relative',
         zIndex: 20
       }}>
-        {/* LEFT COLUMN: HERO HEADLINE & ACTIONS */}
-        <div>
+        {/* HERO HEADLINE & ACTIONS */}
+        <div style={{ maxWidth: '720px' }}>
           {/* LIVE TELEMETRY PILL BADGE */}
           <div style={{
             display: 'inline-flex',
@@ -164,12 +163,12 @@ export default function LandingPage({ isAuthenticated }) {
 
           {/* MAIN HEADLINE */}
           <h1 style={{
-            fontSize: 'clamp(44px, 5.5vw, 68px)',
+            fontSize: 'clamp(48px, 6vw, 76px)',
             fontWeight: '800',
             fontFamily: "'Space Grotesk', sans-serif",
             lineHeight: '1.08',
             color: '#ffffff',
-            margin: '0 0 20px 0',
+            margin: '0 0 24px 0',
             letterSpacing: '-1.5px'
           }}>
             Detecting Lunar Secrets with AI
@@ -177,11 +176,11 @@ export default function LandingPage({ isAuthenticated }) {
 
           {/* SUB-HEADLINE DESCRIPTION */}
           <p style={{
-            fontSize: '16px',
+            fontSize: '17px',
             color: '#cbd5e1',
-            lineHeight: '1.65',
-            maxWidth: '520px',
-            margin: '0 0 36px 0',
+            lineHeight: '1.7',
+            maxWidth: '600px',
+            margin: '0 0 40px 0',
             fontWeight: '400'
           }}>
             Advanced machine learning models scanning the lunar surface for resource identification and subsurface ice deposits in real-time.
@@ -195,9 +194,9 @@ export default function LandingPage({ isAuthenticated }) {
                 background: '#38bdf8',
                 color: '#040711',
                 border: 'none',
-                padding: '13px 32px',
+                padding: '14px 36px',
                 borderRadius: '6px',
-                fontSize: '12px',
+                fontSize: '13px',
                 fontWeight: '800',
                 fontFamily: 'JetBrains Mono',
                 letterSpacing: '1px',
@@ -226,9 +225,9 @@ export default function LandingPage({ isAuthenticated }) {
                 background: 'transparent',
                 color: '#ffffff',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
-                padding: '13px 32px',
+                padding: '14px 36px',
                 borderRadius: '6px',
-                fontSize: '12px',
+                fontSize: '13px',
                 fontWeight: '800',
                 fontFamily: 'JetBrains Mono',
                 letterSpacing: '1px',
@@ -249,53 +248,6 @@ export default function LandingPage({ isAuthenticated }) {
             >
               VIEW DATA
             </button>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: DRAMATIC HIGH Z-INDEX 3D MOON MODEL (POPS OUT OF PAGE) */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', zIndex: 999 }}>
-          {/* Ambient 3D High Radiance Light Halo */}
-          <div style={{
-            position: 'absolute',
-            width: '700px',
-            height: '700px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.28) 0%, rgba(0, 243, 255, 0.12) 45%, transparent 70%)',
-            filter: 'blur(70px)',
-            pointerEvents: 'none',
-            right: '-60px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 998
-          }} />
-
-          {/* 3D NASA Interactive Animated Moon Model Floating Container */}
-          <div className="float-moon" style={{
-            width: '580px',
-            height: '580px',
-            borderRadius: '50%',
-            overflow: 'hidden',
-            position: 'relative',
-            background: 'transparent',
-            boxShadow: '0 25px 90px rgba(0, 0, 0, 0.95), 0 0 85px rgba(56, 189, 248, 0.65), 0 0 150px rgba(0, 243, 255, 0.4)',
-            marginRight: '-60px',
-            marginTop: '-30px',
-            zIndex: 999,
-            transform: 'perspective(1000px) translateZ(30px)'
-          }}>
-            <iframe
-              src="https://solarsystem.nasa.gov/gltf_embed/2366/"
-              title="Official NASA 3D Moon Model"
-              width="100%"
-              height="100%"
-              style={{
-                border: 'none',
-                background: 'transparent',
-                transform: 'scale(1.42)',
-                transformOrigin: 'center center'
-              }}
-              allowFullScreen
-            />
           </div>
         </div>
       </main>
