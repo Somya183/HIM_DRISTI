@@ -130,13 +130,13 @@ export default function MissionControl({ user, onLogout }) {
 
   return (
     <div style={{
-      minHeight: '100vh',
-      width: '100%',
+      height: '100vh',
+      width: '100vw',
       background: '#02040a',
       color: '#ffffff',
       fontFamily: "'Space Grotesk', 'Outfit', sans-serif",
       position: 'relative',
-      overflowX: 'hidden',
+      overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column'
     }}>
@@ -146,6 +146,7 @@ export default function MissionControl({ user, onLogout }) {
       {/* TOP HEADER: LUNAR_OPS_CMD [SYS.VER 4.2.1] */}
       <header style={{
         height: '56px',
+        minHeight: '56px',
         padding: '0 24px',
         background: '#050a14',
         borderBottom: '1px solid rgba(0, 243, 255, 0.25)',
@@ -245,18 +246,22 @@ export default function MissionControl({ user, onLogout }) {
 
       {/* MAIN LUNAR_OPS GRID DASHBOARD */}
       <div style={{
-        flex: 1,
+        height: 'calc(100vh - 56px)',
+        width: '100%',
         display: 'grid',
         gridTemplateColumns: '260px 1fr 320px',
         gap: '2px',
         background: 'rgba(0, 243, 255, 0.15)',
         position: 'relative',
-        zIndex: 10
+        zIndex: 10,
+        overflow: 'hidden'
       }}>
         {/* LEFT COLUMN: MISSION FEED & PIPELINE STAGES */}
         <aside style={{
           background: '#040814',
           padding: '16px',
+          height: '100%',
+          overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -562,6 +567,8 @@ export default function MissionControl({ user, onLogout }) {
         <aside style={{
           background: '#040814',
           padding: '16px',
+          height: '100%',
+          overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
