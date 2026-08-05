@@ -258,29 +258,36 @@ export default function LandingPage({ isAuthenticated }) {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: INTERACTIVE 3D HOLOGRAPHIC LUNAR RADAR GLOBE */}
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/* RIGHT COLUMN: DRAMATIC 3D POP-OUT MOON MODEL */}
+          <div style={{
+            position: 'relative',
+            display: 'flex',
+            justify: 'center',
+            alignItems: 'center',
+            zIndex: 999,
+            marginRight: '-30px'
+          }}>
             {/* Ambient Moonlight Halo */}
             <div style={{
               position: 'absolute',
-              width: '580px',
-              height: '580px',
+              width: '640px',
+              height: '640px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(56, 189, 248, 0.32) 0%, rgba(0, 243, 255, 0.12) 50%, transparent 70%)',
-              filter: 'blur(60px)',
+              background: 'radial-gradient(circle, rgba(56, 189, 248, 0.38) 0%, rgba(0, 243, 255, 0.16) 45%, transparent 70%)',
+              filter: 'blur(70px)',
               pointerEvents: 'none'
             }} />
 
-            {/* Interactive 3D Holographic Moon Container */}
+            {/* 3D Moon Orb Container (Pops Out of Page with Deep Spatial Shadow) */}
             <div className="float-moon" style={{
-              width: '480px',
-              height: '480px',
+              width: '520px',
+              height: '520px',
               borderRadius: '50%',
               overflow: 'hidden',
               position: 'relative',
-              background: '#02040a',
-              border: '1px solid rgba(0, 243, 255, 0.55)',
-              boxShadow: '0 30px 90px rgba(0, 0, 0, 0.98), 0 0 65px rgba(0, 243, 255, 0.45), inset 0 0 40px rgba(0, 0, 0, 0.85)'
+              background: '#000000',
+              border: '1px solid rgba(0, 243, 255, 0.65)',
+              boxShadow: '0 40px 120px rgba(0, 0, 0, 0.98), 0 0 85px rgba(56, 189, 248, 0.7), 0 0 150px rgba(0, 243, 255, 0.4), inset 0 0 50px rgba(0, 0, 0, 0.95)'
             }}>
               <iframe
                 src="https://solarsystem.nasa.gov/gltf_embed/2366/"
@@ -290,13 +297,13 @@ export default function LandingPage({ isAuthenticated }) {
                 style={{
                   border: 'none',
                   background: 'transparent',
-                  transform: 'scale(1.36)',
+                  transform: 'scale(1.42)',
                   transformOrigin: 'center center'
                 }}
                 allowFullScreen
               />
 
-              {/* Volumetric 3D Solar Shadow Overlay */}
+              {/* Volumetric Realistic 3D Solar Shadow & Terminator Overlay */}
               <div style={{
                 position: 'absolute',
                 top: 0,
@@ -304,7 +311,7 @@ export default function LandingPage({ isAuthenticated }) {
                 right: 0,
                 bottom: 0,
                 borderRadius: '50%',
-                background: 'radial-gradient(circle at 28% 28%, transparent 35%, rgba(2, 4, 11, 0.2) 65%, rgba(2, 4, 11, 0.6) 88%, rgba(2, 4, 11, 0.85) 100%)',
+                background: 'radial-gradient(circle at 24% 24%, transparent 25%, rgba(2, 4, 11, 0.45) 55%, rgba(2, 4, 11, 0.82) 80%, rgba(2, 4, 11, 0.96) 100%)',
                 pointerEvents: 'none'
               }} />
             </div>
