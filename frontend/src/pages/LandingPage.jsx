@@ -1,30 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 import StarfieldBackground from '../components/StarfieldBackground';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
-  const [isWarping, setIsWarping] = useState(false);
-
-  const triggerWarpAndNavigate = (targetPath) => {
-    if (isWarping) return;
-    setIsWarping(true);
-    setTimeout(() => {
-      navigate(targetPath);
-    }, 3000);
-  };
 
   const handleInitiateScan = () => {
-    triggerWarpAndNavigate(isAuthenticated ? '/dashboard' : '/login');
+    navigate('/dashboard');
   };
 
   const handleViewData = () => {
-    triggerWarpAndNavigate(isAuthenticated ? '/dashboard' : '/login');
+    navigate('/dashboard');
   };
 
   const handleLoginClick = () => {
-    triggerWarpAndNavigate(isAuthenticated ? '/dashboard' : '/login');
+    navigate(isAuthenticated ? '/dashboard' : '/login');
   };
 
   return (
@@ -40,21 +31,16 @@ export default function LandingPage({ isAuthenticated }) {
       flexDirection: 'column',
       justifyContent: 'space-between'
     }}>
-      {/* 3D HYPERDRIVE WARP-SPEED STARFIELD BACKGROUND */}
-      <StarfieldBackground isWarpSpeed={isWarping} />
+      {/* 3D MOVING STARFIELD BACKGROUND */}
+      <StarfieldBackground />
 
-      {/* PAGE CONTAINER WITH ZOOM & OPACITY FADE DURING WARP */}
+      {/* PAGE CONTENT */}
       <div style={{
         width: '100%',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-        opacity: isWarping ? 0.05 : 1,
-        transform: isWarping ? 'scale(1.08)' : 'scale(1)',
-        filter: isWarping ? 'blur(4px)' : 'none',
-        pointerEvents: isWarping ? 'none' : 'auto'
+        justifyContent: 'space-between'
       }}>
         {/* TOP NAVIGATION HEADER */}
         <header style={{
@@ -82,7 +68,7 @@ export default function LandingPage({ isAuthenticated }) {
               style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
               onMouseEnter={(e) => e.target.style.color = '#ffffff'}
               onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
-              onClick={() => triggerWarpAndNavigate('/login')}
+              onClick={() => navigate('/dashboard')}
             >
               Detection
             </span>
@@ -91,7 +77,7 @@ export default function LandingPage({ isAuthenticated }) {
               style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
               onMouseEnter={(e) => e.target.style.color = '#ffffff'}
               onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
-              onClick={() => triggerWarpAndNavigate('/login')}
+              onClick={() => navigate('/dashboard')}
             >
               Data
             </span>
@@ -100,7 +86,7 @@ export default function LandingPage({ isAuthenticated }) {
               style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
               onMouseEnter={(e) => e.target.style.color = '#ffffff'}
               onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
-              onClick={() => triggerWarpAndNavigate('/login')}
+              onClick={() => navigate('/dashboard')}
             >
               Mission
             </span>
