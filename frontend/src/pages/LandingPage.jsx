@@ -1,289 +1,383 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Layers, Radar, Rocket, Waves, ArrowUpRight, Satellite, MapPinned } from 'lucide-react';
+import { Target, Layers, Radio, Satellite, MapPinned, ArrowUpRight, ShieldCheck, Cpu, Database, Activity } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import moonSphereImg from '../assets/moon_sphere.png';
 import StarfieldBackground from '../components/StarfieldBackground';
 
-const NAV_LINKS = ['Home', 'Mission', 'AI Model', 'Traversal'];
-
-const STAT_CARDS = [
-  { label: 'F1 Score', value: '93.7%', accent: '#00f3ff' },
-  { label: 'IoU Accuracy', value: '88.2%', accent: '#38bdf8' },
-  { label: 'Polar Craters Modeled', value: '03', accent: '#c084fc' },
-];
-
-const INSIGHT_ITEMS = [
-  {
-    icon: Satellite,
-    color: '#00f3ff',
-    title: 'Multi-modal sensor fusion',
-    body: 'Optical, radar, DEM and shadow layers are combined by a PyTorch UNet to score ice probability pixel by pixel.',
-  },
-  {
-    icon: MapPinned,
-    color: '#00ff9d',
-    title: 'Autonomous traversal planning',
-    body: 'Safe rover paths are computed from slope and confidence data, ready to export as GeoJSON for mission ops.',
-  },
-];
-
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
 
-  const goToApp = () => navigate(isAuthenticated ? '/dashboard' : '/login');
+  const handleInitiateScan = () => {
+    navigate('/dashboard');
+  };
+
+  const handleViewData = () => {
+    navigate('/dashboard');
+  };
+
+  const handleLoginClick = () => {
+    navigate(isAuthenticated ? '/dashboard' : '/login');
+  };
 
   return (
     <div style={{
       minHeight: '100vh',
       width: '100%',
-      background: '#020408',
+      background: '#040711',
       color: '#ffffff',
       fontFamily: "'Outfit', sans-serif",
       position: 'relative',
-      overflow: 'hidden',
+      overflowX: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between'
     }}>
+      {/* 3D MOVING STARFIELD */}
       <StarfieldBackground />
 
-      {/* TOP NAVIGATION */}
+      {/* TOP NAVIGATION HEADER */}
       <header style={{
-        padding: '24px 48px',
+        padding: '24px 64px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         position: 'relative',
-        zIndex: 20,
+        zIndex: 30,
+        maxWidth: '1440px',
+        margin: '0 auto',
+        width: '100%'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img src={logoImg} alt="HImDristi logo" style={{ height: '32px', width: 'auto' }} />
-          <span style={{ fontSize: '20px', fontWeight: '800', fontFamily: 'Space Grotesk', letterSpacing: '-0.5px' }}>
-            HImDristi <span style={{ fontSize: '13px', color: '#00f3ff', fontWeight: '400' }}>&bull; LUNAR</span>
+        {/* BRAND LOGO */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+          <img src={logoImg} alt="HimDristi logo" style={{ height: '36px', width: 'auto' }} />
+          <span style={{ fontSize: '24px', fontWeight: '800', fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.5px', color: '#ffffff' }}>
+            HimDristi
           </span>
         </div>
 
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '32px', fontSize: '14px', fontWeight: '500', color: '#94a3b8' }}>
-          {NAV_LINKS.map((link, i) => (
-            <span
-              key={link}
-              style={{ color: i === 0 ? '#ffffff' : '#94a3b8', cursor: 'pointer', transition: 'color 0.2s' }}
-              onMouseEnter={(e) => (e.target.style.color = '#00f3ff')}
-              onMouseLeave={(e) => (e.target.style.color = i === 0 ? '#ffffff' : '#94a3b8')}
-            >
-              {link}
-            </span>
-          ))}
-          <button
-            onClick={() => navigate('/login')}
-            style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: '#ffffff',
-              padding: '6px 18px',
-              borderRadius: '20px',
-              fontSize: '12px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#00f3ff'; e.currentTarget.style.color = '#020408'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'; e.currentTarget.style.color = '#ffffff'; }}
+        {/* NAV LINKS & LOGIN BUTTON */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '40px', fontSize: '15px', fontWeight: '500' }}>
+          <span 
+            style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseEnter={(e) => e.target.style.color = '#ffffff'}
+            onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
+            onClick={() => navigate('/dashboard')}
           >
-            {isAuthenticated ? 'Mission Control' : 'Sign In'}
+            Detection
+          </span>
+
+          <span 
+            style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseEnter={(e) => e.target.style.color = '#ffffff'}
+            onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
+            onClick={() => navigate('/dashboard')}
+          >
+            Data
+          </span>
+
+          <span 
+            style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseEnter={(e) => e.target.style.color = '#ffffff'}
+            onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
+            onClick={() => navigate('/dashboard')}
+          >
+            Mission
+          </span>
+
+          <button
+            onClick={handleLoginClick}
+            style={{
+              background: '#ffffff',
+              color: '#020408',
+              border: 'none',
+              padding: '9px 26px',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '700',
+              fontFamily: "'Space Grotesk', sans-serif",
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(255, 255, 255, 0.2)',
+              transition: 'all 0.25s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 243, 255, 0.5)';
+              e.currentTarget.style.background = '#00f3ff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.background = '#ffffff';
+            }}
+          >
+            {isAuthenticated ? 'Control' : 'Login'}
           </button>
         </nav>
       </header>
 
-      {/* HERO */}
+      {/* HERO SECTION */}
       <main style={{
-        display: 'flex',
-        flexDirection: 'column',
+        maxWidth: '1440px',
+        margin: '0 auto',
+        width: '100%',
+        padding: '40px 64px 80px',
+        display: 'grid',
+        gridTemplateColumns: '1.2fr 1fr',
         alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
+        gap: '60px',
         position: 'relative',
-        zIndex: 10,
-        padding: '20px 20px 0',
+        zIndex: 20
       }}>
-        <p style={{
-          fontSize: '16px',
-          color: '#cbd5e1',
-          maxWidth: '560px',
-          margin: '0 0 24px 0',
-          lineHeight: '1.6',
-          fontWeight: '400',
-        }}>
-          From lunar polar water-ice detection to AI rover traversal, explore everything HImDristi maps beneath the shadowed craters.
-        </p>
+        {/* LEFT COLUMN: HERO HEADLINE & ACTIONS */}
+        <div>
+          {/* LIVE TELEMETRY PILL BADGE */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(56, 189, 248, 0.12)',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
+            padding: '5px 14px',
+            borderRadius: '20px',
+            marginBottom: '28px'
+          }}>
+            <span style={{
+              width: '7px',
+              height: '7px',
+              borderRadius: '50%',
+              background: '#38bdf8',
+              display: 'inline-block',
+              boxShadow: '0 0 10px #38bdf8'
+            }} className="pulse-glow" />
+            <span style={{
+              fontSize: '11px',
+              fontWeight: '800',
+              color: '#38bdf8',
+              letterSpacing: '1.5px',
+              fontFamily: 'JetBrains Mono',
+              textTransform: 'uppercase'
+            }}>
+              LIVE TELEMETRY
+            </span>
+          </div>
 
-        <h1 style={{
-          fontSize: 'clamp(90px, 16vw, 210px)',
-          fontWeight: '900',
-          fontFamily: "'Space Grotesk', sans-serif",
-          letterSpacing: '0.04em',
-          margin: 0,
-          lineHeight: '0.85',
-          textTransform: 'uppercase',
-          userSelect: 'none',
-        }}>
-          MOON
-        </h1>
+          {/* MAIN HEADLINE */}
+          <h1 style={{
+            fontSize: 'clamp(44px, 5.5vw, 68px)',
+            fontWeight: '800',
+            fontFamily: "'Space Grotesk', sans-serif",
+            lineHeight: '1.08',
+            color: '#ffffff',
+            margin: '0 0 20px 0',
+            letterSpacing: '-1.5px'
+          }}>
+            Detecting Lunar Secrets with AI
+          </h1>
 
-        <div style={{
-          position: 'relative',
-          marginTop: '-7vw',
-          width: 'clamp(280px, 34vw, 480px)',
-          height: 'clamp(280px, 34vw, 480px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+          {/* SUB-HEADLINE DESCRIPTION */}
+          <p style={{
+            fontSize: '16px',
+            color: '#cbd5e1',
+            lineHeight: '1.65',
+            maxWidth: '520px',
+            margin: '0 0 36px 0',
+            fontWeight: '400'
+          }}>
+            Advanced machine learning models scanning the lunar surface for resource identification and subsurface ice deposits in real-time.
+          </p>
+
+          {/* RECTANGULAR ACTION BUTTONS */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button
+              onClick={handleInitiateScan}
+              style={{
+                background: '#38bdf8',
+                color: '#040711',
+                border: 'none',
+                padding: '13px 32px',
+                borderRadius: '6px',
+                fontSize: '12px',
+                fontWeight: '800',
+                fontFamily: 'JetBrains Mono',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                boxShadow: '0 0 25px rgba(56, 189, 248, 0.5)',
+                transition: 'all 0.25s ease',
+                textTransform: 'uppercase'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#00f3ff';
+                e.currentTarget.style.boxShadow = '0 0 35px rgba(0, 243, 255, 0.8)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#38bdf8';
+                e.currentTarget.style.boxShadow = '0 0 25px rgba(56, 189, 248, 0.5)';
+                e.currentTarget.style.transform = 'none';
+              }}
+            >
+              INITIATE SCAN
+            </button>
+
+            <button
+              onClick={handleViewData}
+              style={{
+                background: 'transparent',
+                color: '#ffffff',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                padding: '13px 32px',
+                borderRadius: '6px',
+                fontSize: '12px',
+                fontWeight: '800',
+                fontFamily: 'JetBrains Mono',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                textTransform: 'uppercase'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#38bdf8';
+                e.currentTarget.style.color = '#38bdf8';
+                e.currentTarget.style.background = 'rgba(56, 189, 248, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              VIEW DATA
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: FLOATING SCANNING WIDGET & 3D MOON BACKDROP */}
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/* Ambient Blue Halo */}
           <div style={{
             position: 'absolute',
-            width: '100%',
-            height: '100%',
+            width: '450px',
+            height: '450px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(0, 162, 255, 0.25) 0%, rgba(0, 243, 255, 0.1) 50%, transparent 70%)',
-            filter: 'blur(30px)',
-            pointerEvents: 'none',
+            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)',
+            filter: 'blur(50px)',
+            pointerEvents: 'none'
           }} />
 
-          <img
-            src={moonSphereImg}
-            alt="Photorealistic render of the Moon's south pole region"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              borderRadius: '50%',
-              filter: 'drop-shadow(0 0 40px rgba(0, 162, 255, 0.3))',
-            }}
-          />
+          {/* 3D Moon Surface Graphic */}
+          <div className="float-moon" style={{ width: '380px', height: '380px', position: 'relative', opacity: 0.85 }}>
+            <img
+              src={moonSphereImg}
+              alt="Lunar Surface Scanner"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                borderRadius: '50%',
+                filter: 'drop-shadow(0 0 35px rgba(56, 189, 248, 0.3))'
+              }}
+            />
+          </div>
 
-          <button
-            onClick={goToApp}
+          {/* FLOATING SCANNING SECTOR WIDGET (EXACTLY MATCHING USER IMAGE) */}
+          <div
+            className="hud-card"
             style={{
               position: 'absolute',
-              top: '38%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              background: 'linear-gradient(135deg, #00a2ff 0%, #00f3ff 100%)',
-              color: '#ffffff',
-              border: 'none',
-              padding: '14px 44px',
-              borderRadius: '40px',
-              fontSize: '18px',
-              fontWeight: '700',
-              fontFamily: 'Space Grotesk',
-              cursor: 'pointer',
-              boxShadow: '0 10px 30px rgba(0, 162, 255, 0.6), 0 0 20px rgba(0, 243, 255, 0.8)',
-              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-              letterSpacing: '0.5px',
-              zIndex: 30,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.08)';
-              e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 162, 255, 0.9), 0 0 35px rgba(0, 243, 255, 1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1)';
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 162, 255, 0.6), 0 0 20px rgba(0, 243, 255, 0.8)';
+              top: '40%',
+              left: '10%',
+              transform: 'translateY(-50%)',
+              background: 'rgba(9, 15, 30, 0.92)',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              padding: '16px 24px',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.3)',
+              backdropFilter: 'blur(16px)',
+              zIndex: 30
             }}
           >
-            Explore
-          </button>
+            <div style={{
+              padding: '10px',
+              background: 'rgba(56, 189, 248, 0.15)',
+              borderRadius: '8px',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Target size={22} color="#38bdf8" className="spin" />
+            </div>
+
+            <div>
+              <div style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', letterSpacing: '1px', fontFamily: 'JetBrains Mono' }}>
+                SECTOR 76
+              </div>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1.5px', fontFamily: 'JetBrains Mono', marginTop: '2px' }}>
+                SCANNING...
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 
-      {/* MISSION INSIGHTS SECTION */}
+      {/* LOWER MISSION INSIGHTS & STATS ROW */}
       <section style={{
+        maxWidth: '1440px',
+        margin: '0 auto',
+        width: '100%',
+        padding: '0 64px 48px',
         position: 'relative',
-        zIndex: 10,
-        maxWidth: '1100px',
-        margin: '40px auto 0',
-        padding: '0 32px 64px',
+        zIndex: 20
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '28px' }}>
-          <Layers size={20} color="#00f3ff" />
-          <h2 style={{ fontSize: '20px', fontWeight: '700', fontFamily: 'Space Grotesk', margin: 0 }}>
-            Mission Insights
-          </h2>
-        </div>
-
-        {/* STAT ROW */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '20px' }}>
-          {STAT_CARDS.map((stat) => (
-            <div key={stat.label} className="hud-card" style={{ padding: '20px' }}>
-              <p style={{ fontSize: '11px', color: '#94a3b8', margin: '0 0 8px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                {stat.label}
-              </p>
-              <strong style={{ fontSize: '28px', fontFamily: 'Space Grotesk', color: stat.accent }}>
-                {stat.value}
-              </strong>
-            </div>
-          ))}
-        </div>
-
-        {/* TWO-COLUMN INSIGHT ROW: visual card + feature list, echoing the reference layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: '16px' }}>
-          <div className="hud-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              <p style={{ fontSize: '11px', color: '#94a3b8', margin: '0 0 6px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                Primary Target
-              </p>
-              <strong style={{ fontSize: '22px', fontFamily: 'Space Grotesk', display: 'block' }}>Shackleton Crater</strong>
-              <span style={{ fontSize: '13px', color: '#64748b', fontFamily: 'JetBrains Mono' }}>89.9&deg;S, 0&deg;E</span>
-            </div>
-            <div style={{
-              marginTop: '18px',
-              height: '110px',
-              borderRadius: '10px',
-              background: 'radial-gradient(circle at 35% 35%, #cfd8e3 0%, #7d8896 45%, #3a4552 100%)',
-              boxShadow: 'inset -14px -12px 26px rgba(0,0,0,0.35), inset 12px 10px 20px rgba(255,255,255,0.18)',
-            }} />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '32px' }}>
+          <div className="hud-card" style={{ padding: '20px', borderLeft: '4px solid #38bdf8' }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              MODEL F1 ACCURACY
+            </span>
+            <strong style={{ display: 'block', fontSize: '28px', color: '#38bdf8', fontFamily: 'Space Grotesk', marginTop: '4px' }}>
+              93.7%
+            </strong>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {INSIGHT_ITEMS.map((item) => (
-              <div key={item.title} className="hud-card" style={{ padding: '18px', display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-                <div style={{
-                  flexShrink: 0,
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: `${item.color}1f`,
-                  border: `1px solid ${item.color}66`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <item.icon size={18} color={item.color} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: '14px', fontFamily: 'Space Grotesk', margin: '0 0 4px' }}>{item.title}</h3>
-                  <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>{item.body}</p>
-                </div>
-                <ArrowUpRight size={16} color="#64748b" style={{ flexShrink: 0 }} />
-              </div>
-            ))}
+          <div className="hud-card" style={{ padding: '20px', borderLeft: '4px solid #00f3ff' }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              SEGMENTATION IOU SCORE
+            </span>
+            <strong style={{ display: 'block', fontSize: '28px', color: '#00f3ff', fontFamily: 'Space Grotesk', marginTop: '4px' }}>
+              88.2%
+            </strong>
+          </div>
+
+          <div className="hud-card" style={{ padding: '20px', borderLeft: '4px solid #c084fc' }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              POLAR TARGET CRATERS
+            </span>
+            <strong style={{ display: 'block', fontSize: '28px', color: '#c084fc', fontFamily: 'Space Grotesk', marginTop: '4px' }}>
+              03 TARGETS
+            </strong>
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
       <footer style={{
-        padding: '20px 48px',
+        padding: '24px 64px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         fontSize: '12px',
         color: '#64748b',
+        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
         position: 'relative',
-        zIndex: 20,
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        zIndex: 20
       }}>
-        <span>HImDristi &bull; NASA PDS Geosciences Polar Dataset</span>
-        <span style={{ color: '#00f3ff' }}>Coordinates: 89.9&deg;S, 0.0&deg;E (Shackleton Rim)</span>
-        <span>&copy; 2026 AI Mission Intelligence</span>
+        <span>HimDristi • Multi-Modal Lunar Water Ice AI & Traversal Platform</span>
+        <span style={{ color: '#38bdf8', fontFamily: 'JetBrains Mono' }}>Shackleton Target: 89.9°S, 0.0°E</span>
+        <span>© 2026 AI Space Intelligence</span>
       </footer>
     </div>
   );

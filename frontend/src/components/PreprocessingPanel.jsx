@@ -40,7 +40,7 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <label className="glass-button" style={{ fontSize: '11px', padding: '6px 14px', cursor: 'pointer' }}>
-            <Upload size={14} color="#00f3ff" /> Upload Chandrayaan Dataset
+            <Upload size={14} color="#00f3ff" /> Upload Custom Dataset
             <input type="file" accept="image/*" onChange={handleCustomUpload} style={{ display: 'none' }} />
           </label>
 
@@ -124,11 +124,11 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
                 borderRadius: '8px'
               }}>
                 <RefreshCw size={34} color="#00f3ff" className="spin" style={{ marginBottom: '14px', filter: 'drop-shadow(0 0 12px rgba(0, 243, 255, 0.6))' }} />
-                
+
                 <h4 style={{ color: '#00f3ff', fontSize: '15px', fontWeight: '700', margin: '0 0 6px 0', fontFamily: 'Space Grotesk' }}>
                   Preprocessing in Progress...
                 </h4>
-                
+
                 <p style={{ color: '#94a3b8', fontSize: '12px', margin: 0, maxWidth: '300px', lineHeight: '1.5' }}>
                   Processing speckle denoise, CLAHE contrast scaling, and PSR thresholding...
                 </p>
