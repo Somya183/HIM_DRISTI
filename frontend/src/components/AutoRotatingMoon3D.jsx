@@ -23,16 +23,16 @@ export default function AutoRotatingMoon3D({ width = '100%', height = '100%' }) 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // 3. LIGHTING (Balanced Directional Sunlight & Rim Glow)
-    const sunLight = new THREE.DirectionalLight(0xffffff, 2.8);
-    sunLight.position.set(5, 3, 5);
+    // 3. SINGLE-SIDED SOLAR DIRECTIONAL LIGHTING & NATURAL SHADOW
+    const sunLight = new THREE.DirectionalLight(0xffffff, 3.5);
+    sunLight.position.set(6, 2.5, 4); // Strong directional sunlight from top-right
     scene.add(sunLight);
 
-    const rimLight = new THREE.DirectionalLight(0x00f3ff, 1.2);
-    rimLight.position.set(-5, -2, -3);
+    const rimLight = new THREE.DirectionalLight(0x00f3ff, 0.35);
+    rimLight.position.set(-6, -2.5, -3); // Soft subtle rim light on dark side
     scene.add(rimLight);
 
-    const ambientLight = new THREE.AmbientLight(0x475569, 0.95);
+    const ambientLight = new THREE.AmbientLight(0x080f1e, 0.18); // Low ambient light for natural shadow contrast
     scene.add(ambientLight);
 
     // 4. PHOTOREALISTIC 3D MOON MESH
@@ -43,8 +43,8 @@ export default function AutoRotatingMoon3D({ width = '100%', height = '100%' }) 
     const moonMat = new THREE.MeshStandardMaterial({
       map: moonTexture,
       bumpMap: moonTexture,
-      bumpScale: 0.05,
-      roughness: 0.7,
+      bumpScale: 0.06,
+      roughness: 0.88,
       metalness: 0.05
     });
     const moonMesh = new THREE.Mesh(moonGeo, moonMat);
