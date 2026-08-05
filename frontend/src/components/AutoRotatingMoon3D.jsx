@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import moonTextureImg from '../assets/moon_sphere.png';
+import moonTextureImg from '../assets/moon_texture_seamless.jpg';
 
 export default function AutoRotatingMoon3D({ width = '100%', height = '100%' }) {
   const mountRef = useRef(null);
