@@ -291,30 +291,6 @@ export default function LandingPage({ isAuthenticated }) {
               boxShadow: '0 0 30px rgba(0, 243, 255, 0.8), inset 0 0 35px rgba(0, 243, 255, 0.6), 0 40px 120px rgba(0, 0, 0, 0.98), 0 0 90px rgba(56, 189, 248, 0.75)'
             }}>
               <AutoRotatingMoon3D width="100%" height="100%" />
-
-              {/* Volumetric Realistic 3D Solar Shadow & Terminator Overlay */}
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                borderRadius: '50%',
-                background: 'radial-gradient(circle at 24% 24%, transparent 25%, rgba(2, 4, 11, 0.45) 55%, rgba(2, 4, 11, 0.82) 80%, rgba(2, 4, 11, 0.96) 100%)',
-                pointerEvents: 'none'
-              }} />
-
-              {/* Luminous 3D Spherical Edge Curve Rim Light Overlay */}
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                borderRadius: '50%',
-                background: 'radial-gradient(circle at 50% 50%, transparent 68%, rgba(0, 243, 255, 0.35) 94%, rgba(0, 243, 255, 0.75) 100%)',
-                pointerEvents: 'none'
-              }} />
             </div>
           </div>
         </main>
