@@ -59,22 +59,6 @@ export default function StarfieldBackground() {
       });
     }
 
-    // Shooting stars / meteors
-    const shootingStars = [];
-    const createShootingStar = () => {
-      if (Math.random() < 0.05 && shootingStars.length < 5) {
-        shootingStars.push({
-          x: Math.random() * width,
-          y: Math.random() * (height * 0.6),
-          length: Math.random() * 110 + 50,
-          speed: Math.random() * 12 + 8,
-          angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
-          opacity: 1,
-          color: Math.random() > 0.5 ? '#00f3ff' : '#ffffff'
-        });
-      }
-    };
-
     // Render loop
     const render = () => {
       // Smooth mouse interpolation
@@ -144,32 +128,6 @@ export default function StarfieldBackground() {
 
           ctx.restore();
         }
-      }
-
-      // Render Shooting Stars
-      createShootingStar();
-      for (let i = shootingStars.length - 1; i >= 0; i--) {
-        const ss = shootingStars[i];
-        ss.x += Math.cos(ss.angle) * ss.speed;
-        ss.y += Math.sin(ss.angle) * ss.speed;
-        ss.opacity -= 0.018;
-
-        if (ss.opacity <= 0 || ss.x > width || ss.y > height) {
-          shootingStars.splice(i, 1);
-          continue;
-        }
-
-        ctx.save();
-        ctx.strokeStyle = ss.color === '#00f3ff' ? `rgba(0, 243, 255, ${ss.opacity})` : `rgba(255, 255, 255, ${ss.opacity})`;
-        ctx.lineWidth = 1.8;
-        ctx.beginPath();
-        ctx.moveTo(ss.x, ss.y);
-        ctx.lineTo(
-          ss.x - Math.cos(ss.angle) * ss.length,
-          ss.y - Math.sin(ss.angle) * ss.length
-        );
-        ctx.stroke();
-        ctx.restore();
       }
 
       animationFrameId = requestAnimationFrame(render);
