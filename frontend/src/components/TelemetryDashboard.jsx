@@ -23,80 +23,99 @@ export default function TelemetryDashboard({ metrics, landingSite, roverPath }) 
 
   return (
     <>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '8px' }}>
         {/* CARD 1: ESTIMATED ICE VOLUME & MASS */}
-        <div className="glass-card" style={{ padding: '16px', borderLeft: '4px solid #00f3ff' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>
-              ESTIMATED ICE VOLUME
+        <div className="glass-card" style={{ padding: '18px', borderLeft: '4px solid #00f3ff', background: 'linear-gradient(135deg, rgba(0, 243, 255, 0.05) 0%, rgba(11, 18, 33, 0.85) 100%)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              ESTIMATED ICE VOLUME & MASS
             </span>
-            <Droplets size={20} color="#00f3ff" />
+            <div style={{ padding: '6px', background: 'rgba(0, 243, 255, 0.1)', borderRadius: '8px', border: '1px solid rgba(0, 243, 255, 0.3)' }}>
+              <Droplets size={18} color="#00f3ff" />
+            </div>
           </div>
-          <div style={{ fontSize: '22px', fontWeight: '800', color: '#e0f2fe', fontFamily: 'Space Grotesk' }}>
+          <div style={{ fontSize: '24px', fontWeight: '800', color: '#00f3ff', fontFamily: 'Space Grotesk', letterSpacing: '-0.5px' }}>
             {iceMassFormatted}
           </div>
-          <div style={{ fontSize: '12px', color: '#38bdf8', marginTop: '4px' }}>
-            📦 Volume: <strong>{iceVolumeFormatted}</strong>
+          <div style={{ fontSize: '12px', color: '#38bdf8', marginTop: '6px', fontWeight: '600' }}>
+            Volume: <strong>{iceVolumeFormatted}</strong>
           </div>
-          <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>
+          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00f3ff', display: 'inline-block' }}></span>
             Area: {metrics?.high_probability_area_km2 || '8,545'} km² (81.5% PSR)
           </div>
         </div>
 
         {/* CARD 2: ICE CONFIDENCE SCORE */}
-        <div className="glass-card" style={{ padding: '16px', borderLeft: '4px solid #38bdf8' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>
+        <div className="glass-card" style={{ padding: '18px', borderLeft: '4px solid #38bdf8', background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, rgba(11, 18, 33, 0.85) 100%)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               PEAK ICE CONFIDENCE
             </span>
-            <ShieldCheck size={20} color="#38bdf8" />
+            <div style={{ padding: '6px', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+              <ShieldCheck size={18} color="#38bdf8" />
+            </div>
           </div>
-          <div style={{ fontSize: '26px', fontWeight: '800', color: '#00f3ff', fontFamily: 'Space Grotesk' }}>
+          <div style={{ fontSize: '24px', fontWeight: '800', color: '#e0f2fe', fontFamily: 'Space Grotesk', letterSpacing: '-0.5px' }}>
             {metrics?.peak_confidence_pct || '90.9'}%
           </div>
-          <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
-            Mean Deposit Score: <strong>{metrics?.mean_confidence_pct || '45.9'}%</strong>
+          <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '6px', fontWeight: '500' }}>
+            Mean Deposit Score: <strong style={{ color: '#00f3ff' }}>{metrics?.mean_confidence_pct || '45.9'}%</strong>
           </div>
-          <div style={{ fontSize: '11px', color: '#10b981', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            ✔ High-Probability Water Ice Target
+          <div style={{ fontSize: '11px', color: '#10b981', marginTop: '6px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
+            High-Probability Ice Target
           </div>
         </div>
 
         {/* CARD 3: SAFE ROVER LANDING SITE */}
-        <div className="glass-card" style={{ padding: '16px', borderLeft: '4px solid #10b981' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>
+        <div className="glass-card" style={{ padding: '18px', borderLeft: '4px solid #10b981', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(11, 18, 33, 0.85) 100%)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               SAFE LANDING SITE
             </span>
-            <MapPin size={20} color="#10b981" />
+            <div style={{ padding: '6px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+              <MapPin size={18} color="#10b981" />
+            </div>
           </div>
-          <div style={{ fontSize: '26px', fontWeight: '800', color: '#10b981', fontFamily: 'Space Grotesk' }}>
+          <div style={{ fontSize: '24px', fontWeight: '800', color: '#10b981', fontFamily: 'Space Grotesk', letterSpacing: '-0.5px' }}>
             {landingSite?.landing_suitability_pct || '94.5'}%
           </div>
-          <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
-            Landing Slope: <strong>{landingSite?.landing_slope_deg || '4.2'}°</strong> (Safe &lt; 8°)
+          <div style={{ fontSize: '12px', color: '#cbd5e1', marginTop: '6px' }}>
+            Landing Slope: <strong style={{ color: '#10b981' }}>{landingSite?.landing_slope_deg || '4.2'}°</strong> (Safe &lt; 8°)
           </div>
-          <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>
-            Coords: Pixel [{landingSite?.landing_coords_pixel?.join(', ') || '394, 242'}]
+          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', fontFamily: 'JetBrains Mono' }}>
+            Coords: [{landingSite?.landing_coords_pixel?.join(', ') || '394, 242'}]
           </div>
         </div>
 
-        {/* CARD 4: AI MODEL PERFORMANCE METRICS (PHASE 3) */}
-        <div className="glass-card" style={{ padding: '16px', borderLeft: '4px solid #a855f7', cursor: 'pointer' }} onClick={() => setShowModelModal(true)}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>
+        {/* CARD 4: AI MODEL PERFORMANCE METRICS */}
+        <div 
+          className="glass-card" 
+          style={{ 
+            padding: '18px', 
+            borderLeft: '4px solid #c084fc', 
+            cursor: 'pointer',
+            background: 'linear-gradient(135deg, rgba(192, 132, 252, 0.08) 0%, rgba(11, 18, 33, 0.85) 100%)'
+          }} 
+          onClick={() => setShowModelModal(true)}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               AI MODEL ACCURACY (UNET)
             </span>
-            <Cpu size={20} color="#a855f7" />
+            <div style={{ padding: '6px', background: 'rgba(192, 132, 252, 0.1)', borderRadius: '8px', border: '1px solid rgba(192, 132, 252, 0.3)' }}>
+              <Cpu size={18} color="#c084fc" />
+            </div>
           </div>
-          <div style={{ fontSize: '26px', fontWeight: '800', color: '#c084fc', fontFamily: 'Space Grotesk' }}>
-            {modelEval.f1_score_pct}% <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 'normal' }}>F1</span>
+          <div style={{ fontSize: '24px', fontWeight: '800', color: '#c084fc', fontFamily: 'Space Grotesk', letterSpacing: '-0.5px' }}>
+            {modelEval.f1_score_pct}% <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600' }}>F1</span>
           </div>
-          <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
-            IoU Score: <strong style={{ color: '#00f3ff' }}>{modelEval.iou_pct}%</strong> | Precision: <strong>{modelEval.precision_pct}%</strong>
+          <div style={{ fontSize: '12px', color: '#cbd5e1', marginTop: '6px' }}>
+            IoU: <strong style={{ color: '#00f3ff' }}>{modelEval.iou_pct}%</strong> | Precision: <strong>{modelEval.precision_pct}%</strong>
           </div>
-          <div style={{ fontSize: '11px', color: '#a855f7', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Award size={12} /> View Confusion Matrix & Metrics ➔
+          <div style={{ fontSize: '11px', color: '#c084fc', marginTop: '6px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Award size={13} /> View Confusion Matrix ➔
           </div>
         </div>
       </div>

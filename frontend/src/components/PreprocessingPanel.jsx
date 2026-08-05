@@ -34,82 +34,24 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
     <div className="glass-card" style={{ padding: '20px' }}>
       {/* Header with Title & Action Buttons */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '18px', color: '#00f3ff', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, fontWeight: '700' }}>
-          <Sliders size={20} /> Data Preprocessing & Analysis
+        <h3 style={{ fontSize: '16px', color: '#00f3ff', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, fontWeight: '700', fontFamily: 'Space Grotesk' }}>
+          <Sliders size={18} /> Multi-Modal Data Preprocessing Engine
         </h3>
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <label 
-            style={{ 
-              background: 'linear-gradient(135deg, rgba(0, 243, 255, 0.12) 0%, rgba(2, 132, 199, 0.22) 100%)',
-              border: '1px solid rgba(0, 243, 255, 0.6)',
-              color: '#00f3ff',
-              padding: '8px 16px',
-              borderRadius: '10px',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: '700',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 0 15px rgba(0, 243, 255, 0.25)',
-              transition: 'all 0.2s ease',
-              letterSpacing: '0.3px'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0, 243, 255, 0.25) 0%, rgba(2, 132, 199, 0.38) 100%)';
-              e.currentTarget.style.boxShadow = '0 0 25px rgba(0, 243, 255, 0.5)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0, 243, 255, 0.12) 0%, rgba(2, 132, 199, 0.22) 100%)';
-              e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 243, 255, 0.25)';
-              e.currentTarget.style.transform = 'none';
-            }}
-          >
-            <Upload size={15} color="#00f3ff" /> Upload Custom Dataset
+          <label className="glass-button" style={{ fontSize: '11px', padding: '6px 14px', cursor: 'pointer' }}>
+            <Upload size={14} color="#00f3ff" /> Upload Custom Dataset
             <input type="file" accept="image/*" onChange={handleCustomUpload} style={{ display: 'none' }} />
           </label>
 
           <button
             onClick={onRunAnalysis}
             disabled={isAnalyzing}
-            style={{
-              background: isAnalyzing 
-                ? 'rgba(56, 189, 248, 0.3)' 
-                : 'linear-gradient(135deg, #00f3ff 0%, #0284c7 100%)',
-              border: 'none',
-              color: '#070a12',
-              padding: '8px 18px',
-              borderRadius: '10px',
-              cursor: isAnalyzing ? 'not-allowed' : 'pointer',
-              fontSize: '12px',
-              fontWeight: '800',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 0 20px rgba(0, 243, 255, 0.5)',
-              transition: 'all 0.2s ease',
-              letterSpacing: '0.3px',
-              textTransform: 'uppercase'
-            }}
-            onMouseEnter={(e) => {
-              if (!isAnalyzing) {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #38bdf8 0%, #00f3ff 100%)';
-                e.currentTarget.style.boxShadow = '0 0 30px rgba(0, 243, 255, 0.8)';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isAnalyzing) {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #00f3ff 0%, #0284c7 100%)';
-                e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 243, 255, 0.5)';
-                e.currentTarget.style.transform = 'none';
-              }
-            }}
+            className="glass-button glass-button-primary"
+            style={{ fontSize: '11px', padding: '6px 16px', opacity: isAnalyzing ? 0.7 : 1 }}
           >
-            <RefreshCw size={15} className={isAnalyzing ? 'spin' : ''} color="#070a12" />
-            {isAnalyzing ? 'Processing...' : 'Run Pipeline'}
+            <RefreshCw size={14} className={isAnalyzing ? 'spin' : ''} color="#030712" />
+            {isAnalyzing ? 'Processing Pipeline...' : 'Run Pipeline'}
           </button>
         </div>
       </div>
@@ -121,15 +63,16 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             style={{
-              background: activeTab === tab.id ? 'rgba(0, 243, 255, 0.15)' : 'transparent',
-              border: activeTab === tab.id ? '1px solid #00f3ff' : '1px solid transparent',
+              background: activeTab === tab.id ? 'rgba(0, 243, 255, 0.15)' : 'rgba(15, 23, 42, 0.4)',
+              border: activeTab === tab.id ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.08)',
               color: activeTab === tab.id ? '#00f3ff' : '#94a3b8',
               padding: '6px 14px',
               borderRadius: '8px',
               cursor: 'pointer',
               fontSize: '12px',
-              fontWeight: '600',
-              transition: 'all 0.2s ease'
+              fontWeight: '700',
+              transition: 'all 0.2s ease',
+              boxShadow: activeTab === tab.id ? '0 0 15px rgba(0, 243, 255, 0.25)' : 'none'
             }}
           >
             {tab.name}
@@ -140,14 +83,14 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
       {/* Side by Side Image Comparison Display */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
         {/* RAW INPUT */}
-        <div style={{ background: '#05070e', borderRadius: '12px', padding: '12px', border: '1px solid rgba(148, 163, 184, 0.2)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Eye size={14} /> RAW UNFILTERED DATA
+        <div style={{ background: '#030712', borderRadius: '12px', padding: '14px', border: '1px solid rgba(148, 163, 184, 0.2)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontSize: '12px', fontWeight: '700', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Eye size={14} /> RAW UNFILTERED SATELLITE TENSOR
             </span>
-            <span className="neon-badge badge-warning">RAW SATELLITE PHOTO</span>
+            <span className="neon-badge badge-warning" style={{ fontSize: '10px' }}>RAW SATELLITE PHOTO</span>
           </div>
-          <div style={{ width: '100%', height: '260px', borderRadius: '8px', overflow: 'hidden', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '100%', height: '260px', borderRadius: '8px', overflow: 'hidden', background: '#000', border: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             {rawPhoto ? (
               <img src={rawPhoto} alt="Raw Unchanged Satellite Photo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             ) : (
@@ -157,16 +100,16 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
         </div>
 
         {/* PREPROCESSED OUTPUT */}
-        <div style={{ background: '#05070e', borderRadius: '12px', padding: '12px', border: '1px solid rgba(0, 243, 255, 0.4)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#00f3ff', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <CheckCircle2 size={14} /> PREPROCESSED CLEANED DATA
+        <div style={{ background: '#030712', borderRadius: '12px', padding: '14px', border: '1px solid rgba(0, 243, 255, 0.4)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontSize: '12px', fontWeight: '700', color: '#00f3ff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <CheckCircle2 size={14} /> PREPROCESSED CLEANED SENSOR OUTPUT
             </span>
-            <span className="neon-badge badge-cyan">
+            <span className="neon-badge badge-cyan" style={{ fontSize: '10px' }}>
               {isAnalyzing ? 'PREPROCESSING...' : 'PREPROCESSED'}
             </span>
           </div>
-          <div style={{ width: '100%', height: '260px', borderRadius: '8px', overflow: 'hidden', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+          <div style={{ width: '100%', height: '260px', borderRadius: '8px', overflow: 'hidden', background: '#000', border: '1px solid rgba(0, 243, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
             {isAnalyzing ? (
               <div style={{
                 width: '100%',
@@ -178,17 +121,16 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
                 justifyContent: 'center',
                 padding: '24px',
                 textAlign: 'center',
-                border: '1px solid rgba(0, 243, 255, 0.3)',
                 borderRadius: '8px'
               }}>
-                <RefreshCw size={34} color="#00f3ff" className="spin" style={{ marginBottom: '14px', filter: 'drop-shadow(0 0 10px rgba(0, 243, 255, 0.5))' }} />
+                <RefreshCw size={34} color="#00f3ff" className="spin" style={{ marginBottom: '14px', filter: 'drop-shadow(0 0 12px rgba(0, 243, 255, 0.6))' }} />
                 
-                <h4 style={{ color: '#00f3ff', fontSize: '15px', fontWeight: '700', margin: '0 0 6px 0' }}>
+                <h4 style={{ color: '#00f3ff', fontSize: '15px', fontWeight: '700', margin: '0 0 6px 0', fontFamily: 'Space Grotesk' }}>
                   Preprocessing in Progress...
                 </h4>
                 
                 <p style={{ color: '#94a3b8', fontSize: '12px', margin: 0, maxWidth: '300px', lineHeight: '1.5' }}>
-                  Please wait, preprocessing will be done in a while...
+                  Processing speckle denoise, CLAHE contrast scaling, and PSR thresholding...
                 </p>
               </div>
             ) : prepImg ? (
@@ -201,10 +143,10 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
       </div>
 
       {/* Interactive Controls & Parameters */}
-      <div style={{ background: 'rgba(7, 10, 18, 0.6)', padding: '14px', borderRadius: '12px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+      <div style={{ background: 'rgba(3, 7, 18, 0.8)', padding: '14px 18px', borderRadius: '12px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
         <div>
-          <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>
-            Radar Speckle Denoise Strength: <strong>{denoiseLevel}</strong>
+          <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: '600' }}>
+            Radar Speckle Denoise: <strong style={{ color: '#00f3ff' }}>{denoiseLevel}</strong>
           </label>
           <input
             type="range"
@@ -212,13 +154,12 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
             max="15"
             value={denoiseLevel}
             onChange={(e) => setDenoiseLevel(Number(e.target.value))}
-            style={{ width: '100%', accentColor: '#00f3ff' }}
           />
         </div>
 
         <div>
-          <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>
-            Optical CLAHE Clip Limit: <strong>{contrastClip.toFixed(1)}</strong>
+          <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: '600' }}>
+            Optical CLAHE Clip: <strong style={{ color: '#00f3ff' }}>{contrastClip.toFixed(1)}</strong>
           </label>
           <input
             type="range"
@@ -227,13 +168,12 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
             step="0.5"
             value={contrastClip}
             onChange={(e) => setContrastClip(Number(e.target.value))}
-            style={{ width: '100%', accentColor: '#00f3ff' }}
           />
         </div>
 
         <div>
-          <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>
-            Shadow Binary Mask Threshold: <strong>{shadowThreshold}%</strong>
+          <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: '600' }}>
+            Shadow Mask Threshold: <strong style={{ color: '#00f3ff' }}>{shadowThreshold}%</strong>
           </label>
           <input
             type="range"
@@ -241,7 +181,6 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
             max="90"
             value={shadowThreshold}
             onChange={(e) => setShadowThreshold(Number(e.target.value))}
-            style={{ width: '100%', accentColor: '#00f3ff' }}
           />
         </div>
       </div>

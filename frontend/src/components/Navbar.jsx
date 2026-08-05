@@ -79,66 +79,66 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
     <nav 
       className="glass-card" 
       style={{ 
-        padding: '12px 24px', 
-        marginBottom: '20px', 
+        padding: '10px 20px', 
+        marginBottom: '24px', 
         display: 'flex', 
-        justify: 'space-between', 
+        justifyContent: 'space-between', 
         alignItems: 'center',
         position: 'sticky',
-        top: '10px',
+        top: '12px',
         zIndex: 100,
-        backdropFilter: 'blur(16px)',
-        background: 'rgba(7, 10, 18, 0.92)',
-        border: '1px solid rgba(0, 243, 255, 0.3)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)'
+        borderRadius: '16px'
       }}
     >
       {/* Brand Logo & Name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        <img 
-          src={logoImg} 
-          alt="HImDristi Logo" 
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           style={{ 
-            height: '64px', 
-            width: 'auto', 
-            objectFit: 'contain',
-            cursor: 'pointer'
-          }} 
-        />
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0, 243, 255, 0.08)',
+            padding: '6px',
+            borderRadius: '12px',
+            border: '1px solid rgba(0, 243, 255, 0.3)',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          <img 
+            src={logoImg} 
+            alt="HImDristi Logo" 
+            style={{ 
+              height: '42px', 
+              width: 'auto', 
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 0 8px rgba(0, 243, 255, 0.4))'
+            }} 
+          />
+        </div>
 
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
-            <span style={{ fontSize: '11px', color: '#00f3ff', background: 'rgba(0,243,255,0.1)', padding: '2px 6px', borderRadius: '4px', border: '1px solid #00f3ff', fontWeight: '700', letterSpacing: '0.5px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h1 style={{ fontSize: '18px', fontWeight: '800', color: '#f8fafc', margin: 0, letterSpacing: '-0.3px', fontFamily: 'Space Grotesk' }}>
+              HImDristi <span style={{ color: '#00f3ff', fontWeight: '400', fontSize: '14px' }}>हिम दृष्टि</span>
+            </h1>
+            <span className="neon-badge badge-cyan" style={{ fontSize: '10px', padding: '2px 8px' }}>
               v2.0 LUNAR MISSION
             </span>
           </div>
-          <p style={{ fontSize: '11px', color: '#94a3b8', margin: '3px 0 0 0' }}>
+          <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0 0', fontWeight: '500' }}>
             Multi-Modal Water Ice AI Pipeline & Traversal System
           </p>
         </div>
       </div>
 
       {/* QUICK NAVIGATION HEADER LINKS (DIRECT SCROLL TO SECTIONS IN SEQUENCE) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(15, 23, 42, 0.8)', padding: '4px 8px', borderRadius: '10px', border: '1px solid rgba(0, 243, 255, 0.2)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(7, 12, 24, 0.9)', padding: '4px 6px', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
         <button
           onClick={() => scrollToSection('telemetry-overview')}
-          style={{
-            background: 'transparent',
-            color: '#e2e8f0',
-            border: 'none',
-            padding: '6px 10px',
-            borderRadius: '6px',
-            fontSize: '12px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => { e.target.style.color = '#00f3ff'; e.target.style.background = 'rgba(0, 243, 255, 0.12)'; }}
-          onMouseLeave={(e) => { e.target.style.color = '#e2e8f0'; e.target.style.background = 'transparent'; }}
+          className="glass-button"
+          style={{ padding: '6px 12px', fontSize: '12px', borderRadius: '8px', border: 'none', background: 'transparent' }}
         >
           <Activity size={14} color="#00f3ff" />
           01 Telemetry
@@ -146,22 +146,8 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
 
         <button
           onClick={() => scrollToSection('data-pipeline')}
-          style={{
-            background: 'transparent',
-            color: '#e2e8f0',
-            border: 'none',
-            padding: '6px 10px',
-            borderRadius: '6px',
-            fontSize: '12px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => { e.target.style.color = '#38bdf8'; e.target.style.background = 'rgba(56, 189, 248, 0.12)'; }}
-          onMouseLeave={(e) => { e.target.style.color = '#e2e8f0'; e.target.style.background = 'transparent'; }}
+          className="glass-button"
+          style={{ padding: '6px 12px', fontSize: '12px', borderRadius: '8px', border: 'none', background: 'transparent' }}
         >
           <Database size={14} color="#38bdf8" />
           02 Data Pipeline
@@ -169,22 +155,8 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
 
         <button
           onClick={() => scrollToSection('3d-globe')}
-          style={{
-            background: 'transparent',
-            color: '#e2e8f0',
-            border: 'none',
-            padding: '6px 10px',
-            borderRadius: '6px',
-            fontSize: '12px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => { e.target.style.color = '#10b981'; e.target.style.background = 'rgba(16, 185, 129, 0.12)'; }}
-          onMouseLeave={(e) => { e.target.style.color = '#e2e8f0'; e.target.style.background = 'transparent'; }}
+          className="glass-button"
+          style={{ padding: '6px 12px', fontSize: '12px', borderRadius: '8px', border: 'none', background: 'transparent' }}
         >
           <Compass size={14} color="#10b981" />
           03 3D & AI Detection
@@ -192,22 +164,8 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
 
         <button
           onClick={() => scrollToSection('gps-map')}
-          style={{
-            background: 'transparent',
-            color: '#e2e8f0',
-            border: 'none',
-            padding: '6px 10px',
-            borderRadius: '6px',
-            fontSize: '12px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => { e.target.style.color = '#c084fc'; e.target.style.background = 'rgba(192, 132, 252, 0.12)'; }}
-          onMouseLeave={(e) => { e.target.style.color = '#e2e8f0'; e.target.style.background = 'transparent'; }}
+          className="glass-button"
+          style={{ padding: '6px 12px', fontSize: '12px', borderRadius: '8px', border: 'none', background: 'transparent' }}
         >
           <Navigation size={14} color="#c084fc" />
           04 Tactical GPS Map
@@ -222,38 +180,28 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
             <button
               onClick={handleExportPDF}
               title="Export PDF Mission Report"
+              className="glass-button"
               style={{
                 background: 'rgba(16, 185, 129, 0.15)',
                 color: '#10b981',
-                border: '1px solid #10b981',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
+                borderColor: 'rgba(16, 185, 129, 0.4)',
+                padding: '6px 12px',
+                fontSize: '11px'
               }}
             >
-              <FileText size={13} /> PDF
+              <FileText size={13} /> PDF Report
             </button>
 
             <button
               onClick={handleExportGeoJSON}
               title="Export GeoJSON Route"
+              className="glass-button"
               style={{
                 background: 'rgba(0, 243, 255, 0.15)',
                 color: '#00f3ff',
-                border: '1px solid #00f3ff',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
+                borderColor: 'rgba(0, 243, 255, 0.4)',
+                padding: '6px 12px',
+                fontSize: '11px'
               }}
             >
               <Download size={13} /> GeoJSON
@@ -262,20 +210,21 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
         )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '600' }}>Crater:</label>
+          <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crater:</label>
           <select
             value={selectedTarget}
             onChange={(e) => onSelectTarget(e.target.value)}
             style={{
-              background: 'rgba(15, 23, 42, 0.9)',
+              background: 'rgba(7, 12, 24, 0.95)',
               color: '#00f3ff',
               border: '1px solid rgba(0, 243, 255, 0.4)',
-              padding: '6px 10px',
-              borderRadius: '8px',
-              fontSize: '11px',
-              fontWeight: '600',
+              padding: '6px 12px',
+              borderRadius: '10px',
+              fontSize: '12px',
+              fontWeight: '700',
               outline: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              boxShadow: '0 0 12px rgba(0, 243, 255, 0.15)'
             }}
           >
             {targets.map((t) => (
