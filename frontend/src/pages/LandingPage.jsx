@@ -272,16 +272,20 @@ export default function LandingPage({ isAuthenticated }) {
             borderRadius: '50%',
             overflow: 'hidden',
             position: 'relative',
-            background: '#000',
-            border: '2px solid rgba(56, 189, 248, 0.4)',
-            boxShadow: '0 0 50px rgba(56, 189, 248, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9)'
+            background: 'transparent',
+            boxShadow: '0 0 50px rgba(56, 189, 248, 0.35)'
           }}>
             <iframe
               src="https://solarsystem.nasa.gov/gltf_embed/2366/"
               title="Official NASA 3D Moon Model"
               width="100%"
               height="100%"
-              style={{ border: 'none', background: '#000' }}
+              style={{
+                border: 'none',
+                background: 'transparent',
+                transform: 'scale(1.32)',
+                transformOrigin: 'center center'
+              }}
               allowFullScreen
             />
           </div>
