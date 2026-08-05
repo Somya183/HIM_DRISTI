@@ -1,27 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import TelemetryDashboard from '../components/TelemetryDashboard';
-import Moon3DViewer from '../components/Moon3DViewer';
-import PreprocessingPanel from '../components/PreprocessingPanel';
-import LunarGPSMap from '../components/LunarGPSMap';
+import {
+  Radio, Compass, Cpu, Database, Layers, Activity, Bell, Settings, HelpCircle,
+  User, CheckCircle2, Loader2, ArrowRight, Download, FileText, Play, RotateCcw,
+  Sparkles, ShieldCheck, MapPin, Sliders, ChevronRight
+} from 'lucide-react';
 import StarfieldBackground from '../components/StarfieldBackground';
-import { Compass, Cpu, Activity, Database, Layers, Radio, Globe2, Sparkles } from 'lucide-react';
+import PreprocessingPanel from '../components/PreprocessingPanel';
+import Moon3DViewer from '../components/Moon3DViewer';
+import LunarGPSMap from '../components/LunarGPSMap';
+import TelemetryDashboard from '../components/TelemetryDashboard';
 
 export default function MissionControl({ user, onLogout }) {
   const navigate = useNavigate();
 
+  // Navigation & View States
+  const [topTab, setTopTab] = useState('telemetry'); // 'telemetry', 'map', 'analytics'
+  const [activeStep, setActiveStep] = useState('acquisition'); // 'acquisition', 'preprocessing', 'extraction', 'detection', 'decision'
   const [selectedTarget, setSelectedTarget] = useState('shackleton');
+
+  // Execution & Pipeline States
+  const [pipelineStatus, setPipelineStatus] = useState({
+    acquisition: 'complete',
+    preprocessing: 'processing', // 'pending', 'processing', 'complete'
+    extraction: 'pending',
+    detection: 'pending',
+    decision: 'pending'
+  });
+
+  const [scanProgress, setScanProgress] = useState(45);
+  const [isExecuting, setIsExecuting] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogout = () => {
-    onLogout();
-    navigate('/');
-  };
-
+  // Fetch analysis data from backend
   const fetchAnalysis = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch('http://127.0.0.1:5000/api/analyze', {
         method: 'POST',
@@ -34,38 +46,56 @@ export default function MissionControl({ user, onLogout }) {
       }
     } catch (err) {
       console.error("Backend API Connection Error:", err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const handleUploadCustomFile = async (file) => {
-    if (!file) return;
-    setIsLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
+  const handleExecuteScan = () => {
+    if (isExecuting) return;
+    setIsExecuting(true);
 
-      const [response] = await Promise.all([
-        fetch('http://127.0.0.1:5000/api/upload', {
-          method: 'POST',
-          body: formData
-        }),
-        new Promise((resolve) => setTimeout(resolve, 2500))
-      ]);
+    // Step 1: Preprocessing
+    setPipelineStatus({
+      acquisition: 'complete',
+      preprocessing: 'processing',
+      extraction: 'pending',
+      detection: 'pending',
+      decision: 'pending'
+    });
+    setScanProgress(25);
 
-      const data = await response.json();
-      if (data.status === 'success') {
-        setAnalysisData(data);
-      } else {
-        alert("Upload Processing Error: " + data.message);
-      }
-    } catch (err) {
-      console.error("Custom Image Upload Error:", err);
-      alert("Failed to connect to backend server for image preprocessing.");
-    } finally {
-      setIsLoading(false);
-    }
+    setTimeout(() => {
+      // Step 2: Feature Extraction
+      setPipelineStatus(prev => ({ ...prev, preprocessing: 'complete', extraction: 'processing' }));
+      setScanProgress(55);
+
+      setTimeout(() => {
+        // Step 3: AI Detection
+        setPipelineStatus(prev => ({ ...prev, extraction: 'complete', detection: 'processing' }));
+        setScanProgress(85);
+
+        setTimeout(() => {
+          // Step 4: Decision & Complete
+          setPipelineStatus({
+            acquisition: 'complete',
+            preprocessing: 'complete',
+            extraction: 'complete',
+            detection: 'complete',
+            decision: 'complete'
+          });
+          setScanProgress(100);
+          setIsExecuting(false);
+          fetchAnalysis();
+        }, 1200);
+      }, 1000);
+    }, 1000);
+  };
+
+  const handleDownloadPDF = () => {
+    alert("Generating official HImDristi Lunar Ops Command Mission Report (PDF)...");
+  };
+
+  const handleExportCSV = () => {
+    alert("Exporting raw DFSAR Radar CPR & Water Ice Inventory Data (CSV)...");
   };
 
   useEffect(() => {
@@ -74,213 +104,585 @@ export default function MissionControl({ user, onLogout }) {
   }, [selectedTarget]);
 
   return (
-    <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '20px', position: 'relative', color: '#f8fafc' }}>
-      {/* 3D ANIMATED MOVING STARS BACKGROUND */}
+    <div style={{
+      minHeight: '100vh',
+      width: '100%',
+      background: '#040711',
+      color: '#ffffff',
+      fontFamily: "'Outfit', sans-serif",
+      position: 'relative',
+      overflowX: 'hidden',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {/* 3D STARFIELD BACKGROUND */}
       <StarfieldBackground />
 
-      {/* MISSION COMMAND HEADER NAVBAR */}
-      <Navbar
-        selectedTarget={selectedTarget}
-        onSelectTarget={setSelectedTarget}
-        onRunAnalysis={fetchAnalysis}
-        isAnalyzing={isLoading}
-        analysisData={analysisData}
-        user={user}
-        onLogout={handleLogout}
-      />
-
-      {/* SECTION 01: EXECUTIVE MISSION TELEMETRY & MODEL ACCURACY DASHBOARD */}
-      <div id="telemetry-overview" style={{ marginBottom: '28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '10px', fontWeight: '800', color: '#00f3ff', letterSpacing: '1.5px', background: 'rgba(0, 243, 255, 0.12)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0, 243, 255, 0.4)', fontFamily: 'Orbitron' }}>
-              01 // HUD
-            </span>
-            <h2 style={{ fontSize: '16px', fontWeight: '700', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '-0.2px', fontFamily: 'Space Grotesk' }}>
-              <Activity size={18} color="#00f3ff" /> EXECUTIVE MISSION TELEMETRY & AI METRICS
-            </h2>
-          </div>
-          <span className="neon-badge badge-cyan" style={{ fontSize: '10px' }}>
-            <Radio size={12} className="pulse-glow" style={{ marginRight: '4px' }} /> LIVE TELEMETRY STREAM
-          </span>
-        </div>
-
-        <TelemetryDashboard
-          metrics={analysisData?.metrics}
-          landingSite={analysisData?.landing_site}
-          roverPath={analysisData?.rover_path}
-        />
-      </div>
-
-      {/* SECTION 02: MULTI-MODAL DATA INTAKE & PREPROCESSING PIPELINE */}
-      <div id="data-pipeline" style={{ marginBottom: '28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '10px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1.5px', background: 'rgba(56, 189, 248, 0.12)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(56, 189, 248, 0.4)', fontFamily: 'Orbitron' }}>
-              02 // PIPELINE
-            </span>
-            <h2 style={{ fontSize: '16px', fontWeight: '700', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '-0.2px', fontFamily: 'Space Grotesk' }}>
-              <Database size={18} color="#38bdf8" /> MULTI-MODAL SENSOR INGESTION & DATA PREPROCESSING
-            </h2>
-          </div>
-          <span className="neon-badge badge-green" style={{ fontSize: '10px' }}>
-            LROC + DFSAR + DEM PIPELINE
-          </span>
-        </div>
-
-        <div id="upload-data">
-          <PreprocessingPanel
-            images={analysisData?.images}
-            onRunAnalysis={fetchAnalysis}
-            onUploadCustomFile={handleUploadCustomFile}
-            isAnalyzing={isLoading}
-          />
-        </div>
-      </div>
-
-      {/* SECTION 03: 3D INTERACTIVE LUNAR GLOBE & AI WATER ICE HEATMAP */}
-      <div id="3d-globe" style={{ marginBottom: '28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '10px', fontWeight: '800', color: '#00ff9d', letterSpacing: '1.5px', background: 'rgba(0, 255, 157, 0.12)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0, 255, 157, 0.4)', fontFamily: 'Orbitron' }}>
-              03 // VIEWPORT
-            </span>
-            <h2 style={{ fontSize: '16px', fontWeight: '700', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '-0.2px', fontFamily: 'Space Grotesk' }}>
-              <Globe2 size={18} color="#00ff9d" /> 3D LUNAR SURFACE ROTATION & UNET CONFIDENCE HEATMAP
-            </h2>
-          </div>
-          <span className="neon-badge badge-green" style={{ fontSize: '10px' }}>
-            PYTORCH UNET FUSION MODEL ACTIVE
-          </span>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          {/* LEFT PANEL: INTERACTIVE 3D MOON & ROVER PATH MAP */}
-          <div className="hud-card" style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <h3 style={{ fontSize: '15px', color: '#00f3ff', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, fontFamily: 'Space Grotesk' }}>
-                <Compass size={18} /> 3D Interactive Lunar Globe & Traversal Map
-              </h3>
-              <span className="neon-badge badge-green">LIVE 3D RENDER</span>
-            </div>
-
-            <Moon3DViewer
-              selectedTarget={selectedTarget}
-              targetInfo={analysisData?.target}
-              iceGrid={analysisData?.ice_grid}
-              landingSite={analysisData?.landing_site}
-              roverPath={analysisData?.rover_path}
-            />
-          </div>
-
-          {/* RIGHT PANEL: AI ICE CONFIDENCE HEATMAP & RESULTS */}
-          <div className="hud-card" style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <h3 style={{ fontSize: '15px', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, fontFamily: 'Space Grotesk' }}>
-                <Cpu size={18} /> AI Water Ice Deposit Confidence Map
-              </h3>
-              <span className="neon-badge badge-cyan">DEEP UNET TENSOR SEGMENTATION</span>
-            </div>
-
-            <div style={{ width: '100%', height: '360px', borderRadius: '12px', overflow: 'hidden', background: '#020408', border: '1px solid rgba(0, 243, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-              {analysisData?.images?.results?.ice_confidence ? (
-                <img
-                  src={analysisData.images.results.ice_confidence}
-                  alt="AI Ice Confidence Map"
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                />
-              ) : (
-                <span style={{ fontSize: '12px', color: '#64748b' }}>Analyzing Multi-Modal Tensors...</span>
-              )}
-
-              {/* Color Legend Bar */}
-              <div style={{
-                position: 'absolute',
-                bottom: '10px',
-                left: '10px',
-                right: '10px',
-                background: 'rgba(6, 10, 20, 0.9)',
-                padding: '8px 14px',
-                borderRadius: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                fontSize: '10px',
-                color: '#cbd5e1',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(0, 243, 255, 0.2)',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.6)'
-              }}>
-                <span>Low Probability (0%)</span>
-                <div style={{ width: '160px', height: '8px', borderRadius: '4px', background: 'linear-gradient(to right, #000080, #00ffff, #00ff00, #ffff00, #ff0000)' }}></div>
-                <span style={{ color: '#00f3ff', fontWeight: 'bold' }}>High Ice Confidence (100%)</span>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '12px' }}>
-              <div style={{ background: 'rgba(6, 10, 20, 0.7)', padding: '12px', borderRadius: '10px', border: '1px solid rgba(0, 243, 255, 0.25)' }}>
-                <span style={{ color: '#94a3b8', fontWeight: '500' }}>High Confidence Area:</span>
-                <strong style={{ color: '#00f3ff', display: 'block', fontSize: '16px', marginTop: '3px', fontFamily: 'Space Grotesk' }}>
-                  {analysisData?.metrics?.high_probability_area_km2 || '8.54'} km²
-                </strong>
-              </div>
-              <div style={{ background: 'rgba(6, 10, 20, 0.7)', padding: '12px', borderRadius: '10px', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
-                <span style={{ color: '#94a3b8', fontWeight: '500' }}>Estimated Subsurface Mass:</span>
-                <strong style={{ color: '#38bdf8', display: 'block', fontSize: '16px', marginTop: '3px', fontFamily: 'Space Grotesk' }}>
-                  {analysisData?.metrics?.estimated_ice_mass_tonnes ? (analysisData.metrics.estimated_ice_mass_tonnes / 1e6).toFixed(2) + " Million Tonnes" : "0.04 Million Tonnes"}
-                </strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 04: FULL INTERACTIVE 2D AI LUNAR GPS MAP & LOCATION ANALYSIS PANEL */}
-      <div id="gps-map" style={{ marginBottom: '28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '10px', fontWeight: '800', color: '#c084fc', letterSpacing: '1.5px', background: 'rgba(192, 132, 252, 0.12)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(192, 132, 252, 0.4)', fontFamily: 'Orbitron' }}>
-              04 // TRAVERSAL
-            </span>
-            <h2 style={{ fontSize: '16px', fontWeight: '700', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '-0.2px', fontFamily: 'Space Grotesk' }}>
-              <Layers size={18} color="#c084fc" /> TACTICAL LUNAR GPS NAVIGATION & WATER ICE INVENTORY
-            </h2>
-          </div>
-          <span className="neon-badge badge-purple" style={{ fontSize: '10px' }}>
-            MULTILAYERED SUB-METRIC TACTICAL GPS
-          </span>
-        </div>
-
-        <LunarGPSMap
-          analysisData={analysisData}
-          selectedTarget={selectedTarget}
-        />
-      </div>
-
-      {/* SPACE MISSION CONTROL FOOTER CONSOLE */}
-      <footer className="hud-card" style={{
-        padding: '14px 24px',
+      {/* TOP HEADER: LUNAR OPS COMMAND */}
+      <header style={{
+        height: '64px',
+        padding: '0 32px',
+        background: '#070b16',
+        borderBottom: '1px solid rgba(0, 243, 255, 0.2)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        fontSize: '11px',
-        color: '#64748b',
-        borderTop: '1px solid rgba(0, 243, 255, 0.3)'
+        position: 'relative',
+        zIndex: 30
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#00f3ff', fontFamily: 'Orbitron', fontSize: '11px', fontWeight: '700' }}>
-            <Sparkles size={13} /> HImDristi v2.0 Mission Control
-          </span>
-          <span>Target: <strong style={{ color: '#cbd5e1', fontFamily: 'JetBrains Mono' }}>{selectedTarget.toUpperCase()} CRATER</strong></span>
-          <span>Frame: <strong style={{ color: '#cbd5e1', fontFamily: 'JetBrains Mono' }}>MOON ME / PA-454</strong></span>
+        {/* BRAND TITLE */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+          <h1 style={{
+            fontSize: '24px',
+            fontWeight: '900',
+            fontFamily: "'Space Grotesk', sans-serif",
+            color: '#00f3ff',
+            letterSpacing: '1px',
+            margin: 0,
+            textTransform: 'uppercase'
+          }}>
+            LUNAR OPS COMMAND
+          </h1>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-          <span>CUDA Acceleration: <strong style={{ color: '#00ff9d' }}>ACTIVE</strong></span>
-          <span>Backend Latency: <strong style={{ color: '#00f3ff' }}>14ms</strong></span>
-          <span>© 2026 HImDristi AI Space Intelligence</span>
+        {/* CENTER TABS */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '100%' }}>
+          {[
+            { id: 'telemetry', label: 'Telemetry' },
+            { id: 'map', label: 'Map View' },
+            { id: 'analytics', label: 'Analytics' }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setTopTab(tab.id)}
+              style={{
+                height: '100%',
+                padding: '0 24px',
+                background: 'transparent',
+                border: 'none',
+                borderBottom: topTab === tab.id ? '2px solid #00f3ff' : '2px solid transparent',
+                color: topTab === tab.id ? '#ffffff' : '#94a3b8',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* RIGHT SYSTEM UTILITIES & PROFILE */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', color: '#94a3b8' }}>
+          <Bell size={18} style={{ cursor: 'pointer' }} />
+          <Settings size={18} style={{ cursor: 'pointer' }} />
+          <HelpCircle size={18} style={{ cursor: 'pointer' }} />
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            background: 'rgba(0, 243, 255, 0.15)',
+            border: '1px solid rgba(0, 243, 255, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#00f3ff',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            cursor: 'pointer'
+          }}>
+            <User size={16} />
+          </div>
         </div>
-      </footer>
+      </header>
+
+      {/* MAIN THREE-COLUMN LUNAR OPS DASHBOARD */}
+      <div style={{
+        flex: 1,
+        display: 'grid',
+        gridTemplateColumns: '260px 1fr 340px',
+        gap: '1px',
+        background: 'rgba(0, 243, 255, 0.12)',
+        position: 'relative',
+        zIndex: 10
+      }}>
+        {/* LEFT COLUMN: SIDEBAR MENU & PIPELINE STAGES */}
+        <aside style={{
+          background: '#070b16',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          borderRight: '1px solid rgba(0, 243, 255, 0.15)'
+        }}>
+          <div>
+            {/* MISSION HEADER BOX */}
+            <div style={{
+              background: 'rgba(11, 18, 36, 0.8)',
+              border: '1px solid rgba(0, 243, 255, 0.25)',
+              borderRadius: '10px',
+              padding: '14px',
+              marginBottom: '24px'
+            }}>
+              <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#ffffff', margin: 0, fontFamily: "'Space Grotesk', sans-serif" }}>
+                MISSION LUNAR-ICE
+              </h3>
+              <span style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginTop: '4px' }}>
+                Sector: South Pole-Aitken
+              </span>
+            </div>
+
+            {/* PIPELINE NAVIGATION ITEMS */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {[
+                { id: 'acquisition', label: 'Data Acquisition', icon: Radio },
+                { id: 'preprocessing', label: 'Preprocessing', icon: Sliders },
+                { id: 'extraction', label: 'Feature Extraction', icon: Activity },
+                { id: 'detection', label: 'AI Detection', icon: Cpu },
+                { id: 'decision', label: 'Mission Decision', icon: Compass }
+              ].map(item => {
+                const IconComponent = item.icon;
+                const isActive = activeStep === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveStep(item.id)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '12px 14px',
+                      borderRadius: '8px',
+                      background: isActive ? '#00f3ff' : 'transparent',
+                      color: isActive ? '#040711' : '#94a3b8',
+                      border: 'none',
+                      fontSize: '13px',
+                      fontWeight: isActive ? '800' : '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <IconComponent size={17} color={isActive ? '#040711' : '#94a3b8'} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* BOTTOM ACTIONS */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <button
+              onClick={handleExecuteScan}
+              disabled={isExecuting}
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: 'rgba(0, 243, 255, 0.12)',
+                border: '1px solid #00f3ff',
+                color: '#00f3ff',
+                borderRadius: '6px',
+                fontSize: '12px',
+                fontWeight: '800',
+                letterSpacing: '1px',
+                fontFamily: 'JetBrains Mono',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                textTransform: 'uppercase',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {isExecuting ? <Loader2 size={16} className="animate-spin" /> : <Play size={15} />}
+              {isExecuting ? 'SCANNING...' : 'EXECUTE SCAN'}
+            </button>
+
+            <button
+              onClick={handleDownloadPDF}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#94a3b8',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                padding: '6px 0'
+              }}
+            >
+              <Download size={14} /> Export Reports
+            </button>
+
+            <button
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#94a3b8',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                padding: '6px 0'
+              }}
+            >
+              <Settings size={14} /> System Status
+            </button>
+          </div>
+        </aside>
+
+        {/* CENTER COLUMN: MAIN VIEWPORT & ACTIONABLE OUTPUTS */}
+        <main style={{
+          background: '#040711',
+          padding: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px',
+          overflowY: 'auto'
+        }}>
+          {/* TOP STATUS BADGES */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(0, 243, 255, 0.12)',
+              border: '1px solid rgba(0, 243, 255, 0.35)',
+              padding: '6px 14px',
+              borderRadius: '6px',
+              fontSize: '11px',
+              fontWeight: '800',
+              color: '#00f3ff',
+              fontFamily: 'JetBrains Mono'
+            }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00f3ff' }} className="pulse-glow" />
+              SYS_ON_LINE
+            </div>
+
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              padding: '6px 14px',
+              borderRadius: '6px',
+              fontSize: '11px',
+              fontWeight: '700',
+              color: '#cbd5e1',
+              fontFamily: 'JetBrains Mono'
+            }}>
+              <MapPin size={13} color="#38bdf8" /> COORD: -89.9°S, 180.0°E
+            </div>
+          </div>
+
+          {/* MAIN VIEWPORT PANEL */}
+          <div style={{
+            flex: 1,
+            minHeight: '420px',
+            background: '#070b16',
+            border: '1px solid rgba(0, 243, 255, 0.25)',
+            borderRadius: '12px',
+            padding: '20px',
+            position: 'relative'
+          }}>
+            {topTab === 'telemetry' && (
+              <div>
+                {activeStep === 'acquisition' || activeStep === 'preprocessing' ? (
+                  <PreprocessingPanel
+                    images={analysisData?.images}
+                    onRunAnalysis={fetchAnalysis}
+                    isAnalyzing={isExecuting}
+                  />
+                ) : activeStep === 'detection' ? (
+                  <Moon3DViewer
+                    selectedTarget={selectedTarget}
+                    targetInfo={analysisData?.target}
+                    iceGrid={analysisData?.ice_grid}
+                  />
+                ) : (
+                  <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
+                )}
+              </div>
+            )}
+
+            {topTab === 'map' && (
+              <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
+            )}
+
+            {topTab === 'analytics' && (
+              <TelemetryDashboard
+                metrics={analysisData?.metrics}
+                landingSite={analysisData?.landing_site}
+                roverPath={analysisData?.rover_path}
+              />
+            )}
+          </div>
+
+          {/* BOTTOM SECTION: ACTIONABLE OUTPUTS */}
+          <div>
+            <h3 style={{
+              fontSize: '12px',
+              fontWeight: '800',
+              color: '#38bdf8',
+              letterSpacing: '1px',
+              fontFamily: 'JetBrains Mono',
+              marginBottom: '14px',
+              textTransform: 'uppercase'
+            }}>
+              ACTIONABLE OUTPUTS
+            </h3>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+              {/* CARD 1: FINAL ICE PROBABILITY MAP */}
+              <div style={{
+                background: '#070b16',
+                border: '1px solid rgba(0, 243, 255, 0.35)',
+                borderRadius: '10px',
+                padding: '16px',
+                position: 'relative'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <Layers size={18} color="#00f3ff" />
+                  <span style={{ fontSize: '10px', fontWeight: '800', color: scanProgress === 100 ? '#00ff9d' : '#00f3ff', fontFamily: 'JetBrains Mono' }}>
+                    {scanProgress === 100 ? 'COMPLETE' : 'GENERATING'}
+                  </span>
+                </div>
+                <h4 style={{ fontSize: '13px', fontWeight: '700', margin: '0 0 12px 0' }}>
+                  Final Ice Probability Map
+                </h4>
+                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                  <div style={{ width: `${scanProgress}%`, height: '100%', background: '#00f3ff', transition: 'width 0.5s ease' }} />
+                </div>
+              </div>
+
+              {/* CARD 2: SAFE LANDING SITE MAP */}
+              <div style={{
+                background: '#070b16',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '10px',
+                padding: '16px',
+                position: 'relative'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <Compass size={18} color="#94a3b8" />
+                  <span style={{ fontSize: '10px', fontWeight: '800', color: pipelineStatus.decision === 'complete' ? '#00ff9d' : '#64748b', fontFamily: 'JetBrains Mono' }}>
+                    {pipelineStatus.decision === 'complete' ? 'COMPLETE' : 'PENDING'}
+                  </span>
+                </div>
+                <h4 style={{ fontSize: '13px', fontWeight: '700', margin: 0, color: pipelineStatus.decision === 'complete' ? '#ffffff' : '#94a3b8' }}>
+                  Safe Landing Site Map
+                </h4>
+              </div>
+
+              {/* CARD 3: ROVER PATH PLAN */}
+              <div style={{
+                background: '#070b16',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '10px',
+                padding: '16px',
+                position: 'relative'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <Activity size={18} color="#94a3b8" />
+                  <span style={{ fontSize: '10px', fontWeight: '800', color: pipelineStatus.decision === 'complete' ? '#00ff9d' : '#64748b', fontFamily: 'JetBrains Mono' }}>
+                    {pipelineStatus.decision === 'complete' ? 'COMPLETE' : 'PENDING'}
+                  </span>
+                </div>
+                <h4 style={{ fontSize: '13px', fontWeight: '700', margin: 0, color: pipelineStatus.decision === 'complete' ? '#ffffff' : '#94a3b8' }}>
+                  Rover Path Plan
+                </h4>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* RIGHT COLUMN: AUTOMATED PIPELINE STATUS */}
+        <aside style={{
+          background: '#070b16',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          borderLeft: '1px solid rgba(0, 243, 255, 0.15)'
+        }}>
+          <div>
+            <h3 style={{
+              fontSize: '12px',
+              fontWeight: '800',
+              color: '#38bdf8',
+              letterSpacing: '1px',
+              fontFamily: 'JetBrains Mono',
+              marginBottom: '20px',
+              textTransform: 'uppercase'
+            }}>
+              AUTOMATED PIPELINE STATUS
+            </h3>
+
+            {/* TIMELINE STEPS */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* STAGE 1: DATA ACQUISITION */}
+              <div style={{ position: 'relative', paddingLeft: '24px' }}>
+                <div style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: '4px',
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  background: '#00f3ff',
+                  boxShadow: '0 0 10px #00f3ff'
+                }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <h4 style={{ fontSize: '12px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
+                    DATA ACQUISITION
+                  </h4>
+                  <span style={{ fontSize: '10px', fontWeight: '800', color: '#00ff9d', fontFamily: 'JetBrains Mono' }}>
+                    COMPLETE
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {['OPTICAL', 'RADAR', 'DEM', 'SHADOW MAP'].map(tag => (
+                    <span key={tag} style={{
+                      fontSize: '9px',
+                      fontWeight: '700',
+                      background: 'rgba(255,255,255,0.06)',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      padding: '3px 8px',
+                      borderRadius: '4px',
+                      color: '#cbd5e1'
+                    }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* STAGE 2: DATA PREPROCESSING */}
+              <div style={{ position: 'relative', paddingLeft: '24px' }}>
+                <div style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: '4px',
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  background: pipelineStatus.preprocessing === 'complete' ? '#00ff9d' : '#f59e0b',
+                  boxShadow: '0 0 10px #f59e0b'
+                }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <h4 style={{ fontSize: '12px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
+                    DATA PREPROCESSING
+                  </h4>
+                  <span style={{ fontSize: '10px', fontWeight: '800', color: pipelineStatus.preprocessing === 'complete' ? '#00ff9d' : '#f59e0b', fontFamily: 'JetBrains Mono' }}>
+                    {pipelineStatus.preprocessing.toUpperCase()}
+                  </span>
+                </div>
+                <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '11px', color: '#94a3b8', lineHeight: '1.6' }}>
+                  <li>Normalization</li>
+                  <li>Data Alignment</li>
+                  <li style={{ color: '#f59e0b', fontWeight: '600' }}>Radiometric Calibration</li>
+                  <li>Noise Filtering</li>
+                </ul>
+              </div>
+
+              {/* STAGE 3: FEATURE EXTRACTION */}
+              <div style={{ position: 'relative', paddingLeft: '24px' }}>
+                <div style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: '4px',
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  background: pipelineStatus.extraction === 'complete' ? '#00ff9d' : '#475569'
+                }} />
+                <h4 style={{ fontSize: '12px', fontWeight: '800', margin: '0 0 4px 0', color: pipelineStatus.extraction === 'complete' ? '#ffffff' : '#64748b' }}>
+                  FEATURE EXTRACTION
+                </h4>
+                <p style={{ fontSize: '11px', color: '#64748b', margin: 0 }}>
+                  {pipelineStatus.extraction === 'complete' ? 'Extracted 128-PPD high CPR features.' : 'Pending prior step completion.'}
+                </p>
+              </div>
+
+              {/* STAGE 4: AI DETECTION & DECISION */}
+              <div style={{ position: 'relative', paddingLeft: '24px' }}>
+                <div style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: '4px',
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  background: pipelineStatus.decision === 'complete' ? '#00ff9d' : '#475569'
+                }} />
+                <h4 style={{ fontSize: '12px', fontWeight: '800', margin: '0 0 4px 0', color: pipelineStatus.decision === 'complete' ? '#ffffff' : '#64748b' }}>
+                  AI DETECTION & DECISION
+                </h4>
+                <p style={{ fontSize: '11px', color: '#64748b', margin: 0 }}>
+                  {pipelineStatus.decision === 'complete' ? 'UNet segmentation & A* traversal ready.' : 'Pending prior step completion.'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* BOTTOM EXPORT ACTION BUTTONS */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <button
+              onClick={handleDownloadPDF}
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: 'rgba(255, 255, 255, 0.06)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: '800',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                textTransform: 'uppercase',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Download size={14} /> DOWNLOAD REPORTS (PDF)
+            </button>
+
+            <button
+              onClick={handleExportCSV}
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: '#94a3b8',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: '800',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                textTransform: 'uppercase',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <FileText size={14} /> EXPORT RAW CSV
+            </button>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
