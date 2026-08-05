@@ -286,47 +286,7 @@ export default function LandingPage({ isAuthenticated }) {
             />
           </div>
 
-          {/* FLOATING SCANNING SECTOR WIDGET (EXACTLY MATCHING USER IMAGE) */}
-          <div
-            className="hud-card"
-            style={{
-              position: 'absolute',
-              top: '40%',
-              left: '10%',
-              transform: 'translateY(-50%)',
-              background: 'rgba(9, 15, 30, 0.92)',
-              border: '1px solid rgba(56, 189, 248, 0.4)',
-              padding: '16px 24px',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '14px',
-              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.3)',
-              backdropFilter: 'blur(16px)',
-              zIndex: 30
-            }}
-          >
-            <div style={{
-              padding: '10px',
-              background: 'rgba(56, 189, 248, 0.15)',
-              borderRadius: '8px',
-              border: '1px solid rgba(56, 189, 248, 0.4)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <Target size={22} color="#38bdf8" className="spin" />
-            </div>
 
-            <div>
-              <div style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', letterSpacing: '1px', fontFamily: 'JetBrains Mono' }}>
-                SECTOR 76
-              </div>
-              <div style={{ fontSize: '13px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1.5px', fontFamily: 'JetBrains Mono', marginTop: '2px' }}>
-                SCANNING...
-              </div>
-            </div>
-          </div>
         </div>
       </main>
 
