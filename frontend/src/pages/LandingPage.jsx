@@ -255,24 +255,24 @@ export default function LandingPage({ isAuthenticated }) {
           {/* Ambient Moonlight Halo */}
           <div style={{
             position: 'absolute',
-            width: '560px',
-            height: '560px',
+            width: '580px',
+            height: '580px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, rgba(0, 243, 255, 0.1) 50%, transparent 70%)',
-            filter: 'blur(55px)',
+            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.32) 0%, rgba(0, 243, 255, 0.12) 50%, transparent 70%)',
+            filter: 'blur(60px)',
             pointerEvents: 'none'
           }} />
 
           {/* NASA 3D Moon Model Orb Container (Floating 3D Sphere with Deep Shadow) */}
           <div className="float-moon" style={{
-            width: '460px',
-            height: '460px',
+            width: '480px',
+            height: '480px',
             borderRadius: '50%',
             overflow: 'hidden',
             position: 'relative',
             background: '#000',
-            border: '1px solid rgba(0, 243, 255, 0.6)',
-            boxShadow: '0 25px 80px rgba(0, 0, 0, 0.95), 0 0 55px rgba(56, 189, 248, 0.55), 0 0 110px rgba(0, 243, 255, 0.3)'
+            border: '1px solid rgba(0, 243, 255, 0.5)',
+            boxShadow: '0 30px 90px rgba(0, 0, 0, 0.98), 0 0 60px rgba(0, 243, 255, 0.45), inset 0 0 40px rgba(0, 0, 0, 0.85)'
           }}>
             <iframe
               src="https://solarsystem.nasa.gov/gltf_embed/2366/"
@@ -296,7 +296,7 @@ export default function LandingPage({ isAuthenticated }) {
               right: 0,
               bottom: 0,
               borderRadius: '50%',
-              background: 'radial-gradient(circle at 35% 35%, transparent 45%, rgba(4, 7, 17, 0.4) 75%, rgba(4, 7, 17, 0.8) 100%)',
+              background: 'radial-gradient(circle at 28% 28%, transparent 30%, rgba(2, 4, 11, 0.35) 60%, rgba(2, 4, 11, 0.75) 85%, rgba(2, 4, 11, 0.92) 100%)',
               pointerEvents: 'none'
             }} />
           </div>
