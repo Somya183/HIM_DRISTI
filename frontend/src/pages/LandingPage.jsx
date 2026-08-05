@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 import StarfieldBackground from '../components/StarfieldBackground';
-import ThreeMoonGlobe from '../components/ThreeMoonGlobe';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
@@ -251,29 +250,43 @@ export default function LandingPage({ isAuthenticated }) {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: 3D INTERACTIVE WEBGL MOON GLOBE */}
+        {/* RIGHT COLUMN: OFFICIAL NASA 3D INTERACTIVE MOON MODEL */}
         <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           {/* Ambient Moonlight Halo */}
           <div style={{
             position: 'absolute',
-            width: '520px',
-            height: '520px',
+            width: '540px',
+            height: '540px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(0, 243, 255, 0.08) 50%, transparent 70%)',
             filter: 'blur(50px)',
             pointerEvents: 'none'
           }} />
 
-          {/* Real 3D WebGL Moon Sphere */}
+          {/* NASA 3D Moon Model Orb Container */}
           <div style={{
             width: '460px',
             height: '460px',
             borderRadius: '50%',
+            overflow: 'hidden',
             position: 'relative',
             background: 'transparent',
-            filter: 'drop-shadow(0 0 35px rgba(0, 243, 255, 0.45))'
+            border: '1px solid rgba(0, 243, 255, 0.45)',
+            boxShadow: '0 0 45px rgba(56, 189, 248, 0.4), 0 0 90px rgba(0, 243, 255, 0.2)'
           }}>
-            <ThreeMoonGlobe width="460px" height="460px" />
+            <iframe
+              src="https://solarsystem.nasa.gov/gltf_embed/2366/"
+              title="Official NASA 3D Moon Model"
+              width="100%"
+              height="100%"
+              style={{
+                border: 'none',
+                background: 'transparent',
+                transform: 'scale(1.36)',
+                transformOrigin: 'center center'
+              }}
+              allowFullScreen
+            />
           </div>
         </div>
       </main>
