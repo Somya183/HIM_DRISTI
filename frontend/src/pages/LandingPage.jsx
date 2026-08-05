@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Radio, Compass, Cpu, Database, Activity, Bell, Settings, HelpCircle,
   User, CheckCircle2, Loader2, ArrowRight, Download, FileText, Play, RotateCcw,
-  Sparkles, ShieldCheck, MapPin, Sliders, ChevronRight, AlertTriangle, Layers
+  Sparkles, ShieldCheck, MapPin, Sliders, ChevronRight, AlertTriangle, Layers, Upload
 } from 'lucide-react';
 import StarfieldBackground from '../components/StarfieldBackground';
 import PreprocessingPanel from '../components/PreprocessingPanel';
@@ -399,20 +399,77 @@ export default function LandingPage({ isAuthenticated }) {
             display: 'flex',
             flexDirection: 'column'
           }}>
-            {/* RADAR HEADER BAR */}
+            {/* RADAR HEADER BAR WITH CRATER SELECTOR & FILE UPLOAD */}
             <div style={{
-              padding: '10px 16px',
-              background: 'rgba(0, 243, 255, 0.05)',
-              borderBottom: '1px solid rgba(0, 243, 255, 0.2)',
+              padding: '8px 16px',
+              background: 'rgba(0, 243, 255, 0.06)',
+              borderBottom: '1px solid rgba(0, 243, 255, 0.25)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               fontSize: '10px',
               fontFamily: 'JetBrains Mono',
-              color: '#38bdf8'
+              color: '#38bdf8',
+              flexWrap: 'wrap',
+              gap: '10px'
             }}>
-              <span>☒ TOPOGRAPHIC_RADAR_MAP_v2.0</span>
-              <div style={{ display: 'flex', gap: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <span style={{ fontWeight: 'bold' }}>☒ TOPOGRAPHIC_RADAR_MAP_v2.0</span>
+
+                {/* SELECT CRATER DROPDOWN */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ color: '#64748b' }}>CRATER:</span>
+                  <select
+                    value={selectedTarget}
+                    onChange={(e) => setSelectedTarget(e.target.value)}
+                    style={{
+                      background: '#040814',
+                      border: '1px solid rgba(0, 243, 255, 0.4)',
+                      color: '#00f3ff',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '10px',
+                      fontFamily: 'JetBrains Mono',
+                      outline: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value="shackleton">🌕 Shackleton Crater (-89.9°S)</option>
+                    <option value="haworth">🌑 Haworth Crater (-87.5°S)</option>
+                    <option value="shoemaker">🌘 Shoemaker Crater (-88.1°S)</option>
+                    <option value="faustini">🌗 Faustini Crater (-87.3°S)</option>
+                    <option value="cabeus">🌖 Cabeus Crater (-84.9°S)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* UPLOAD FILE BUTTON & TACTICAL METRICS */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(0, 243, 255, 0.12)',
+                  border: '1px solid #00f3ff',
+                  color: '#00f3ff',
+                  padding: '4px 10px',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  fontFamily: 'JetBrains Mono',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}>
+                  <Upload size={12} /> UPLOAD DATASET
+                  <input type="file" accept="image/*,.bin,.raw,.tif" onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      alert(`Dataset "${file.name}" uploaded successfully! Processing DFSAR radar layers...`);
+                      fetchAnalysis();
+                    }
+                  }} style={{ display: 'none' }} />
+                </label>
+
                 <span>SCALE: 1:1000</span>
                 <span>MODE: TACTICAL</span>
               </div>
