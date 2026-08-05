@@ -1,7 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function StarfieldBackground() {
+export default function StarfieldBackground({ isWarpSpeed = false }) {
   const canvasRef = useRef(null);
+  const warpRef = useRef(isWarpSpeed);
+
+  useEffect(() => {
+    warpRef.current = isWarpSpeed;
+  }, [isWarpSpeed]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,12 +24,10 @@ export default function StarfieldBackground() {
 
     window.addEventListener('resize', handleResize);
 
-    // 3D Star Density Boost (1,200 Stars for dense space coverage)
-    const numStars = 1200;
+    const numStars = 1400;
     const stars = [];
     const focalLength = width;
 
-    // Mouse tracking for parallax tilt
     let mouseX = width / 2;
     let mouseY = height / 2;
     let targetMouseX = width / 2;
@@ -37,21 +40,19 @@ export default function StarfieldBackground() {
 
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Color palette for realistic & vibrant star spectrum
     const starColors = [
       '#ffffff', '#ffffff', '#ffffff', 
       '#00f3ff', '#38bdf8', '#7dd3fc', 
       '#bae6fd', '#fef08a', '#e0f2fe'
     ];
 
-    // Initialize 1,200 3D Stars with multi-layered speed & depth
     for (let i = 0; i < numStars; i++) {
       stars.push({
-        x: (Math.random() - 0.5) * width * 3,
-        y: (Math.random() - 0.5) * height * 3,
+        x: (Math.random() - 0.5) * width * 3.5,
+        y: (Math.random() - 0.5) * height * 3.5,
         z: Math.random() * width * 1.2,
         size: Math.random() * 1.8 + 0.3,
-        speed: Math.random() * 1.8 + 0.6,
+        speed: Math.random() * 1.8 + 0.8,
         baseAlpha: Math.random() * 0.8 + 0.2,
         twinkleSpeed: Math.random() * 0.04 + 0.01,
         twinkleFactor: Math.random() * Math.PI * 2,
@@ -59,20 +60,33 @@ export default function StarfieldBackground() {
       });
     }
 
-    // Render loop
+    let currentWarpMult = 1.0;
+
     const render = () => {
-      // Smooth mouse interpolation
+      const isWarping = warpRef.current;
+
+      // Smooth Warp Speed Acceleration
+      if (isWarping) {
+        currentWarpMult += (45.0 - currentWarpMult) * 0.08;
+      } else {
+        currentWarpMult += (1.0 - currentWarpMult) * 0.05;
+      }
+
       mouseX += (targetMouseX - mouseX) * 0.04;
       mouseY += (targetMouseY - mouseY) * 0.04;
 
       const offsetX = (mouseX - width / 2) * 0.12;
       const offsetY = (mouseY - height / 2) * 0.12;
 
-      // Deep space background clear
-      ctx.fillStyle = '#02040a';
+      // Deep space background clear (with motion blur trail during warp)
+      if (isWarping) {
+        ctx.fillStyle = 'rgba(2, 4, 10, 0.35)';
+      } else {
+        ctx.fillStyle = '#02040a';
+      }
       ctx.fillRect(0, 0, width, height);
 
-      // Multi-layer deep space galactic nebula glow
+      // Deep Space Galactic Nebula Glow
       const nebula = ctx.createRadialGradient(
         width / 2 + offsetX * 1.5,
         height / 3 + offsetY * 1.5,
@@ -88,42 +102,67 @@ export default function StarfieldBackground() {
       ctx.fillStyle = nebula;
       ctx.fillRect(0, 0, width, height);
 
-      // Render 1,200 3D Stars
+      // Render 1,400 3D Stars
       for (let i = 0; i < numStars; i++) {
         const star = stars[i];
 
-        // Move star forward in 3D space
-        star.z -= star.speed;
+        const prevZ = star.z;
+        const moveSpeed = star.speed * currentWarpMult;
+        star.z -= moveSpeed;
 
-        // Loop star back to distant depth when it passes camera
         if (star.z <= 0) {
           star.z = width * 1.2;
-          star.x = (Math.random() - 0.5) * width * 3;
-          star.y = (Math.random() - 0.5) * height * 3;
+          star.x = (Math.random() - 0.5) * width * 3.5;
+          star.y = (Math.random() - 0.5) * height * 3.5;
         }
 
-        // 3D Perspective projection
+        // 3D Perspective Projections
         const k = focalLength / star.z;
         const px = star.x * k + width / 2 + offsetX * (800 / star.z);
         const py = star.y * k + height / 2 + offsetY * (800 / star.z);
 
-        if (px >= -20 && px <= width + 20 && py >= -20 && py <= height + 20) {
+        const prevK = focalLength / prevZ;
+        const prevPx = star.x * prevK + width / 2 + offsetX * (800 / prevZ);
+        const prevPy = star.y * prevK + height / 2 + offsetY * (800 / prevZ);
+
+        if (px >= -50 && px <= width + 50 && py >= -50 && py <= height + 50) {
           star.twinkleFactor += star.twinkleSpeed;
-          const alpha = Math.min(1, Math.max(0.15, star.baseAlpha + Math.sin(star.twinkleFactor) * 0.35));
-          const size = Math.max(0.6, (1 - star.z / (width * 1.2)) * star.size * 2.2);
+          const alpha = Math.min(1, Math.max(0.2, star.baseAlpha + Math.sin(star.twinkleFactor) * 0.35));
 
           ctx.save();
-          ctx.globalAlpha = alpha;
-          ctx.fillStyle = star.color;
-          ctx.beginPath();
-          ctx.arc(px, py, size, 0, Math.PI * 2);
-          ctx.fill();
 
-          // Star outer glow for larger bright stars
-          if (size > 2.0) {
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = star.color;
+          if (currentWarpMult > 2.5) {
+            // WARP SPEED HIGH-ACCELERATION LIGHT STREAKS
+            const streakLineWidth = Math.max(1.2, star.size * (currentWarpMult / 15));
+            ctx.globalAlpha = Math.min(1, alpha * 1.5);
+            ctx.strokeStyle = star.color === '#ffffff' ? '#00f3ff' : star.color;
+            ctx.lineWidth = streakLineWidth;
+            ctx.beginPath();
+            ctx.moveTo(prevPx, prevPy);
+            ctx.lineTo(px, py);
+            ctx.stroke();
+
+            // Bright Streak Core
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = Math.max(0.8, streakLineWidth * 0.5);
+            ctx.beginPath();
+            ctx.moveTo(prevPx, prevPy);
+            ctx.lineTo(px, py);
+            ctx.stroke();
+          } else {
+            // NORMAL SPACE FLOATING STAR DOTS
+            const size = Math.max(0.6, (1 - star.z / (width * 1.2)) * star.size * 2.2);
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = star.color;
+            ctx.beginPath();
+            ctx.arc(px, py, size, 0, Math.PI * 2);
             ctx.fill();
+
+            if (size > 2.0) {
+              ctx.shadowBlur = 10;
+              ctx.shadowColor = star.color;
+              ctx.fill();
+            }
           }
 
           ctx.restore();

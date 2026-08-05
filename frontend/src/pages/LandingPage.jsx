@@ -1,21 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 import StarfieldBackground from '../components/StarfieldBackground';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
+  const [isWarping, setIsWarping] = useState(false);
+
+  const triggerWarpAndNavigate = (targetPath) => {
+    if (isWarping) return;
+    setIsWarping(true);
+    setTimeout(() => {
+      navigate(targetPath);
+    }, 1100);
+  };
 
   const handleInitiateScan = () => {
-    navigate('/dashboard');
+    triggerWarpAndNavigate(isAuthenticated ? '/dashboard' : '/login');
   };
 
   const handleViewData = () => {
-    navigate('/dashboard');
+    triggerWarpAndNavigate(isAuthenticated ? '/dashboard' : '/login');
   };
 
   const handleLoginClick = () => {
-    navigate(isAuthenticated ? '/dashboard' : '/login');
+    triggerWarpAndNavigate(isAuthenticated ? '/dashboard' : '/login');
   };
 
   return (
@@ -31,279 +40,291 @@ export default function LandingPage({ isAuthenticated }) {
       flexDirection: 'column',
       justifyContent: 'space-between'
     }}>
-      {/* 3D MOVING STARFIELD BACKGROUND */}
-      <StarfieldBackground />
+      {/* 3D HYPERDRIVE WARP-SPEED STARFIELD BACKGROUND */}
+      <StarfieldBackground isWarpSpeed={isWarping} />
 
-      {/* TOP NAVIGATION HEADER */}
-      <header style={{
-        padding: '24px 64px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'relative',
-        zIndex: 30,
-        maxWidth: '1440px',
-        margin: '0 auto',
-        width: '100%'
-      }}>
-        {/* BRAND LOGO */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
-          <img src={logoImg} alt="HimDristi logo" style={{ height: '36px', width: 'auto' }} />
-          <span style={{ fontSize: '24px', fontWeight: '800', fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.5px', color: '#ffffff' }}>
-            HimDristi
-          </span>
-        </div>
-
-        {/* NAV LINKS & LOGIN BUTTON */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '40px', fontSize: '15px', fontWeight: '500' }}>
-          <span 
-            style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseEnter={(e) => e.target.style.color = '#ffffff'}
-            onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
-            onClick={() => navigate('/dashboard')}
-          >
-            Detection
-          </span>
-
-          <span 
-            style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseEnter={(e) => e.target.style.color = '#ffffff'}
-            onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
-            onClick={() => navigate('/dashboard')}
-          >
-            Data
-          </span>
-
-          <span 
-            style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseEnter={(e) => e.target.style.color = '#ffffff'}
-            onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
-            onClick={() => navigate('/dashboard')}
-          >
-            Mission
-          </span>
-
-          <button
-            onClick={handleLoginClick}
-            style={{
-              background: '#ffffff',
-              color: '#020408',
-              border: 'none',
-              padding: '9px 26px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '700',
-              fontFamily: "'Space Grotesk', sans-serif",
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(255, 255, 255, 0.2)',
-              transition: 'all 0.25s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 243, 255, 0.5)';
-              e.currentTarget.style.background = '#00f3ff';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 255, 255, 0.2)';
-              e.currentTarget.style.background = '#ffffff';
-            }}
-          >
-            {isAuthenticated ? 'Control' : 'Login'}
-          </button>
-        </nav>
-      </header>
-
-      {/* HERO SECTION */}
-      <main style={{
-        maxWidth: '1440px',
-        margin: '0 auto',
+      {/* PAGE CONTAINER WITH ZOOM & OPACITY FADE DURING WARP */}
+      <div style={{
         width: '100%',
-        padding: '50px 64px 80px',
-        display: 'grid',
-        gridTemplateColumns: '1.2fr 1fr',
-        alignItems: 'center',
-        gap: '50px',
-        position: 'relative',
-        zIndex: 20
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+        opacity: isWarping ? 0.05 : 1,
+        transform: isWarping ? 'scale(1.08)' : 'scale(1)',
+        filter: isWarping ? 'blur(4px)' : 'none',
+        pointerEvents: isWarping ? 'none' : 'auto'
       }}>
-        {/* LEFT COLUMN: HERO HEADLINE & ACTIONS */}
-        <div>
-          {/* LIVE TELEMETRY PILL BADGE */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'rgba(56, 189, 248, 0.12)',
-            border: '1px solid rgba(56, 189, 248, 0.35)',
-            padding: '5px 14px',
-            borderRadius: '20px',
-            marginBottom: '28px'
-          }}>
-            <span style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              background: '#38bdf8',
-              display: 'inline-block',
-              boxShadow: '0 0 10px #38bdf8'
-            }} className="pulse-glow" />
-            <span style={{
-              fontSize: '11px',
-              fontWeight: '800',
-              color: '#38bdf8',
-              letterSpacing: '1.5px',
-              fontFamily: 'JetBrains Mono',
-              textTransform: 'uppercase'
-            }}>
-              LIVE TELEMETRY
+        {/* TOP NAVIGATION HEADER */}
+        <header style={{
+          padding: '24px 64px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          position: 'relative',
+          zIndex: 30,
+          maxWidth: '1440px',
+          margin: '0 auto',
+          width: '100%'
+        }}>
+          {/* BRAND LOGO */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+            <img src={logoImg} alt="HimDristi logo" style={{ height: '36px', width: 'auto' }} />
+            <span style={{ fontSize: '24px', fontWeight: '800', fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.5px', color: '#ffffff' }}>
+              HimDristi
             </span>
           </div>
 
-          {/* MAIN HEADLINE */}
-          <h1 style={{
-            fontSize: 'clamp(44px, 5.5vw, 68px)',
-            fontWeight: '800',
-            fontFamily: "'Space Grotesk', sans-serif",
-            lineHeight: '1.08',
-            color: '#ffffff',
-            margin: '0 0 24px 0',
-            letterSpacing: '-1.5px'
-          }}>
-            Detecting Lunar Secrets with AI
-          </h1>
+          {/* NAV LINKS & LOGIN BUTTON */}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '40px', fontSize: '15px', fontWeight: '500' }}>
+            <span 
+              style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
+              onMouseEnter={(e) => e.target.style.color = '#ffffff'}
+              onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
+              onClick={() => triggerWarpAndNavigate('/login')}
+            >
+              Detection
+            </span>
 
-          {/* SUB-HEADLINE DESCRIPTION */}
-          <p style={{
-            fontSize: '16px',
-            color: '#cbd5e1',
-            lineHeight: '1.65',
-            maxWidth: '540px',
-            margin: '0 0 40px 0',
-            fontWeight: '400'
-          }}>
-            Advanced machine learning models scanning the lunar surface for resource identification and subsurface ice deposits in real-time.
-          </p>
+            <span 
+              style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
+              onMouseEnter={(e) => e.target.style.color = '#ffffff'}
+              onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
+              onClick={() => triggerWarpAndNavigate('/login')}
+            >
+              Data
+            </span>
 
-          {/* RECTANGULAR ACTION BUTTONS */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <span 
+              style={{ color: '#cbd5e1', cursor: 'pointer', transition: 'color 0.2s' }}
+              onMouseEnter={(e) => e.target.style.color = '#ffffff'}
+              onMouseLeave={(e) => e.target.style.color = '#cbd5e1'}
+              onClick={() => triggerWarpAndNavigate('/login')}
+            >
+              Mission
+            </span>
+
             <button
-              onClick={handleInitiateScan}
+              onClick={handleLoginClick}
               style={{
-                background: '#38bdf8',
-                color: '#040711',
+                background: '#ffffff',
+                color: '#020408',
                 border: 'none',
-                padding: '14px 36px',
-                borderRadius: '6px',
-                fontSize: '13px',
-                fontWeight: '800',
-                fontFamily: 'JetBrains Mono',
-                letterSpacing: '1px',
+                padding: '9px 26px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '700',
+                fontFamily: "'Space Grotesk', sans-serif",
                 cursor: 'pointer',
-                boxShadow: '0 0 25px rgba(56, 189, 248, 0.5)',
-                transition: 'all 0.25s ease',
-                textTransform: 'uppercase'
+                boxShadow: '0 4px 15px rgba(255, 255, 255, 0.2)',
+                transition: 'all 0.25s ease'
               }}
               onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 243, 255, 0.5)';
                 e.currentTarget.style.background = '#00f3ff';
-                e.currentTarget.style.boxShadow = '0 0 35px rgba(0, 243, 255, 0.8)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#38bdf8';
-                e.currentTarget.style.boxShadow = '0 0 25px rgba(56, 189, 248, 0.5)';
                 e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.background = '#ffffff';
               }}
             >
-              INITIATE SCAN
+              {isAuthenticated ? 'Control' : 'Login'}
             </button>
+          </nav>
+        </header>
 
-            <button
-              onClick={handleViewData}
-              style={{
-                background: 'transparent',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                padding: '14px 36px',
-                borderRadius: '6px',
-                fontSize: '13px',
+        {/* HERO SECTION */}
+        <main style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          width: '100%',
+          padding: '50px 64px 80px',
+          display: 'grid',
+          gridTemplateColumns: '1.2fr 1fr',
+          alignItems: 'center',
+          gap: '50px',
+          position: 'relative',
+          zIndex: 20
+        }}>
+          {/* LEFT COLUMN: HERO HEADLINE & ACTIONS */}
+          <div>
+            {/* LIVE TELEMETRY PILL BADGE */}
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(56, 189, 248, 0.12)',
+              border: '1px solid rgba(56, 189, 248, 0.35)',
+              padding: '5px 14px',
+              borderRadius: '20px',
+              marginBottom: '28px'
+            }}>
+              <span style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                background: '#38bdf8',
+                display: 'inline-block',
+                boxShadow: '0 0 10px #38bdf8'
+              }} className="pulse-glow" />
+              <span style={{
+                fontSize: '11px',
                 fontWeight: '800',
+                color: '#38bdf8',
+                letterSpacing: '1.5px',
                 fontFamily: 'JetBrains Mono',
-                letterSpacing: '1px',
-                cursor: 'pointer',
-                transition: 'all 0.25s ease',
                 textTransform: 'uppercase'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#38bdf8';
-                e.currentTarget.style.color = '#38bdf8';
-                e.currentTarget.style.background = 'rgba(56, 189, 248, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                e.currentTarget.style.color = '#ffffff';
-                e.currentTarget.style.background = 'transparent';
-              }}
-            >
-              VIEW DATA
-            </button>
+              }}>
+                LIVE TELEMETRY
+              </span>
+            </div>
+
+            {/* MAIN HEADLINE */}
+            <h1 style={{
+              fontSize: 'clamp(44px, 5.5vw, 68px)',
+              fontWeight: '800',
+              fontFamily: "'Space Grotesk', sans-serif",
+              lineHeight: '1.08',
+              color: '#ffffff',
+              margin: '0 0 24px 0',
+              letterSpacing: '-1.5px'
+            }}>
+              Detecting Lunar Secrets with AI
+            </h1>
+
+            {/* SUB-HEADLINE DESCRIPTION */}
+            <p style={{
+              fontSize: '16px',
+              color: '#cbd5e1',
+              lineHeight: '1.65',
+              maxWidth: '540px',
+              margin: '0 0 40px 0',
+              fontWeight: '400'
+            }}>
+              Advanced machine learning models scanning the lunar surface for resource identification and subsurface ice deposits in real-time.
+            </p>
+
+            {/* RECTANGULAR ACTION BUTTONS */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <button
+                onClick={handleInitiateScan}
+                style={{
+                  background: '#38bdf8',
+                  color: '#040711',
+                  border: 'none',
+                  padding: '14px 36px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  fontWeight: '800',
+                  fontFamily: 'JetBrains Mono',
+                  letterSpacing: '1px',
+                  cursor: 'pointer',
+                  boxShadow: '0 0 25px rgba(56, 189, 248, 0.5)',
+                  transition: 'all 0.25s ease',
+                  textTransform: 'uppercase'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#00f3ff';
+                  e.currentTarget.style.boxShadow = '0 0 35px rgba(0, 243, 255, 0.8)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#38bdf8';
+                  e.currentTarget.style.boxShadow = '0 0 25px rgba(56, 189, 248, 0.5)';
+                  e.currentTarget.style.transform = 'none';
+                }}
+              >
+                INITIATE SCAN
+              </button>
+
+              <button
+                onClick={handleViewData}
+                style={{
+                  background: 'transparent',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  padding: '14px 36px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  fontWeight: '800',
+                  fontFamily: 'JetBrains Mono',
+                  letterSpacing: '1px',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  textTransform: 'uppercase'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#38bdf8';
+                  e.currentTarget.style.color = '#38bdf8';
+                  e.currentTarget.style.background = 'rgba(56, 189, 248, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                  e.currentTarget.style.color = '#ffffff';
+                  e.currentTarget.style.background = 'transparent';
+                }}
+              >
+                VIEW DATA
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* RIGHT COLUMN: OFFICIAL NASA 3D INTERACTIVE MOON MODEL WITH 3D SHADOW DEPTH */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {/* Ambient Moonlight Halo */}
-          <div style={{
-            position: 'absolute',
-            width: '580px',
-            height: '580px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.32) 0%, rgba(0, 243, 255, 0.12) 50%, transparent 70%)',
-            filter: 'blur(60px)',
-            pointerEvents: 'none'
-          }} />
-
-          {/* NASA 3D Moon Model Orb Container (Floating 3D Sphere with Deep Shadow) */}
-          <div className="float-moon" style={{
-            width: '480px',
-            height: '480px',
-            borderRadius: '50%',
-            overflow: 'hidden',
-            position: 'relative',
-            background: '#000',
-            border: '1px solid rgba(0, 243, 255, 0.5)',
-            boxShadow: '0 30px 90px rgba(0, 0, 0, 0.98), 0 0 60px rgba(0, 243, 255, 0.45), inset 0 0 40px rgba(0, 0, 0, 0.85)'
-          }}>
-            <iframe
-              src="https://solarsystem.nasa.gov/gltf_embed/2366/"
-              title="Official NASA 3D Moon Model"
-              width="100%"
-              height="100%"
-              style={{
-                border: 'none',
-                background: 'transparent',
-                transform: 'scale(1.36)',
-                transformOrigin: 'center center'
-              }}
-              allowFullScreen
-            />
-
-            {/* Volumetric 3D Solar Shadow & Depth Overlay */}
+          {/* RIGHT COLUMN: OFFICIAL NASA 3D INTERACTIVE MOON MODEL WITH 3D SHADOW DEPTH */}
+          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {/* Ambient Moonlight Halo */}
             <div style={{
               position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+              width: '580px',
+              height: '580px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle at 28% 28%, transparent 30%, rgba(2, 4, 11, 0.35) 60%, rgba(2, 4, 11, 0.75) 85%, rgba(2, 4, 11, 0.92) 100%)',
+              background: 'radial-gradient(circle, rgba(56, 189, 248, 0.32) 0%, rgba(0, 243, 255, 0.12) 50%, transparent 70%)',
+              filter: 'blur(60px)',
               pointerEvents: 'none'
             }} />
+
+            {/* NASA 3D Moon Model Orb Container (Floating 3D Sphere with Deep Shadow) */}
+            <div className="float-moon" style={{
+              width: '480px',
+              height: '480px',
+              borderRadius: '50%',
+              overflow: 'hidden',
+              position: 'relative',
+              background: '#000',
+              border: '1px solid rgba(0, 243, 255, 0.5)',
+              boxShadow: '0 30px 90px rgba(0, 0, 0, 0.98), 0 0 60px rgba(0, 243, 255, 0.45), inset 0 0 40px rgba(0, 0, 0, 0.85)'
+            }}>
+              <iframe
+                src="https://solarsystem.nasa.gov/gltf_embed/2366/"
+                title="Official NASA 3D Moon Model"
+                width="100%"
+                height="100%"
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  transform: 'scale(1.36)',
+                  transformOrigin: 'center center'
+                }}
+                allowFullScreen
+              />
+
+              {/* Volumetric 3D Solar Shadow & Depth Overlay */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle at 28% 28%, transparent 30%, rgba(2, 4, 11, 0.35) 60%, rgba(2, 4, 11, 0.75) 85%, rgba(2, 4, 11, 0.92) 100%)',
+                pointerEvents: 'none'
+              }} />
+            </div>
           </div>
-        </div>
-      </main>
-
-
+        </main>
+      </div>
     </div>
   );
 }
