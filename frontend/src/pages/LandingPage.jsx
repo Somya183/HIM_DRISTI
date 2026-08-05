@@ -250,29 +250,29 @@ export default function LandingPage({ isAuthenticated }) {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: OFFICIAL NASA 3D INTERACTIVE MOON MODEL */}
+        {/* RIGHT COLUMN: OFFICIAL NASA 3D INTERACTIVE MOON MODEL WITH 3D SHADOW DEPTH */}
         <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           {/* Ambient Moonlight Halo */}
           <div style={{
             position: 'absolute',
-            width: '540px',
-            height: '540px',
+            width: '560px',
+            height: '560px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(0, 243, 255, 0.08) 50%, transparent 70%)',
-            filter: 'blur(50px)',
+            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, rgba(0, 243, 255, 0.1) 50%, transparent 70%)',
+            filter: 'blur(55px)',
             pointerEvents: 'none'
           }} />
 
-          {/* NASA 3D Moon Model Orb Container */}
-          <div style={{
+          {/* NASA 3D Moon Model Orb Container (Floating 3D Sphere with Deep Shadow) */}
+          <div className="float-moon" style={{
             width: '460px',
             height: '460px',
             borderRadius: '50%',
             overflow: 'hidden',
             position: 'relative',
-            background: 'transparent',
-            border: '1px solid rgba(0, 243, 255, 0.45)',
-            boxShadow: '0 0 45px rgba(56, 189, 248, 0.4), 0 0 90px rgba(0, 243, 255, 0.2)'
+            background: '#000',
+            border: '1px solid rgba(0, 243, 255, 0.6)',
+            boxShadow: '0 25px 80px rgba(0, 0, 0, 0.95), 0 0 55px rgba(56, 189, 248, 0.55), 0 0 110px rgba(0, 243, 255, 0.3)'
           }}>
             <iframe
               src="https://solarsystem.nasa.gov/gltf_embed/2366/"
@@ -287,26 +287,23 @@ export default function LandingPage({ isAuthenticated }) {
               }}
               allowFullScreen
             />
+
+            {/* Volumetric 3D Solar Shadow & Depth Overlay */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle at 35% 35%, transparent 45%, rgba(4, 7, 17, 0.4) 75%, rgba(4, 7, 17, 0.8) 100%)',
+              pointerEvents: 'none'
+            }} />
           </div>
         </div>
       </main>
 
-      {/* FOOTER */}
-      <footer style={{
-        padding: '24px 64px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        fontSize: '12px',
-        color: '#64748b',
-        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-        position: 'relative',
-        zIndex: 20
-      }}>
-        <span>HimDristi • Multi-Modal Lunar Water Ice AI & Traversal Platform</span>
-        <span style={{ color: '#38bdf8', fontFamily: 'JetBrains Mono' }}>Shackleton Target: 89.9°S, 0.0°E</span>
-        <span>© 2026 AI Space Intelligence</span>
-      </footer>
+
     </div>
   );
 }
