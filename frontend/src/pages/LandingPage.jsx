@@ -343,38 +343,6 @@ export default function LandingPage({ isAuthenticated }) {
               {isExecuting ? 'SCANNING...' : '► INIT_SCAN_SEQ'}
             </button>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              <button
-                onClick={() => navigate('/dashboard')}
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#94a3b8',
-                  padding: '8px',
-                  borderRadius: '4px',
-                  fontSize: '10px',
-                  fontFamily: 'JetBrains Mono',
-                  cursor: 'pointer'
-                }}
-              >
-                📜 LOGS
-              </button>
-              <button
-                onClick={() => navigate('/dashboard')}
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#94a3b8',
-                  padding: '8px',
-                  borderRadius: '4px',
-                  fontSize: '10px',
-                  fontFamily: 'JetBrains Mono',
-                  cursor: 'pointer'
-                }}
-              >
-                ⚙️ SYS
-              </button>
-            </div>
           </div>
         </aside>
 
