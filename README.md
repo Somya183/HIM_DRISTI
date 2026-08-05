@@ -1,4 +1,4 @@
-# 🌕 HImDristi (हिम दृष्टि) — Lunar Water Ice AI Detection & Traversal Platform
+#  HimDristi Lunar Water Ice AI Detection & Traversal Platform
 
 > **Advanced Multi-Modal Deep Learning & 3D Tactical Navigation Platform for Lunar Polar Resource Exploration**
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 📌 Overview
+##  Overview
 
 **HImDristi** is an end-to-end AI mission control platform designed to identify, quantify, and map permanently shadowed water ice deposits at the Lunar South Pole (Shackleton, Haworth, and Shoemaker craters). 
 
@@ -18,18 +18,18 @@ By combining multi-modal satellite remote sensing datasets—including **LROC Op
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-- **🧠 Multi-Modal PyTorch UNet Model**: Sensor fusion model trained on multi-spectral lunar polar data delivering pixel-level ice probability maps ($93.7\%$ F1 Score, $88.2\%$ IoU).
-- **🛰️ Sensor Preprocessing Pipeline**: Real-time interactive controls for speckle noise reduction, CLAHE contrast enhancement, and PSR binary shadow masking.
-- **🌐 3D Interactive Lunar Globe**: Real-time 3D rendered lunar surface with interactive crater pins, sun lighting angles, and landing site targeting.
-- **🗺️ Sub-Metric 2D Tactical Lunar GPS**: Tactical map with layer switching (Satellite, Topography DEM, SAR Radar, Hybrid Slope), waypoint navigation, and ice deposit inventory.
-- **📊 Executive Telemetry & Confusion Matrix**: Real-time KPI cards tracking estimated ice mass (million tonnes), peak confidence, slope safety, and confusion matrix metrics.
-- **📄 One-Click Mission Exports**: Instant PDF Mission Assessment Reports, GeoJSON Rover Traversal Routes, and CSV Telemetry Data.
+-  Multi-Modal PyTorch UNet Model**: Sensor fusion model trained on multi-spectral lunar polar data delivering pixel-level ice probability maps ($93.7\%$ F1 Score, $88.2\%$ IoU).
+-  Sensor Preprocessing Pipeline**: Real-time interactive controls for speckle noise reduction, CLAHE contrast enhancement, and PSR binary shadow masking.
+-  3D Interactive Lunar Globe**: Real-time 3D rendered lunar surface with interactive crater pins, sun lighting angles, and landing site targeting.
+- Sub-Metric 2D Tactical Lunar GPS**: Tactical map with layer switching (Satellite, Topography DEM, SAR Radar, Hybrid Slope), waypoint navigation, and ice deposit inventory.
+-  Executive Telemetry & Confusion Matrix**: Real-time KPI cards tracking estimated ice mass (million tonnes), peak confidence, slope safety, and confusion matrix metrics.
+-  One-Click Mission Exports**: Instant PDF Mission Assessment Reports, GeoJSON Rover Traversal Routes, and CSV Telemetry Data.
 
 ---
 
-## 🏗️ Architecture & Stack
+## Architecture & Stack
 
 ```
 HImDristi/
@@ -103,6 +103,6 @@ npm run dev
 
 ---
 
-## 📜 License
+##  License
 
 Distributed under the **MIT License**. See `LICENSE` for more information.
