@@ -3,7 +3,7 @@
 > 
 ##  Overview
 
-**HImDristi** is an end-to-end AI mission control platform designed to identify, quantify, and map permanently shadowed water ice deposits at the Lunar South Pole (Shackleton, Haworth, and Shoemaker craters). 
+**HImDristi** is an end-to-end AI mission control platform designed to identify, quantify, and map permanently shadowed water ice deposits at the Lunar South Pole.
 
 By combining multi-modal satellite remote sensing datasets—including **LROC Optical Albedo**, **DFSAR Circular Polarization Ratio (CPR) Radar**, **LOLA Elevation (DEM)**, and **PSR Shadow Maps**—HImDristi utilizes a custom **PyTorch UNet Fusion Model** to predict subsurface ice presence and compute optimal, safe autonomous rover traversal routes.
 
