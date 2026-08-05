@@ -3,47 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import {
   Radio, Compass, Cpu, Database, Activity, Bell, Settings, HelpCircle,
   User, CheckCircle2, Loader2, ArrowRight, Download, FileText, Play, RotateCcw,
-  Sparkles, ShieldCheck, MapPin, Sliders, ChevronRight, AlertTriangle, Layers, Upload
+  Sparkles, ShieldCheck, MapPin, Sliders, ChevronRight, AlertTriangle, Layers, Upload,
+  Eye, Grid, Shield, Check, Info, FileSpreadsheet
 } from 'lucide-react';
 import StarfieldBackground from '../components/StarfieldBackground';
 import PreprocessingPanel from '../components/PreprocessingPanel';
 import Moon3DViewer from '../components/Moon3DViewer';
 import LunarGPSMap from '../components/LunarGPSMap';
 import TelemetryDashboard from '../components/TelemetryDashboard';
-import AutoRotatingMoon3D from '../components/AutoRotatingMoon3D';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
 
-  // View & Pipeline States
-  const [topTab, setTopTab] = useState('telemetry'); // 'telemetry', 'map', 'analytics'
-  const [activeStep, setActiveStep] = useState('acquisition'); // 'acquisition', 'preprocessing', 'extraction', 'detection', 'decision'
+  // Navigation & Flowchart Pipeline State
+  const [pipelineStage, setPipelineStage] = useState('acquisition'); // 'acquisition', 'preprocessing', 'extraction', 'ai_detection', 'outputs'
   const [selectedTarget, setSelectedTarget] = useState('shackleton');
-
-  const [pipelineStatus, setPipelineStatus] = useState({
-    acquisition: 'active',
-    preprocessing: 'complete',
-    extraction: 'complete',
-    detection: 'complete',
-    decision: 'complete'
-  });
-
-  const [scanProgress, setScanProgress] = useState(100);
+  const [activeLayer, setActiveLayer] = useState('radar'); // 'optical', 'radar', 'dem', 'shadow'
   const [isExecuting, setIsExecuting] = useState(false);
+  const [scanProgress, setScanProgress] = useState(100);
   const [analysisData, setAnalysisData] = useState(null);
 
-  // Live Terminal Stream Logs
-  const [logs, setLogs] = useState([
-    { time: '00:45:12.10', text: 'INITIATING CHANDRAYAAN-2 DFSAR SWEEP... OK', type: 'info' },
-    { time: '00:45:12.45', text: 'CALIBRATING LROC OPTICAL ALBEDO... OK', type: 'info' },
-    { time: '00:45:13.02', text: 'RECEIVING SAR DATA PACKET 1682...', type: 'info' },
-    { time: '00:45:13.50', text: 'WRN: ANOMALOUS HIGH-CPR READING SEC_7A', type: 'warn' },
-    { time: '00:45:14.11', text: 'COMPENSATING FOR LUNAR SHADOW NOISE... OK', type: 'info' },
-    { time: '00:45:14.89', text: 'RUNNING PYTORCH UNET SEGMENTATION MODEL...', type: 'info' },
-    { time: '00:45:15.20', text: 'POSITIVE WATER ICE HYDROGEN SIGNATURE DETECTED', type: 'success' }
-  ]);
-
-  // Fetch analysis data from backend
+  // Fetch real backend data
   const fetchAnalysis = async () => {
     try {
       const response = await fetch('http://127.0.0.1:5000/api/analyze', {
@@ -60,35 +40,41 @@ export default function LandingPage({ isAuthenticated }) {
     }
   };
 
-  const handleInitScanSeq = () => {
+  const handleExecuteFullPipeline = () => {
     if (isExecuting) return;
     setIsExecuting(true);
-    setScanProgress(20);
-
-    const addLog = (text, type = 'info') => {
-      const now = new Date();
-      const timeStr = `00:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now.getMilliseconds().toString().padStart(3, '0').slice(0, 2)}`;
-      setLogs(prev => [...prev.slice(-12), { time: timeStr, text, type }]);
-    };
-
-    addLog('INITIATING TACTICAL LUNAR RADAR SWEEP...', 'info');
+    setScanProgress(15);
+    setPipelineStage('acquisition');
 
     setTimeout(() => {
-      setScanProgress(50);
-      addLog('PROCESSING RADIOMETRIC CLAHE CONTRAST...', 'info');
+      setPipelineStage('preprocessing');
+      setScanProgress(40);
 
       setTimeout(() => {
-        setScanProgress(80);
-        addLog('PYTORCH UNET TENSOR SEGMENTATION ACTIVE', 'warn');
+        setPipelineStage('extraction');
+        setScanProgress(65);
 
         setTimeout(() => {
-          setScanProgress(100);
-          addLog('ICE CONFIDENCE MATRIX & SAFE TRAVERSAL VECTOR READY', 'success');
-          setIsExecuting(false);
-          fetchAnalysis();
+          setPipelineStage('ai_detection');
+          setScanProgress(85);
+
+          setTimeout(() => {
+            setPipelineStage('outputs');
+            setScanProgress(100);
+            setIsExecuting(false);
+            fetchAnalysis();
+          }, 1000);
         }, 1000);
       }, 1000);
     }, 1000);
+  };
+
+  const handleDownloadPDF = () => {
+    alert("Downloading official HImDristi Lunar Water Ice Intelligence Report (PDF)...");
+  };
+
+  const handleExportCSV = () => {
+    alert("Exporting raw ISRO Chandrayaan-2 DFSAR Radar CPR & Water Ice Inventory Data (CSV)...");
   };
 
   useEffect(() => {
@@ -124,7 +110,7 @@ export default function LandingPage({ isAuthenticated }) {
         position: 'relative',
         zIndex: 30
       }}>
-        {/* BRAND TITLE */}
+        {/* BRAND TITLE & VERSION */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <h1 style={{
             fontSize: '20px',
@@ -148,35 +134,58 @@ export default function LandingPage({ isAuthenticated }) {
           </span>
         </div>
 
-        {/* CENTER TABS: TELEMETRY | MAP_VIEW | ANALYTICS */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '100%' }}>
-          {[
-            { id: 'telemetry', label: 'TELEMETRY' },
-            { id: 'map', label: 'Map_View' },
-            { id: 'analytics', label: 'Analytics' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setTopTab(tab.id)}
+        {/* CENTER CRATER SELECTOR & UPLOAD ACTION */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', fontFamily: 'JetBrains Mono' }}>
+            <span style={{ color: '#64748b' }}>TARGET CRATER:</span>
+            <select
+              value={selectedTarget}
+              onChange={(e) => setSelectedTarget(e.target.value)}
               style={{
-                height: '100%',
-                padding: '0 28px',
-                background: topTab === tab.id ? 'rgba(0, 243, 255, 0.08)' : 'transparent',
-                border: '1px solid rgba(0, 243, 255, 0.2)',
-                borderBottom: topTab === tab.id ? '2px solid #00f3ff' : '1px solid rgba(0, 243, 255, 0.2)',
-                color: topTab === tab.id ? '#ffffff' : '#94a3b8',
-                fontSize: '12px',
-                fontWeight: '700',
+                background: '#070f20',
+                border: '1px solid rgba(0, 243, 255, 0.4)',
+                color: '#00f3ff',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                fontSize: '11px',
                 fontFamily: 'JetBrains Mono',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                letterSpacing: '1px'
+                outline: 'none',
+                cursor: 'pointer'
               }}
             >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+              <option value="shackleton">🌕 Shackleton Crater (-89.9°S, 0.0°E)</option>
+              <option value="haworth">🌑 Haworth Crater (-87.5°S, -5.0°E)</option>
+              <option value="shoemaker">🌘 Shoemaker Crater (-88.1°S, 45.0°E)</option>
+              <option value="faustini">🌗 Faustini Crater (-87.3°S, 87.0°E)</option>
+              <option value="cabeus">🌖 Cabeus Crater (-84.9°S, 35.5°W)</option>
+            </select>
+          </div>
+
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'rgba(0, 243, 255, 0.12)',
+            border: '1px solid #00f3ff',
+            color: '#00f3ff',
+            padding: '5px 12px',
+            borderRadius: '6px',
+            fontSize: '10px',
+            fontFamily: 'JetBrains Mono',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}>
+            <Upload size={13} /> UPLOAD DATASET
+            <input type="file" accept="image/*,.bin,.raw,.tif" onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                alert(`Dataset "${file.name}" uploaded successfully! Ingesting multi-modal sensor layers...`);
+                fetchAnalysis();
+              }
+            }} style={{ display: 'none' }} />
+          </label>
+        </div>
 
         {/* RIGHT UTILITIES & AUTH */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', color: '#94a3b8' }}>
@@ -192,7 +201,7 @@ export default function LandingPage({ isAuthenticated }) {
               gap: '8px',
               background: 'rgba(0, 243, 255, 0.12)',
               border: '1px solid rgba(0, 243, 255, 0.4)',
-              padding: '4px 12px',
+              padding: '5px 12px',
               borderRadius: '6px',
               color: '#00f3ff',
               fontSize: '10px',
@@ -207,19 +216,104 @@ export default function LandingPage({ isAuthenticated }) {
         </div>
       </header>
 
-      {/* MAIN LUNAR_OPS GRID DASHBOARD */}
+      {/* PIPELINE FLOWCHART STEP BAR */}
       <div style={{
-        height: 'calc(100vh - 56px)',
+        height: '42px',
+        minHeight: '42px',
+        background: '#040814',
+        borderBottom: '1px solid rgba(0, 243, 255, 0.2)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 24px',
+        position: 'relative',
+        zIndex: 20
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {[
+            { id: 'acquisition', num: '01', name: 'DATA ACQUISITION', sub: 'OPTICAL • RADAR • DEM • SHADOW' },
+            { id: 'preprocessing', num: '02', name: 'DATA PREPROCESSING', sub: 'NORM • ALIGN • CALIBRATE • FILTER' },
+            { id: 'extraction', num: '03', name: 'FEATURE EXTRACTION', sub: 'HIGH CPR • SLOPE • PSR COLD TRAPS' },
+            { id: 'ai_detection', num: '04', name: 'AI DETECTION & DECISION', sub: 'PYTORCH UNET • MULTI-CRITERIA RANK' },
+            { id: 'outputs', num: '05', name: 'OUTPUTS & REPORTS', sub: 'ICE MAP • LANDING • 3D • ROVER PATH' }
+          ].map((stage, idx) => {
+            const isActive = pipelineStage === stage.id;
+            return (
+              <React.Fragment key={stage.id}>
+                <button
+                  onClick={() => setPipelineStage(stage.id)}
+                  style={{
+                    background: isActive ? 'rgba(0, 243, 255, 0.15)' : 'transparent',
+                    border: isActive ? '1px solid #00f3ff' : '1px solid transparent',
+                    borderRadius: '6px',
+                    padding: '4px 12px',
+                    color: isActive ? '#ffffff' : '#64748b',
+                    fontSize: '11px',
+                    fontFamily: 'JetBrains Mono',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <span style={{
+                    fontSize: '10px',
+                    fontWeight: '900',
+                    color: isActive ? '#00f3ff' : '#475569',
+                    background: isActive ? 'rgba(0, 243, 255, 0.2)' : 'rgba(255,255,255,0.05)',
+                    padding: '2px 6px',
+                    borderRadius: '4px'
+                  }}>
+                    {stage.num}
+                  </span>
+                  <span style={{ fontWeight: '800', letterSpacing: '0.5px' }}>{stage.name}</span>
+                </button>
+
+                {idx < 4 && <ChevronRight size={14} color="#334155" />}
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        <button
+          onClick={handleExecuteFullPipeline}
+          disabled={isExecuting}
+          style={{
+            background: '#00f3ff',
+            color: '#02040a',
+            border: 'none',
+            padding: '6px 18px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            fontWeight: '900',
+            fontFamily: 'JetBrains Mono',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 0 15px rgba(0, 243, 255, 0.5)',
+            textTransform: 'uppercase'
+          }}
+        >
+          {isExecuting ? <Loader2 size={13} className="animate-spin" /> : <Play size={13} />}
+          {isExecuting ? 'RUNNING PIPELINE...' : 'EXECUTE PIPELINE'}
+        </button>
+      </div>
+
+      {/* MAIN 3-COLUMN WORKSPACE */}
+      <div style={{
+        height: 'calc(100vh - 98px)',
         width: '100%',
         display: 'grid',
-        gridTemplateColumns: '260px 1fr 320px',
+        gridTemplateColumns: '260px 1fr 340px',
         gap: '2px',
         background: 'rgba(0, 243, 255, 0.15)',
         position: 'relative',
         zIndex: 10,
         overflow: 'hidden'
       }}>
-        {/* LEFT COLUMN: MISSION FEED & PIPELINE STAGES */}
+        {/* LEFT COLUMN: MULTI-SOURCE SENSOR INGESTION & STAGE CONFIG */}
         <aside style={{
           background: '#040814',
           padding: '16px',
@@ -231,82 +325,58 @@ export default function LandingPage({ isAuthenticated }) {
           borderRight: '1px solid rgba(0, 243, 255, 0.2)'
         }}>
           <div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '9px',
-              fontWeight: '800',
-              color: '#64748b',
-              fontFamily: 'JetBrains Mono',
-              marginBottom: '12px'
-            }}>
-              <span>LIVE FEED // SECURE</span>
-              <span style={{ color: '#00f3ff' }}>T-MINUS 00:45:12</span>
-            </div>
-
-            {/* OP: LUNAR-ICE MISSION CARD */}
+            {/* STAGE STATUS */}
             <div style={{
               background: 'rgba(8, 14, 28, 0.9)',
               border: '1px solid rgba(0, 243, 255, 0.3)',
-              padding: '14px',
+              padding: '12px',
               borderRadius: '6px',
-              marginBottom: '20px'
+              marginBottom: '16px'
             }}>
-              <h2 style={{ fontSize: '15px', fontWeight: '900', color: '#ffffff', margin: '0 0 10px 0', letterSpacing: '1px', fontFamily: 'Space Grotesk' }}>
-                OP: LUNAR-ICE
-              </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b' }}>SECTOR:</span>
-                  <span style={{ color: '#cbd5e1' }}>SPA_BASIN_S</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b' }}>TARGET:</span>
-                  <span style={{ color: '#38bdf8' }}>H2O_DEPOSIT</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b' }}>STATUS:</span>
-                  <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>NOMINAL</span>
-                </div>
+              <div style={{ fontSize: '9px', fontWeight: '800', color: '#64748b', fontFamily: 'JetBrains Mono', marginBottom: '4px' }}>
+                ACTIVE FLOWCHART STAGE
               </div>
+              <h2 style={{ fontSize: '14px', fontWeight: '900', color: '#00f3ff', margin: 0, textTransform: 'uppercase', fontFamily: 'Space Grotesk' }}>
+                {pipelineStage.replace('_', ' ')}
+              </h2>
             </div>
 
-            {/* PIPELINE NAVIGATION STAGES */}
+            {/* MULTI-SOURCE DATA LAYERS */}
+            <h3 style={{ fontSize: '10px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1px', fontFamily: 'JetBrains Mono', marginBottom: '10px', textTransform: 'uppercase' }}>
+              COMPREHENSIVE SENSOR LAYERS
+            </h3>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {[
-                { id: 'acquisition', label: 'DATA_ACQ_PHASE', sub: 'OPTICAL // SAR // THERMAL [ACTV]', icon: Radio },
-                { id: 'preprocessing', label: 'SIG_PREPROC', sub: 'RADIOMETRIC_CLAHE', icon: Sliders },
-                { id: 'extraction', label: 'FEAT_EXTRACT', sub: '128PPD_HIGH_CPR', icon: Activity },
-                { id: 'detection', label: 'NEURAL_NET_EVAL', sub: 'PYTORCH_UNET_V4.2', icon: Cpu },
-                { id: 'decision', label: 'EXEC_DECISION', sub: 'A_STAR_ROVER_PATH', icon: Compass }
-              ].map(stage => {
-                const IconComp = stage.icon;
-                const isActive = activeStep === stage.id;
+                { id: 'optical', name: 'OPTICAL IMAGE', desc: 'LROC Narrow Angle Camera (0.5m Albedo)', icon: Eye },
+                { id: 'radar', name: 'RADAR IMAGE', desc: 'ISRO DFSAR & Mini-RF CPR (128-PPD)', icon: Radio },
+                { id: 'dem', name: 'DEM (TERRAIN)', desc: 'LOLA Elevation & Surface Roughness', icon: Layers },
+                { id: 'shadow', name: 'SHADOW MAP', desc: 'Permanently Shadowed Region (PSR <100K)', icon: Database }
+              ].map(layer => {
+                const LayerIcon = layer.icon;
+                const isSel = activeLayer === layer.id;
                 return (
                   <button
-                    key={stage.id}
-                    onClick={() => setActiveStep(stage.id)}
+                    key={layer.id}
+                    onClick={() => setActiveLayer(layer.id)}
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: isActive ? 'rgba(0, 243, 255, 0.15)' : 'rgba(255, 255, 255, 0.02)',
-                      border: isActive ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.08)',
+                      background: isSel ? 'rgba(0, 243, 255, 0.15)' : 'rgba(255, 255, 255, 0.02)',
+                      border: isSel ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '6px',
-                      color: isActive ? '#00f3ff' : '#94a3b8',
+                      color: isSel ? '#00f3ff' : '#94a3b8',
                       cursor: 'pointer',
                       textAlign: 'left',
                       transition: 'all 0.2s ease'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                      <IconComp size={14} color={isActive ? '#00f3ff' : '#64748b'} />
-                      <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', letterSpacing: '0.5px' }}>
-                        {stage.label}
-                      </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
+                      <LayerIcon size={14} color={isSel ? '#00f3ff' : '#64748b'} />
+                      <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono' }}>{layer.name}</span>
                     </div>
-                    <span style={{ fontSize: '9px', color: isActive ? '#38bdf8' : '#475569', fontFamily: 'JetBrains Mono', display: 'block', paddingLeft: '22px' }}>
-                      {stage.sub}
+                    <span style={{ fontSize: '9px', color: isSel ? '#38bdf8' : '#475569', fontFamily: 'JetBrains Mono', display: 'block', paddingLeft: '22px' }}>
+                      {layer.desc}
                     </span>
                   </button>
                 );
@@ -314,39 +384,32 @@ export default function LandingPage({ isAuthenticated }) {
             </div>
           </div>
 
-          {/* BOTTOM LEFT ACTION BUTTONS */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button
-              onClick={handleInitScanSeq}
-              disabled={isExecuting}
-              style={{
-                width: '100%',
-                padding: '12px',
-                background: 'rgba(0, 243, 255, 0.15)',
-                border: '1px solid #00f3ff',
-                color: '#00f3ff',
-                borderRadius: '6px',
-                fontSize: '12px',
-                fontWeight: '900',
-                letterSpacing: '1.5px',
-                fontFamily: 'JetBrains Mono',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                boxShadow: '0 0 20px rgba(0, 243, 255, 0.3)',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {isExecuting ? <Loader2 size={15} className="animate-spin" /> : <Play size={14} />}
-              {isExecuting ? 'SCANNING...' : '► INIT_SCAN_SEQ'}
-            </button>
-
+          {/* QUICK TELEMETRY SUMMARY */}
+          <div style={{
+            background: 'rgba(7, 15, 32, 0.8)',
+            border: '1px solid rgba(0, 243, 255, 0.2)',
+            borderRadius: '6px',
+            padding: '12px',
+            fontSize: '10px',
+            fontFamily: 'JetBrains Mono'
+          }}>
+            <div style={{ color: '#64748b', marginBottom: '6px' }}>PIPELINE TELEMETRY:</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span>LAT/LON:</span>
+              <span style={{ color: '#00f3ff' }}>-89.9°S, 0.0°E</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span>ICE MASS:</span>
+              <span style={{ color: '#00ff9d' }}>0.04M Tonnes</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>UNet F1:</span>
+              <span style={{ color: '#38bdf8' }}>96.4%</span>
+            </div>
           </div>
         </aside>
 
-        {/* CENTER COLUMN: MAIN VIEWPORT & LIVE TERMINAL STREAM */}
+        {/* CENTER COLUMN: MAIN VIEWPORT (SWITCHES WITH FLOWCHART STAGE) */}
         <main style={{
           background: '#02040a',
           padding: '16px',
@@ -356,254 +419,112 @@ export default function LandingPage({ isAuthenticated }) {
           flexDirection: 'column',
           gap: '16px'
         }}>
-          {/* MAIN RADAR HUD CONTAINER */}
-          <div style={{
-            flex: 1,
-            minHeight: '440px',
-            background: '#050a14',
-            border: '1px solid rgba(0, 243, 255, 0.3)',
-            borderRadius: '8px',
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            {/* RADAR HEADER BAR WITH CRATER SELECTOR & FILE UPLOAD */}
-            <div style={{
-              padding: '8px 16px',
-              background: 'rgba(0, 243, 255, 0.06)',
-              borderBottom: '1px solid rgba(0, 243, 255, 0.25)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '10px',
-              fontFamily: 'JetBrains Mono',
-              color: '#38bdf8',
-              flexWrap: 'wrap',
-              gap: '10px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <span style={{ fontWeight: 'bold' }}>☒ TOPOGRAPHIC_RADAR_MAP_v2.0</span>
-
-                {/* SELECT CRATER DROPDOWN */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ color: '#64748b' }}>CRATER:</span>
-                  <select
-                    value={selectedTarget}
-                    onChange={(e) => setSelectedTarget(e.target.value)}
-                    style={{
-                      background: '#040814',
-                      border: '1px solid rgba(0, 243, 255, 0.4)',
-                      color: '#00f3ff',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '10px',
-                      fontFamily: 'JetBrains Mono',
-                      outline: 'none',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <option value="shackleton">🌕 Shackleton Crater (-89.9°S)</option>
-                    <option value="haworth">🌑 Haworth Crater (-87.5°S)</option>
-                    <option value="shoemaker">🌘 Shoemaker Crater (-88.1°S)</option>
-                    <option value="faustini">🌗 Faustini Crater (-87.3°S)</option>
-                    <option value="cabeus">🌖 Cabeus Crater (-84.9°S)</option>
-                  </select>
-                </div>
+          {/* STAGE 01: DATA ACQUISITION VIEWPORT */}
+          {pipelineStage === 'acquisition' && (
+            <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h3 style={{ fontSize: '15px', color: '#00f3ff', margin: 0, fontFamily: 'Space Grotesk' }}>
+                  📡 DATA ACQUISITION — Multi-Source Sensor Ingestion
+                </h3>
+                <span className="neon-badge badge-cyan">4 SENSOR CHANNELS READY</span>
               </div>
 
-              {/* UPLOAD FILE BUTTON & TACTICAL METRICS */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <label style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  background: 'rgba(0, 243, 255, 0.12)',
-                  border: '1px solid #00f3ff',
-                  color: '#00f3ff',
-                  padding: '4px 10px',
-                  borderRadius: '4px',
-                  fontSize: '10px',
-                  fontFamily: 'JetBrains Mono',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}>
-                  <Upload size={12} /> UPLOAD DATASET
-                  <input type="file" accept="image/*,.bin,.raw,.tif" onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      alert(`Dataset "${file.name}" uploaded successfully! Processing DFSAR radar layers...`);
-                      fetchAnalysis();
-                    }
-                  }} style={{ display: 'none' }} />
-                </label>
-
-                <span>SCALE: 1:1000</span>
-                <span>MODE: TACTICAL</span>
-              </div>
-            </div>
-
-            {/* RADAR GRID & VIEWPORT */}
-            <div style={{
-              flex: 1,
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.05) 0%, transparent 70%)'
-            }}>
-              {/* TARGET COORDINATES OVERLAY BOX */}
-              <div style={{
-                position: 'absolute',
-                top: '16px',
-                left: '16px',
-                background: 'rgba(4, 8, 20, 0.85)',
-                border: '1px solid rgba(0, 243, 255, 0.3)',
-                padding: '8px 12px',
-                borderRadius: '4px',
-                fontSize: '10px',
-                fontFamily: 'JetBrains Mono',
-                color: '#00f3ff',
-                zIndex: 10
-              }}>
-                <div>LAT: -89.9°S</div>
-                <div>LON: 180.0°E</div>
-                <div>ALT: 2.4KM</div>
-              </div>
-
-              {/* RENDER VIEWPORT DEPENDING ON TOP TAB & ACTIVE STEP */}
-              {topTab === 'telemetry' ? (
-                activeStep === 'detection' ? (
-                  <Moon3DViewer selectedTarget={selectedTarget} targetInfo={analysisData?.target} iceGrid={analysisData?.ice_grid} />
-                ) : activeStep === 'acquisition' ? (
-                  /* HIGH-TECH CRATER SELECTOR & FILE UPLOAD PANEL (REPLACED MOON SPHERE) */
-                  <div style={{
-                    width: '92%',
-                    maxWidth: '680px',
-                    padding: '24px',
-                    background: 'rgba(5, 11, 24, 0.92)',
-                    border: '1px solid rgba(0, 243, 255, 0.35)',
-                    borderRadius: '12px',
-                    boxShadow: '0 0 40px rgba(0, 243, 255, 0.15)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '20px',
-                    zIndex: 10
-                  }}>
-                    {/* SECTION 1: CRATER SELECTOR GRID */}
-                    <div>
-                      <h3 style={{ fontSize: '11px', fontWeight: '800', color: '#00f3ff', letterSpacing: '1.5px', fontFamily: 'JetBrains Mono', margin: '0 0 12px 0', textTransform: 'uppercase' }}>
-                        🎯 SELECT TARGET LUNAR CRATER
-                      </h3>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                        {[
-                          { id: 'shackleton', name: 'Shackleton Crater', coords: '-89.9°S, 0.0°E', depth: '21.0 km' },
-                          { id: 'haworth', name: 'Haworth Crater', coords: '-87.5°S, -5.0°E', depth: '35.0 km' },
-                          { id: 'shoemaker', name: 'Shoemaker Crater', coords: '-88.1°S, 45.0°E', depth: '50.0 km' },
-                          { id: 'faustini', name: 'Faustini Crater', coords: '-87.3°S, 87.0°E', depth: '39.0 km' },
-                          { id: 'cabeus', name: 'Cabeus Crater', coords: '-84.9°S, 35.5°W', depth: '100.0 km' }
-                        ].map(crater => (
-                          <button
-                            key={crater.id}
-                            onClick={() => setSelectedTarget(crater.id)}
-                            style={{
-                              background: selectedTarget === crater.id ? 'rgba(0, 243, 255, 0.18)' : 'rgba(255, 255, 255, 0.03)',
-                              border: selectedTarget === crater.id ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.1)',
-                              borderRadius: '8px',
-                              padding: '10px 12px',
-                              color: selectedTarget === crater.id ? '#00f3ff' : '#cbd5e1',
-                              cursor: 'pointer',
-                              textAlign: 'left',
-                              transition: 'all 0.2s ease'
-                            }}
-                          >
-                            <div style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', marginBottom: '4px' }}>
-                              {crater.name}
-                            </div>
-                            <div style={{ fontSize: '9px', color: '#64748b', fontFamily: 'JetBrains Mono' }}>
-                              {crater.coords}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                {[
+                  { title: 'OPTICAL IMAGE (LROC)', key: 'optical', type: 'Albedo Imagery (0.5m/px)' },
+                  { title: 'RADAR IMAGE (DFSAR CPR)', key: 'radar', type: 'Circular Polarization Ratio (>1.0)' },
+                  { title: 'DEM (TERRAIN ELEVATION)', key: 'dem', type: 'LOLA Topographic Relief Map' },
+                  { title: 'SHADOW MAP (PSR)', key: 'shadow', type: 'Thermal Cold Trap (<100K)' }
+                ].map(item => (
+                  <div key={item.key} style={{
+                    background: '#070f20',
+                    border: activeLayer === item.key ? '2px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '8px',
+                    padding: '14px',
+                    cursor: 'pointer'
+                  }} onClick={() => setActiveLayer(item.key)}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
+                      <strong style={{ color: activeLayer === item.key ? '#00f3ff' : '#ffffff' }}>{item.title}</strong>
+                      <span style={{ color: '#00ff9d' }}>INGESTED</span>
                     </div>
-
-                    {/* SECTION 2: FILE UPLOAD DROPZONE */}
-                    <div>
-                      <h3 style={{ fontSize: '11px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1.5px', fontFamily: 'JetBrains Mono', margin: '0 0 12px 0', textTransform: 'uppercase' }}>
-                        📤 UPLOAD CUSTOM TELEMETRY DATASET
-                      </h3>
-
-                      <label style={{
-                        border: '2px dashed rgba(0, 243, 255, 0.4)',
-                        background: 'rgba(0, 243, 255, 0.04)',
-                        borderRadius: '10px',
-                        padding: '24px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '10px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}>
-                        <Upload size={28} color="#00f3ff" />
-                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#ffffff', fontFamily: 'JetBrains Mono' }}>
-                          DRAG & DROP LUNAR TELEMETRY FILE OR CLICK TO BROWSE
-                        </span>
-                        <span style={{ fontSize: '10px', color: '#64748b', fontFamily: 'JetBrains Mono' }}>
-                          Supports LROC Optical, DFSAR Radar CPR (.IMG / .RAW / .PNG / .TIF)
-                        </span>
-                        <input
-                          type="file"
-                          accept="image/*,.bin,.raw,.tif"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              alert(`Dataset "${file.name}" uploaded successfully! Ingesting DFSAR radar layers...`);
-                              fetchAnalysis();
-                            }
-                          }}
-                          style={{ display: 'none' }}
-                        />
-                      </label>
+                    <div style={{ height: '160px', borderRadius: '6px', overflow: 'hidden', background: '#020408', border: '1px solid rgba(0,243,255,0.2)' }}>
+                      {analysisData?.images?.preprocessed?.[item.key] ? (
+                        <img src={analysisData.images.preprocessed[item.key]} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#64748b', fontSize: '11px' }}>
+                          Loading Multi-Modal Ingestion Channel...
+                        </div>
+                      )}
                     </div>
                   </div>
-                ) : (
-                  <PreprocessingPanel images={analysisData?.images} onRunAnalysis={fetchAnalysis} isAnalyzing={isExecuting} />
-                )
-              ) : topTab === 'map' ? (
-                <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
-              ) : (
-                <TelemetryDashboard metrics={analysisData?.metrics} landingSite={analysisData?.landing_site} roverPath={analysisData?.rover_path} />
-              )}
-
-              {/* HAZARD DETECTED WARNING BADGE */}
-              <div style={{
-                position: 'absolute',
-                bottom: '16px',
-                right: '16px',
-                background: 'rgba(245, 158, 11, 0.15)',
-                border: '1px solid rgba(245, 158, 11, 0.5)',
-                color: '#f59e0b',
-                padding: '6px 12px',
-                borderRadius: '4px',
-                fontSize: '10px',
-                fontFamily: 'JetBrains Mono',
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                zIndex: 10
-              }}>
-                <AlertTriangle size={13} /> HAZARD_DETECTED | CONFIDENCE: 87%
+                ))}
               </div>
             </div>
-          </div>
+          )}
+
+          {/* STAGE 02: DATA PREPROCESSING VIEWPORT */}
+          {pipelineStage === 'preprocessing' && (
+            <PreprocessingPanel
+              images={analysisData?.images}
+              onRunAnalysis={fetchAnalysis}
+              isAnalyzing={isExecuting}
+            />
+          )}
+
+          {/* STAGE 03: FEATURE EXTRACTION VIEWPORT */}
+          {pipelineStage === 'extraction' && (
+            <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h3 style={{ fontSize: '15px', color: '#38bdf8', margin: 0, fontFamily: 'Space Grotesk' }}>
+                  📊 FEATURE EXTRACTION — High-CPR Anomaly & Slope Extraction
+                </h3>
+                <span className="neon-badge badge-blue">EXTRACTED 128-PPD FEATURES</span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
+                  <h4 style={{ fontSize: '12px', color: '#00f3ff', fontFamily: 'JetBrains Mono', margin: '0 0 10px 0' }}>
+                    Radar CPR Anomaly Overlay (CPR {'> 1.2'})
+                  </h4>
+                  <div style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden' }}>
+                    {analysisData?.images?.results?.ice_confidence && (
+                      <img src={analysisData.images.results.ice_confidence} alt="CPR Anomaly" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    )}
+                  </div>
+                </div>
+
+                <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
+                  <h4 style={{ fontSize: '12px', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 10px 0' }}>
+                    Terrain Slope Hazard Boundary ({'<15°'})
+                  </h4>
+                  <div style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden' }}>
+                    {analysisData?.images?.results?.landing_zones && (
+                      <img src={analysisData.images.results.landing_zones} alt="Slope Hazard" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STAGE 04: AI DETECTION & DECISION VIEWPORT (3D MOON ROTATION & HEATMAP) */}
+          {pipelineStage === 'ai_detection' && (
+            <Moon3DViewer
+              selectedTarget={selectedTarget}
+              targetInfo={analysisData?.target}
+              iceGrid={analysisData?.ice_grid}
+            />
+          )}
+
+          {/* STAGE 05: OUTPUTS & REPORTS VIEWPORT (GPS & FINAL MAPS) */}
+          {pipelineStage === 'outputs' && (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
+            </div>
+          )}
         </main>
 
-        {/* RIGHT COLUMN: OUTPUT CARDS & PIPELINE DIAGNOSTICS */}
+        {/* RIGHT COLUMN: ACTIONABLE FLOWCHART OUTPUT CARDS & REPORTS */}
         <aside style={{
           background: '#040814',
           padding: '16px',
@@ -614,133 +535,169 @@ export default function LandingPage({ isAuthenticated }) {
           justifyContent: 'space-between',
           borderLeft: '1px solid rgba(0, 243, 255, 0.2)'
         }}>
-          {/* TOP THREE ACTIONABLE CARDS */}
+          {/* FLOWCHART OUTPUT CARDS */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {/* CARD 1: MAP_GEN */}
-            <div style={{
-              background: '#070f20',
-              border: '1px solid rgba(0, 243, 255, 0.35)',
-              borderRadius: '6px',
-              padding: '14px',
-              position: 'relative'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
-                <span style={{ color: '#38bdf8' }}>MAP_GEN</span>
-                <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>COMPLETE</span>
-              </div>
+            <h3 style={{ fontSize: '10px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1px', fontFamily: 'JetBrains Mono', marginBottom: '4px', textTransform: 'uppercase' }}>
+              ACTIONABLE MISSION OUTPUTS
+            </h3>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+            {/* OUTPUT 1: FINAL ICE PROBABILITY MAP */}
+            <div
+              onClick={() => setPipelineStage('outputs')}
+              style={{
+                background: '#070f20',
+                border: '1px solid rgba(0, 243, 255, 0.35)',
+                borderRadius: '6px',
+                padding: '14px',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '6px' }}>
+                <span style={{ color: '#38bdf8' }}>OUTPUT 01</span>
+                <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>GENERATED</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
                 <Layers size={18} color="#00f3ff" />
                 <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', color: '#ffffff' }}>
-                  ICE_PROBABILITY_MATRIX_V3
+                  FINAL ICE PROBABILITY MAP
                 </span>
               </div>
-
-              <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
-                <div style={{ width: `${scanProgress}%`, height: '100%', background: '#00f3ff', transition: 'width 0.5s ease' }} />
+              <div style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'JetBrains Mono' }}>
+                2D & 3D PyTorch UNet Confidence Matrix
               </div>
             </div>
 
-            {/* CARD 2: SITE_EVAL */}
-            <div style={{
-              background: '#070f20',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '6px',
-              padding: '14px',
-              position: 'relative'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
-                <span style={{ color: '#64748b' }}>SITE_EVAL</span>
-                <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>QUEUED</span>
+            {/* OUTPUT 2: SAFE LANDING SITE MAP */}
+            <div
+              onClick={() => setPipelineStage('outputs')}
+              style={{
+                background: '#070f20',
+                border: '1px solid rgba(0, 243, 255, 0.25)',
+                borderRadius: '6px',
+                padding: '14px',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '6px' }}>
+                <span style={{ color: '#38bdf8' }}>OUTPUT 02</span>
+                <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>OPTIMAL</span>
               </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
                 <Compass size={18} color="#00f3ff" />
                 <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', color: '#ffffff' }}>
-                  SAFE_LANDING_ZONES
+                  SAFE LANDING SITE MAP
                 </span>
+              </div>
+              <div style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'JetBrains Mono' }}>
+                Multi-criteria slope {'<15°'} Touchdown Zones
               </div>
             </div>
 
-            {/* CARD 3: PATH_CALC */}
-            <div style={{
-              background: '#070f20',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '6px',
-              padding: '14px',
-              position: 'relative'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
-                <span style={{ color: '#64748b' }}>PATH_CALC</span>
-                <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>LOCKED</span>
+            {/* OUTPUT 3: 3D TERRAIN VISUALIZATION */}
+            <div
+              onClick={() => setPipelineStage('ai_detection')}
+              style={{
+                background: '#070f20',
+                border: '1px solid rgba(0, 243, 255, 0.25)',
+                borderRadius: '6px',
+                padding: '14px',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '6px' }}>
+                <span style={{ color: '#38bdf8' }}>OUTPUT 03</span>
+                <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>3D RENDER</span>
               </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
                 <Activity size={18} color="#00f3ff" />
                 <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', color: '#ffffff' }}>
-                  ROVER_TRAVERSAL_VECTORS
+                  3D TERRAIN VISUALIZATION
                 </span>
+              </div>
+              <div style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'JetBrains Mono' }}>
+                Rotating 3D Surface Globe & Solar Shadows
+              </div>
+            </div>
+
+            {/* OUTPUT 4: ROVER PATH PLAN */}
+            <div
+              onClick={() => setPipelineStage('outputs')}
+              style={{
+                background: '#070f20',
+                border: '1px solid rgba(0, 243, 255, 0.25)',
+                borderRadius: '6px',
+                padding: '14px',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '6px' }}>
+                <span style={{ color: '#38bdf8' }}>OUTPUT 04</span>
+                <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>A* COMPUTED</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                <Compass size={18} color="#00ff9d" />
+                <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', color: '#ffffff' }}>
+                  ROVER PATH PLAN
+                </span>
+              </div>
+              <div style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'JetBrains Mono' }}>
+                Safe traversal vectors avoiding hazard craters
               </div>
             </div>
           </div>
 
-          {/* BOTTOM PIPELINE DIAGNOSTICS PANEL */}
-          <div style={{
-            background: '#070f20',
-            border: '1px solid rgba(0, 243, 255, 0.25)',
-            borderRadius: '6px',
-            padding: '14px'
-          }}>
-            <h4 style={{ fontSize: '10px', fontWeight: '800', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 12px 0', textTransform: 'uppercase' }}>
-              PIPELINE_DIAGNOSTICS
+          {/* DOWNLOAD REPORTS & EXPORT SECTION */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
+            <h4 style={{ fontSize: '10px', fontWeight: '800', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 4px 0', textTransform: 'uppercase' }}>
+              DOWNLOAD REPORTS
             </h4>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '10px', fontFamily: 'JetBrains Mono', marginBottom: '14px' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', marginBottom: '4px' }}>
-                  <span>CPU_LOAD</span>
-                  <span style={{ color: '#00f3ff' }}>78%</span>
-                </div>
-                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
-                  <div style={{ width: '78%', height: '100%', background: '#00f3ff' }} />
-                </div>
-              </div>
+            <button
+              onClick={handleDownloadPDF}
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: '#00f3ff',
+                color: '#02040a',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: '900',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                textTransform: 'uppercase',
+                boxShadow: '0 0 15px rgba(0, 243, 255, 0.4)'
+              }}
+            >
+              <Download size={14} /> DOWNLOAD REPORT (PDF)
+            </button>
 
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', marginBottom: '4px' }}>
-                  <span>MEM_USE</span>
-                  <span style={{ color: '#38bdf8' }}>62%</span>
-                </div>
-                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
-                  <div style={{ width: '62%', height: '100%', background: '#38bdf8' }} />
-                </div>
-              </div>
-
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', marginBottom: '4px' }}>
-                  <span>UPLINK</span>
-                  <span style={{ color: '#00ff9d' }}>95%</span>
-                </div>
-                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
-                  <div style={{ width: '95%', height: '100%', background: '#00ff9d' }} />
-                </div>
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', fontSize: '9px', fontFamily: 'JetBrains Mono', textAlign: 'center' }}>
-              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '6px', borderRadius: '4px' }}>
-                <span style={{ color: '#64748b', display: 'block' }}>NET_LATENCY</span>
-                <strong style={{ color: '#ffffff' }}>1.24s</strong>
-              </div>
-              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '6px', borderRadius: '4px' }}>
-                <span style={{ color: '#64748b', display: 'block' }}>DATA_RATE</span>
-                <strong style={{ color: '#ffffff' }}>14.2 MB/s</strong>
-              </div>
-              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '6px', borderRadius: '4px' }}>
-                <span style={{ color: '#64748b', display: 'block' }}>ERR_RATE</span>
-                <strong style={{ color: '#00ff9d' }}>0.001%</strong>
-              </div>
-            </div>
+            <button
+              onClick={handleExportCSV}
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: '800',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                textTransform: 'uppercase'
+              }}
+            >
+              <FileSpreadsheet size={14} /> EXPORT RAW DATA (CSV)
+            </button>
           </div>
         </aside>
       </div>
