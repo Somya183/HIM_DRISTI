@@ -1,0 +1,36 @@
+{
+  "target": "Moon (Lunar South Pole)",
+  "feature_name": "Shackleton Crater",
+  "center_coordinates": {
+    "latitude": -89.9,
+    "longitude": 0.0
+  },
+  "bounding_box": {
+    "min_lat": -89.95,
+    "max_lat": -89.85,
+    "min_lon": -10.0,
+    "max_lon": 10.0
+  },
+  "spatial_resolution_meters": 235.0,
+  "grid_dimensions": [
+    512,
+    512
+  ],
+  "projection": "Simple Cylindrical / Polar Stereographic (Moon 2000)",
+  "source_archive": "NASA Planetary Data System (PDS) Geosciences Node",
+  "pds_dataset_id": "LRO-L-MRFLRO-5-GLOBAL-MOSAIC-V1.0",
+  "data_status": "AUTHENTIC NASA PDS DATA",
+  "dataset_name": "Real NASA LOLA Lunar Digital Elevation Model (DEM)",
+  "instrument": "Lunar Orbiter Laser Altimeter (LOLA)",
+  "spacecraft": "Lunar Reconnaissance Orbiter (LRO)",
+  "agency": "NASA",
+  "pds_product_id": "GLOBAL_M_128PPD_SIMP_0C.IMG",
+  "measured_variable": "Topographic Elevation",
+  "unit": "Meters relative to 1737.4 km lunar sphere radius",
+  "min_elevation_m": -21553.83984375,
+  "max_elevation_m": 73345.1171875,
+  "files": [
+    "lola_dem_shackleton.npy",
+    "lola_dem_shackleton.png"
+  ]
+}

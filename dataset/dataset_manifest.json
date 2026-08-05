@@ -1,0 +1,17 @@
+{
+  "project": "HImDristi - Lunar Water Ice Detection",
+  "phase": "Phase 1 - Data Collection (Day 1)",
+  "dataset_source": "NASA Planetary Data System (PDS) Geosciences Node",
+  "target_region": "Shackleton Crater, Lunar South Pole",
+  "coordinates": {
+    "lat": -89.9,
+    "lon": 0.0
+  },
+  "data_status": "AUTHENTIC OFFICIAL NASA PDS DATA",
+  "modalities": {
+    "radar": "dataset/radar/dfsar_cpr_shackleton.npy",
+    "optical": "dataset/optical/lroc_optical_shackleton.npy",
+    "dem": "dataset/dem/lola_dem_shackleton.npy",
+    "shadow": "dataset/shadow/psr_shadow_shackleton.npy"
+  }
+}

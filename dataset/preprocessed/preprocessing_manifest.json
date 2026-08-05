@@ -1,0 +1,20 @@
+{
+  "phase": "Phase 2 - Preprocessing",
+  "status": "Complete",
+  "output_tensor_shape": [
+    512,
+    512,
+    4
+  ],
+  "channels": [
+    "0: Denoised & Normalized Radar CPR",
+    "1: Resized & CLAHE Enhanced Optical Reflectance",
+    "2: Min-Max Normalized DEM Elevation",
+    "3: Binary Morphologically Cleaned Shadow Mask"
+  ],
+  "dem_stats": {
+    "min_elevation_m": -21553.83984375,
+    "max_elevation_m": 73345.1171875
+  },
+  "psr_coverage_percent": 88.543701171875
+}

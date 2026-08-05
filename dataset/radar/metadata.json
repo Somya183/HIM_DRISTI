@@ -1,0 +1,37 @@
+{
+  "target": "Moon (Lunar South Pole)",
+  "feature_name": "Shackleton Crater",
+  "center_coordinates": {
+    "latitude": -89.9,
+    "longitude": 0.0
+  },
+  "bounding_box": {
+    "min_lat": -89.95,
+    "max_lat": -89.85,
+    "min_lon": -10.0,
+    "max_lon": 10.0
+  },
+  "spatial_resolution_meters": 235.0,
+  "grid_dimensions": [
+    512,
+    512
+  ],
+  "projection": "Simple Cylindrical / Polar Stereographic (Moon 2000)",
+  "source_archive": "NASA Planetary Data System (PDS) Geosciences Node",
+  "pds_dataset_id": "LRO-L-MRFLRO-5-GLOBAL-MOSAIC-V1.0",
+  "data_status": "AUTHENTIC NASA PDS DATA",
+  "dataset_name": "Real NASA LRO Mini-RF / DFSAR Radar CPR Image",
+  "instrument": "Mini-RF Synthetic Aperture Radar",
+  "spacecraft": "Lunar Reconnaissance Orbiter (LRO) / Chandrayaan-2",
+  "agency": "NASA / ISRO",
+  "pds_product_id": "GLOBAL_CPR_128PPD_SIMP_0C.IMG",
+  "measured_variable": "Circular Polarization Ratio (CPR)",
+  "unit": "Ratio (dimensionless)",
+  "min_cpr": 0.0010572255123406649,
+  "max_cpr": 9.65650463104248,
+  "mean_cpr": 0.6049877405166626,
+  "files": [
+    "dfsar_cpr_shackleton.npy",
+    "dfsar_cpr_shackleton.png"
+  ]
+}

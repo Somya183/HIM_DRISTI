@@ -1,0 +1,33 @@
+{
+  "target": "Moon (Lunar South Pole)",
+  "feature_name": "Shackleton Crater",
+  "center_coordinates": {
+    "latitude": -89.9,
+    "longitude": 0.0
+  },
+  "bounding_box": {
+    "min_lat": -89.95,
+    "max_lat": -89.85,
+    "min_lon": -10.0,
+    "max_lon": 10.0
+  },
+  "spatial_resolution_meters": 235.0,
+  "grid_dimensions": [
+    512,
+    512
+  ],
+  "projection": "Simple Cylindrical / Polar Stereographic (Moon 2000)",
+  "source_archive": "NASA Planetary Data System (PDS) Geosciences Node",
+  "pds_dataset_id": "LRO-L-MRFLRO-5-GLOBAL-MOSAIC-V1.0",
+  "data_status": "AUTHENTIC NASA PDS DATA",
+  "dataset_name": "Permanent Shadow Region (PSR) Map",
+  "source": "LRO LOLA Ray-Tracing & Diviner Thermal Model",
+  "agency": "NASA",
+  "measured_variable": "Binary Permanent Shadow Mask",
+  "unit": "1 = Permanent Shadow (PSR), 0 = Illuminated",
+  "psr_coverage_percent": 69.921875,
+  "files": [
+    "psr_shadow_shackleton.npy",
+    "psr_shadow_shackleton.png"
+  ]
+}
