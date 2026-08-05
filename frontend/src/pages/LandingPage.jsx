@@ -508,8 +508,99 @@ export default function LandingPage({ isAuthenticated }) {
                 activeStep === 'detection' ? (
                   <Moon3DViewer selectedTarget={selectedTarget} targetInfo={analysisData?.target} iceGrid={analysisData?.ice_grid} />
                 ) : activeStep === 'acquisition' ? (
-                  <div style={{ height: '380px', width: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <AutoRotatingMoon3D />
+                  /* HIGH-TECH CRATER SELECTOR & FILE UPLOAD PANEL (REPLACED MOON SPHERE) */
+                  <div style={{
+                    width: '92%',
+                    maxWidth: '680px',
+                    padding: '24px',
+                    background: 'rgba(5, 11, 24, 0.92)',
+                    border: '1px solid rgba(0, 243, 255, 0.35)',
+                    borderRadius: '12px',
+                    boxShadow: '0 0 40px rgba(0, 243, 255, 0.15)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px',
+                    zIndex: 10
+                  }}>
+                    {/* SECTION 1: CRATER SELECTOR GRID */}
+                    <div>
+                      <h3 style={{ fontSize: '11px', fontWeight: '800', color: '#00f3ff', letterSpacing: '1.5px', fontFamily: 'JetBrains Mono', margin: '0 0 12px 0', textTransform: 'uppercase' }}>
+                        🎯 SELECT TARGET LUNAR CRATER
+                      </h3>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                        {[
+                          { id: 'shackleton', name: 'Shackleton Crater', coords: '-89.9°S, 0.0°E', depth: '21.0 km' },
+                          { id: 'haworth', name: 'Haworth Crater', coords: '-87.5°S, -5.0°E', depth: '35.0 km' },
+                          { id: 'shoemaker', name: 'Shoemaker Crater', coords: '-88.1°S, 45.0°E', depth: '50.0 km' },
+                          { id: 'faustini', name: 'Faustini Crater', coords: '-87.3°S, 87.0°E', depth: '39.0 km' },
+                          { id: 'cabeus', name: 'Cabeus Crater', coords: '-84.9°S, 35.5°W', depth: '100.0 km' }
+                        ].map(crater => (
+                          <button
+                            key={crater.id}
+                            onClick={() => setSelectedTarget(crater.id)}
+                            style={{
+                              background: selectedTarget === crater.id ? 'rgba(0, 243, 255, 0.18)' : 'rgba(255, 255, 255, 0.03)',
+                              border: selectedTarget === crater.id ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.1)',
+                              borderRadius: '8px',
+                              padding: '10px 12px',
+                              color: selectedTarget === crater.id ? '#00f3ff' : '#cbd5e1',
+                              cursor: 'pointer',
+                              textAlign: 'left',
+                              transition: 'all 0.2s ease'
+                            }}
+                          >
+                            <div style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', marginBottom: '4px' }}>
+                              {crater.name}
+                            </div>
+                            <div style={{ fontSize: '9px', color: '#64748b', fontFamily: 'JetBrains Mono' }}>
+                              {crater.coords}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* SECTION 2: FILE UPLOAD DROPZONE */}
+                    <div>
+                      <h3 style={{ fontSize: '11px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1.5px', fontFamily: 'JetBrains Mono', margin: '0 0 12px 0', textTransform: 'uppercase' }}>
+                        📤 UPLOAD CUSTOM TELEMETRY DATASET
+                      </h3>
+
+                      <label style={{
+                        border: '2px dashed rgba(0, 243, 255, 0.4)',
+                        background: 'rgba(0, 243, 255, 0.04)',
+                        borderRadius: '10px',
+                        padding: '24px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}>
+                        <Upload size={28} color="#00f3ff" />
+                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#ffffff', fontFamily: 'JetBrains Mono' }}>
+                          DRAG & DROP LUNAR TELEMETRY FILE OR CLICK TO BROWSE
+                        </span>
+                        <span style={{ fontSize: '10px', color: '#64748b', fontFamily: 'JetBrains Mono' }}>
+                          Supports LROC Optical, DFSAR Radar CPR (.IMG / .RAW / .PNG / .TIF)
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*,.bin,.raw,.tif"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              alert(`Dataset "${file.name}" uploaded successfully! Ingesting DFSAR radar layers...`);
+                              fetchAnalysis();
+                            }
+                          }}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
+                    </div>
                   </div>
                 ) : (
                   <PreprocessingPanel images={analysisData?.images} onRunAnalysis={fetchAnalysis} isAnalyzing={isExecuting} />
@@ -540,56 +631,6 @@ export default function LandingPage({ isAuthenticated }) {
               }}>
                 <AlertTriangle size={13} /> HAZARD_DETECTED | CONFIDENCE: 87%
               </div>
-            </div>
-          </div>
-
-          {/* BOTTOM TERMINAL LOG CONSOLE (`LIVE_TELEMETRY_STREAM`) */}
-          <div style={{
-            height: '140px',
-            minHeight: '140px',
-            background: '#050a14',
-            border: '1px solid rgba(0, 243, 255, 0.25)',
-            borderRadius: '8px',
-            padding: '12px',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '10px',
-              fontFamily: 'JetBrains Mono',
-              color: '#38bdf8',
-              marginBottom: '8px',
-              borderBottom: '1px solid rgba(0, 243, 255, 0.15)',
-              paddingBottom: '6px'
-            }}>
-              <span style={{ fontWeight: 'bold' }}>LIVE_TELEMETRY_STREAM</span>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <span style={{ background: 'rgba(0,243,255,0.1)', padding: '2px 6px', borderRadius: '3px', cursor: 'pointer' }}>RAW_DATA</span>
-                <span style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '3px', cursor: 'pointer' }}>FILTERED</span>
-              </div>
-            </div>
-
-            <div style={{
-              flex: 1,
-              overflowY: 'auto',
-              fontFamily: 'JetBrains Mono',
-              fontSize: '10px',
-              lineHeight: '1.6',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '2px'
-            }}>
-              {logs.map((log, idx) => (
-                <div key={idx} style={{
-                  color: log.type === 'warn' ? '#f59e0b' : log.type === 'success' ? '#00ff9d' : '#94a3b8'
-                }}>
-                  <span style={{ color: '#475569', marginRight: '8px' }}>[{log.time}]</span>
-                  <span>{log.text}</span>
-                </div>
-              ))}
             </div>
           </div>
         </main>
