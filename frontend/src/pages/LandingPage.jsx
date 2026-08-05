@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 import StarfieldBackground from '../components/StarfieldBackground';
-import HolographicMoon3D from '../components/HolographicMoon3D';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
@@ -283,7 +282,19 @@ export default function LandingPage({ isAuthenticated }) {
               border: '1px solid rgba(0, 243, 255, 0.55)',
               boxShadow: '0 30px 90px rgba(0, 0, 0, 0.98), 0 0 65px rgba(0, 243, 255, 0.45), inset 0 0 40px rgba(0, 0, 0, 0.85)'
             }}>
-              <HolographicMoon3D width="100%" height="100%" />
+              <iframe
+                src="https://solarsystem.nasa.gov/gltf_embed/2366/"
+                title="Official NASA Photorealistic 3D Moon Model"
+                width="100%"
+                height="100%"
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  transform: 'scale(1.36)',
+                  transformOrigin: 'center center'
+                }}
+                allowFullScreen
+              />
 
               {/* Volumetric 3D Solar Shadow Overlay */}
               <div style={{
