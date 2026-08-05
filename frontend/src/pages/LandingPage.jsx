@@ -265,18 +265,24 @@ export default function LandingPage({ isAuthenticated }) {
             pointerEvents: 'none'
           }} />
 
-          {/* 3D Moon Surface Graphic */}
-          <div className="float-moon" style={{ width: '380px', height: '380px', position: 'relative', opacity: 0.85 }}>
-            <img
-              src={moonSphereImg}
-              alt="Lunar Surface Scanner"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                borderRadius: '50%',
-                filter: 'drop-shadow(0 0 35px rgba(56, 189, 248, 0.3))'
-              }}
+          {/* 3D NASA Interactive Animated Moon Model Embed */}
+          <div style={{
+            width: '420px',
+            height: '420px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            position: 'relative',
+            background: '#000',
+            border: '2px solid rgba(56, 189, 248, 0.4)',
+            boxShadow: '0 0 50px rgba(56, 189, 248, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9)'
+          }}>
+            <iframe
+              src="https://solarsystem.nasa.gov/gltf_embed/2366/"
+              title="Official NASA 3D Moon Model"
+              width="100%"
+              height="100%"
+              style={{ border: 'none', background: '#000' }}
+              allowFullScreen
             />
           </div>
 
