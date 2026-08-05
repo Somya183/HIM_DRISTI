@@ -118,18 +118,19 @@ export default function LandingPage({ isAuthenticated }) {
 
       {/* HERO SECTION */}
       <main style={{
-        maxWidth: '1200px',
+        maxWidth: '1440px',
         margin: '0 auto',
         width: '100%',
-        padding: '60px 64px 100px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
+        padding: '50px 64px 80px',
+        display: 'grid',
+        gridTemplateColumns: '1.2fr 1fr',
+        alignItems: 'center',
+        gap: '50px',
         position: 'relative',
         zIndex: 20
       }}>
-        {/* HERO HEADLINE & ACTIONS */}
-        <div style={{ maxWidth: '720px' }}>
+        {/* LEFT COLUMN: HERO HEADLINE & ACTIONS */}
+        <div>
           {/* LIVE TELEMETRY PILL BADGE */}
           <div style={{
             display: 'inline-flex',
@@ -163,7 +164,7 @@ export default function LandingPage({ isAuthenticated }) {
 
           {/* MAIN HEADLINE */}
           <h1 style={{
-            fontSize: 'clamp(48px, 6vw, 76px)',
+            fontSize: 'clamp(44px, 5.5vw, 68px)',
             fontWeight: '800',
             fontFamily: "'Space Grotesk', sans-serif",
             lineHeight: '1.08',
@@ -176,10 +177,10 @@ export default function LandingPage({ isAuthenticated }) {
 
           {/* SUB-HEADLINE DESCRIPTION */}
           <p style={{
-            fontSize: '17px',
+            fontSize: '16px',
             color: '#cbd5e1',
-            lineHeight: '1.7',
-            maxWidth: '600px',
+            lineHeight: '1.65',
+            maxWidth: '540px',
             margin: '0 0 40px 0',
             fontWeight: '400'
           }}>
@@ -248,6 +249,41 @@ export default function LandingPage({ isAuthenticated }) {
             >
               VIEW DATA
             </button>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: OFFICIAL NASA 3D INTERACTIVE MOON MODEL */}
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/* Ambient Moonlight Light Halo */}
+          <div style={{
+            position: 'absolute',
+            width: '520px',
+            height: '520px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%)',
+            filter: 'blur(50px)',
+            pointerEvents: 'none'
+          }} />
+
+          {/* 3D NASA Interactive Animated Moon Model Container */}
+          <div style={{
+            width: '460px',
+            height: '460px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            position: 'relative',
+            background: '#000',
+            border: '2px solid rgba(56, 189, 248, 0.4)',
+            boxShadow: '0 0 50px rgba(56, 189, 248, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9)'
+          }}>
+            <iframe
+              src="https://solarsystem.nasa.gov/gltf_embed/2366/"
+              title="Official NASA 3D Moon Model"
+              width="100%"
+              height="100%"
+              style={{ border: 'none', background: '#000' }}
+              allowFullScreen
+            />
           </div>
         </div>
       </main>
