@@ -330,44 +330,7 @@ export default function LandingPage({ isAuthenticated }) {
         </div>
       </main>
 
-      {/* LOWER MISSION INSIGHTS & STATS ROW */}
-      <section style={{
-        maxWidth: '1440px',
-        margin: '0 auto',
-        width: '100%',
-        padding: '0 64px 48px',
-        position: 'relative',
-        zIndex: 20
-      }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '32px' }}>
-          <div className="hud-card" style={{ padding: '20px', borderLeft: '4px solid #38bdf8' }}>
-            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              MODEL F1 ACCURACY
-            </span>
-            <strong style={{ display: 'block', fontSize: '28px', color: '#38bdf8', fontFamily: 'Space Grotesk', marginTop: '4px' }}>
-              93.7%
-            </strong>
-          </div>
 
-          <div className="hud-card" style={{ padding: '20px', borderLeft: '4px solid #00f3ff' }}>
-            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              SEGMENTATION IOU SCORE
-            </span>
-            <strong style={{ display: 'block', fontSize: '28px', color: '#00f3ff', fontFamily: 'Space Grotesk', marginTop: '4px' }}>
-              88.2%
-            </strong>
-          </div>
-
-          <div className="hud-card" style={{ padding: '20px', borderLeft: '4px solid #c084fc' }}>
-            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              POLAR TARGET CRATERS
-            </span>
-            <strong style={{ display: 'block', fontSize: '28px', color: '#c084fc', fontFamily: 'Space Grotesk', marginTop: '4px' }}>
-              03 TARGETS
-            </strong>
-          </div>
-        </div>
-      </section>
 
       {/* FOOTER */}
       <footer style={{
