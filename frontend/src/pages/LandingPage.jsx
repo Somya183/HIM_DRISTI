@@ -278,7 +278,7 @@ export default function LandingPage({ isAuthenticated }) {
               pointerEvents: 'none'
             }} />
 
-            {/* 3D Moon Orb Container (Pops Out of Page with Deep Spatial Shadow) */}
+            {/* 3D Moon Orb Container (Pops Out of Page with Deep Spatial Shadow & Edge Curve Highlights) */}
             <div className="float-moon" style={{
               width: '520px',
               height: '520px',
@@ -286,8 +286,8 @@ export default function LandingPage({ isAuthenticated }) {
               overflow: 'hidden',
               position: 'relative',
               background: '#000000',
-              border: '1px solid rgba(0, 243, 255, 0.65)',
-              boxShadow: '0 40px 120px rgba(0, 0, 0, 0.98), 0 0 85px rgba(56, 189, 248, 0.7), 0 0 150px rgba(0, 243, 255, 0.4), inset 0 0 50px rgba(0, 0, 0, 0.95)'
+              border: '2px solid rgba(0, 243, 255, 0.85)',
+              boxShadow: '0 0 30px rgba(0, 243, 255, 0.8), inset 0 0 35px rgba(0, 243, 255, 0.6), 0 40px 120px rgba(0, 0, 0, 0.98), 0 0 90px rgba(56, 189, 248, 0.75)'
             }}>
               <iframe
                 src="https://solarsystem.nasa.gov/gltf_embed/2366/"
@@ -312,6 +312,18 @@ export default function LandingPage({ isAuthenticated }) {
                 bottom: 0,
                 borderRadius: '50%',
                 background: 'radial-gradient(circle at 24% 24%, transparent 25%, rgba(2, 4, 11, 0.45) 55%, rgba(2, 4, 11, 0.82) 80%, rgba(2, 4, 11, 0.96) 100%)',
+                pointerEvents: 'none'
+              }} />
+
+              {/* Luminous 3D Spherical Edge Curve Rim Light Overlay */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle at 50% 50%, transparent 68%, rgba(0, 243, 255, 0.35) 94%, rgba(0, 243, 255, 0.75) 100%)',
                 pointerEvents: 'none'
               }} />
             </div>
