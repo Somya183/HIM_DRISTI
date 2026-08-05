@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Target, Layers, Radio, Satellite, MapPinned, ArrowUpRight, ShieldCheck, Cpu, Database, Activity } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import moonSphereImg from '../assets/moon_sphere.png';
-import StarfieldBackground from '../components/StarfieldBackground';
+import ThreeMoonGlobe from '../components/ThreeMoonGlobe';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
@@ -265,30 +265,16 @@ export default function LandingPage({ isAuthenticated }) {
             pointerEvents: 'none'
           }} />
 
-          {/* 3D NASA Interactive Animated Moon Model Container (Ultra-Thin Glowing Border) */}
+          {/* REAL WEBGL THREE.JS INTERACTIVE 3D MOON GLOBE */}
           <div style={{
-            width: '460px',
-            height: '460px',
+            width: '480px',
+            height: '480px',
             borderRadius: '50%',
-            overflow: 'hidden',
             position: 'relative',
             background: 'transparent',
-            border: '1px solid rgba(0, 243, 255, 0.5)',
-            boxShadow: '0 0 30px rgba(0, 243, 255, 0.35)'
+            filter: 'drop-shadow(0 0 35px rgba(0, 243, 255, 0.4))'
           }}>
-            <iframe
-              src="https://solarsystem.nasa.gov/gltf_embed/2366/"
-              title="Official NASA 3D Moon Model"
-              width="100%"
-              height="100%"
-              style={{
-                border: 'none',
-                background: 'transparent',
-                transform: 'scale(1.36)',
-                transformOrigin: 'center center'
-              }}
-              allowFullScreen
-            />
+            <ThreeMoonGlobe width="480px" height="480px" />
           </div>
         </div>
       </main>
