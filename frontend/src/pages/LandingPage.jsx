@@ -258,7 +258,7 @@ export default function LandingPage({ isAuthenticated }) {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: OFFICIAL NASA 3D INTERACTIVE MOON MODEL WITH 3D SHADOW DEPTH */}
+          {/* RIGHT COLUMN: OPEN SOURCE REALISTIC 3D MOON MODEL */}
           <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             {/* Ambient Moonlight Halo */}
             <div style={{
@@ -271,32 +271,33 @@ export default function LandingPage({ isAuthenticated }) {
               pointerEvents: 'none'
             }} />
 
-            {/* NASA 3D Moon Model Orb Container (Floating 3D Sphere with Deep Shadow) */}
+            {/* Open Source Realistic 3D Moon Orb Container */}
             <div className="float-moon" style={{
               width: '480px',
               height: '480px',
               borderRadius: '50%',
               overflow: 'hidden',
               position: 'relative',
-              background: '#000',
-              border: '1px solid rgba(0, 243, 255, 0.5)',
-              boxShadow: '0 30px 90px rgba(0, 0, 0, 0.98), 0 0 60px rgba(0, 243, 255, 0.45), inset 0 0 40px rgba(0, 0, 0, 0.85)'
+              background: '#02040a',
+              border: '1px solid rgba(0, 243, 255, 0.55)',
+              boxShadow: '0 30px 90px rgba(0, 0, 0, 0.98), 0 0 65px rgba(0, 243, 255, 0.45), inset 0 0 40px rgba(0, 0, 0, 0.85)'
             }}>
               <iframe
-                src="https://solarsystem.nasa.gov/gltf_embed/2366/"
-                title="Official NASA 3D Moon Model"
+                src="https://sketchfab.com/models/2d228fdd647c4383a152345591eb1380/embed?autostart=1&internal=1&tracking=0&ui_ar=0&ui_infos=0&ui_snapshots=0&ui_stop=0&ui_theme=dark&ui_watermark=0"
+                title="NASA CGI Moon Kit Photorealistic 3D Model (Open Source)"
                 width="100%"
                 height="100%"
                 style={{
                   border: 'none',
                   background: 'transparent',
-                  transform: 'scale(1.36)',
+                  transform: 'scale(1.22)',
                   transformOrigin: 'center center'
                 }}
+                allow="autoplay; fullscreen; vr"
                 allowFullScreen
               />
 
-              {/* Volumetric 3D Solar Shadow & Depth Overlay */}
+              {/* Volumetric 3D Solar Shadow Overlay */}
               <div style={{
                 position: 'absolute',
                 top: 0,
@@ -304,7 +305,7 @@ export default function LandingPage({ isAuthenticated }) {
                 right: 0,
                 bottom: 0,
                 borderRadius: '50%',
-                background: 'radial-gradient(circle at 28% 28%, transparent 30%, rgba(2, 4, 11, 0.35) 60%, rgba(2, 4, 11, 0.75) 85%, rgba(2, 4, 11, 0.92) 100%)',
+                background: 'radial-gradient(circle at 28% 28%, transparent 35%, rgba(2, 4, 11, 0.25) 65%, rgba(2, 4, 11, 0.65) 88%, rgba(2, 4, 11, 0.88) 100%)',
                 pointerEvents: 'none'
               }} />
             </div>
