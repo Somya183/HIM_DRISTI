@@ -155,7 +155,7 @@ export default function Moon3DViewer({ selectedTarget = 'shackleton', targetInfo
           <strong style={{ color: '#00f3ff' }}>🧊 WATER ICE CONFIDENCE HEATMAP</strong>
           <span style={{ color: '#00ff9d' }}>94.2% PEAK</span>
         </div>
-        <div style={{ height: '260px', background: '#020408', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {analysisData?.images?.results?.ice_confidence ? (
             <img src={analysisData.images.results.ice_confidence} alt="Ice Confidence" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
@@ -163,6 +163,51 @@ export default function Moon3DViewer({ selectedTarget = 'shackleton', targetInfo
               Rendering PyTorch UNet Segmented Confidence Tensor...
             </div>
           )}
+        </div>
+
+        {/* COLOR MAP LEGEND GUIDE */}
+        <div style={{
+          marginTop: '12px',
+          padding: '10px 14px',
+          background: 'rgba(5, 10, 24, 0.9)',
+          border: '1px solid rgba(0, 243, 255, 0.2)',
+          borderRadius: '6px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <div style={{ fontSize: '10px', fontWeight: '800', color: '#00f3ff', fontFamily: 'JetBrains Mono', letterSpacing: '1px' }}>
+            🎨 COLOR MAP LEGEND & ICE PROBABILITY SCALE:
+          </div>
+
+          {/* GRADIENT COLOR BAR */}
+          <div style={{
+            height: '8px',
+            width: '100%',
+            borderRadius: '4px',
+            background: 'linear-gradient(90deg, #000080 0%, #0002ff 25%, #00f3ff 50%, #ffff00 75%, #ff0000 100%)',
+            boxShadow: '0 0 10px rgba(0, 243, 255, 0.2)'
+          }} />
+
+          {/* COLOR BREAKDOWN TILES */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: '#ff0000', display: 'inline-block' }}></span>
+              <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>RED (80-100%):</span> Pure Ice Deposit
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: '#ffff00', display: 'inline-block' }}></span>
+              <span style={{ color: '#ffee00', fontWeight: 'bold' }}>YELLOW (50-80%):</span> Ice & Regolith Mix
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: '#00f3ff', display: 'inline-block' }}></span>
+              <span style={{ color: '#00f3ff', fontWeight: 'bold' }}>CYAN (20-50%):</span> Surface Frost Layer
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: '#000080', display: 'inline-block' }}></span>
+              <span style={{ color: '#64748b', fontWeight: 'bold' }}>BLUE (0-20%):</span> Dry Regolith (No Ice)
+            </div>
+          </div>
         </div>
       </div>
     </div>
