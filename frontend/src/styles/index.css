@@ -320,6 +320,16 @@ select {
 }
 
 /* Animations & Laser Sweeps */
+@keyframes floatMoon {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(1.5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.float-moon {
+  animation: floatMoon 8s ease-in-out infinite;
+}
+
 @keyframes laserScan {
   0% { top: 0%; opacity: 0.3; }
   50% { top: 96%; opacity: 0.9; }
