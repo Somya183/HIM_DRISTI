@@ -1,15 +1,6 @@
 #  HimDristi Lunar Water Ice AI Detection & Traversal Platform
 
-> **Advanced Multi-Modal Deep Learning & 3D Tactical Navigation Platform for Lunar Polar Resource Exploration**
-
-![Version](https://img.shields.io/badge/v2.0-Lunar_Mission-00f3ff?style=for-the-badge)
-![PyTorch](https://img.shields.io/badge/PyTorch-UNet_Fusion-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white)
-![React](https://img.shields.io/badge/React-18-61dafb?style=for-the-badge&logo=react&logoColor=black)
-![Three.js](https://img.shields.io/badge/Three.js-3D_Globe-black?style=for-the-badge&logo=three.js&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-API_Backend-000000?style=for-the-badge&logo=flask&logoColor=white)
-
----
-
+> 
 ##  Overview
 
 **HImDristi** is an end-to-end AI mission control platform designed to identify, quantify, and map permanently shadowed water ice deposits at the Lunar South Pole (Shackleton, Haworth, and Shoemaker craters). 
@@ -99,7 +90,6 @@ npm run dev
 | **IoU (Intersection over Union)** | **88.2%** |
 | **Precision** | **94.8%** |
 | **Recall** | **92.6%** |
-| **Primary Target** | Shackleton Crater ($89.9^\circ\text{S}, 0^\circ\text{E}$) |
 
 ---
 
