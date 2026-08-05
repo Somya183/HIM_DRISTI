@@ -179,7 +179,7 @@ export default function LandingPage({ isAuthenticated }) {
               margin: '0 0 24px 0',
               letterSpacing: '-1.5px'
             }}>
-              Detecting Lunar Secrets with AI
+              Detecting Lunar Water Ice
             </h1>
 
             {/* SUB-HEADLINE DESCRIPTION */}
@@ -187,11 +187,11 @@ export default function LandingPage({ isAuthenticated }) {
               fontSize: '16px',
               color: '#cbd5e1',
               lineHeight: '1.65',
-              maxWidth: '540px',
+              maxWidth: '560px',
               margin: '0 0 40px 0',
               fontWeight: '400'
             }}>
-              Advanced machine learning models scanning the lunar surface for resource identification and subsurface ice deposits in real-time.
+              Multi-modal neural network models scanning NASA LRO radar & polar imagery to map subsurface water ice deposits and calculate safe rover traversal routes inside Shackleton Crater in real-time.
             </p>
 
             {/* RECTANGULAR ACTION BUTTONS */}
