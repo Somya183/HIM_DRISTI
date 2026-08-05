@@ -265,23 +265,28 @@ export default function LandingPage({ isAuthenticated }) {
             pointerEvents: 'none'
           }} />
 
-          {/* 3D NASA Interactive Animated Moon Model Container */}
+          {/* 3D NASA Interactive Animated Moon Model Container (Ultra-Thin Glowing Border) */}
           <div style={{
             width: '460px',
             height: '460px',
             borderRadius: '50%',
             overflow: 'hidden',
             position: 'relative',
-            background: '#000',
-            border: '2px solid rgba(56, 189, 248, 0.4)',
-            boxShadow: '0 0 50px rgba(56, 189, 248, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9)'
+            background: 'transparent',
+            border: '1px solid rgba(0, 243, 255, 0.5)',
+            boxShadow: '0 0 30px rgba(0, 243, 255, 0.35)'
           }}>
             <iframe
               src="https://solarsystem.nasa.gov/gltf_embed/2366/"
               title="Official NASA 3D Moon Model"
               width="100%"
               height="100%"
-              style={{ border: 'none', background: '#000' }}
+              style={{
+                border: 'none',
+                background: 'transparent',
+                transform: 'scale(1.36)',
+                transformOrigin: 'center center'
+              }}
               allowFullScreen
             />
           </div>
