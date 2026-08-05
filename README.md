@@ -58,7 +58,7 @@ HImDristi/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Prerequisites
 - **Python 3.9+**
@@ -90,7 +90,7 @@ npm run dev
 
 ---
 
-## 📊 AI Model Benchmarks
+##  AI Model Benchmarks
 
 | Metric | Benchmark Score |
 | :--- | :--- |
