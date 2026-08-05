@@ -4,7 +4,7 @@ import {
   Radio, Compass, Cpu, Database, Activity, Bell, Settings, HelpCircle,
   User, CheckCircle2, Loader2, ArrowRight, Download, FileText, Play, RotateCcw,
   Sparkles, ShieldCheck, MapPin, Sliders, ChevronRight, AlertTriangle, Layers, Upload,
-  Eye, Grid, Shield, Check, Info, FileSpreadsheet
+  Eye, Grid, Shield, Check, Info, FileSpreadsheet, Menu
 } from 'lucide-react';
 import StarfieldBackground from '../components/StarfieldBackground';
 import PreprocessingPanel from '../components/PreprocessingPanel';
@@ -15,6 +15,7 @@ import TelemetryDashboard from '../components/TelemetryDashboard';
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
 
+  const [showSidebar, setShowSidebar] = useState(true);
   const [pipelineStage, setPipelineStage] = useState('acquisition'); // 'acquisition', 'preprocessing', 'extraction', 'ai_detection', 'outputs'
   const [selectedTarget, setSelectedTarget] = useState('shackleton');
   const [activeLayer, setActiveLayer] = useState('radar'); // 'optical', 'radar', 'dem', 'shadow'
@@ -135,27 +136,49 @@ export default function LandingPage({ isAuthenticated }) {
         position: 'relative',
         zIndex: 30
       }}>
-        {/* BRAND TITLE & VERSION */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }} onClick={() => navigate('/')}>
-          <h1 style={{
-            fontSize: '22px',
-            fontWeight: '900',
-            fontFamily: "'Space Grotesk', sans-serif",
-            color: '#00f3ff',
-            letterSpacing: '1px',
-            margin: 0
-          }}>
-            HimDristi
-          </h1>
-          <span style={{
-            fontSize: '10px',
-            fontWeight: '800',
-            color: '#64748b',
-            letterSpacing: '1px',
-            fontFamily: 'JetBrains Mono'
-          }}>
-            [SYS.VER 4.2.1]
-          </span>
+        {/* BRAND TITLE & TOGGLE SIDEBAR MENU */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <button
+            onClick={() => setShowSidebar(prev => !prev)}
+            title="Toggle Left Panel"
+            style={{
+              background: showSidebar ? 'rgba(0, 243, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+              border: showSidebar ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '6px',
+              padding: '6px 10px',
+              color: showSidebar ? '#00f3ff' : '#94a3b8',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+              boxShadow: showSidebar ? '0 0 10px rgba(0, 243, 255, 0.3)' : 'none'
+            }}
+          >
+            <Menu size={18} />
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+            <h1 style={{
+              fontSize: '22px',
+              fontWeight: '900',
+              fontFamily: "'Space Grotesk', sans-serif",
+              color: '#00f3ff',
+              letterSpacing: '1px',
+              margin: 0
+            }}>
+              HimDristi
+            </h1>
+            <span style={{
+              fontSize: '10px',
+              fontWeight: '800',
+              color: '#64748b',
+              letterSpacing: '1px',
+              fontFamily: 'JetBrains Mono'
+            }}>
+              [SYS.VER 4.2.1]
+            </span>
+          </div>
         </div>
 
         {/* CENTER CRATER SELECTOR & UPLOAD ACTION */}
@@ -356,84 +379,87 @@ export default function LandingPage({ isAuthenticated }) {
         height: 'calc(100vh - 98px)',
         width: '100%',
         display: 'grid',
-        gridTemplateColumns: '260px 1fr 340px',
+        gridTemplateColumns: showSidebar ? '260px 1fr 340px' : '1fr 340px',
         gap: '2px',
         background: 'rgba(0, 243, 255, 0.15)',
         position: 'relative',
         zIndex: 10,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        transition: 'grid-template-columns 0.3s ease'
       }}>
         {/* LEFT COLUMN: MULTI-SOURCE SENSOR INGESTION & STAGE CONFIG */}
-        <aside style={{
-          background: '#040814',
-          padding: '16px',
-          height: '100%',
-          overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          borderRight: '1px solid rgba(0, 243, 255, 0.2)'
-        }}>
-          <div>
-            {/* STAGE STATUS */}
-            <div style={{
-              background: 'rgba(8, 14, 28, 0.9)',
-              border: '1px solid rgba(0, 243, 255, 0.3)',
-              padding: '12px',
-              borderRadius: '6px',
-              marginBottom: '16px'
-            }}>
-              <div style={{ fontSize: '9px', fontWeight: '800', color: '#64748b', fontFamily: 'JetBrains Mono', marginBottom: '4px' }}>
-                ACTIVE FLOWCHART STAGE
+        {showSidebar && (
+          <aside style={{
+            background: '#040814',
+            padding: '16px',
+            height: '100%',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            borderRight: '1px solid rgba(0, 243, 255, 0.2)'
+          }}>
+            <div>
+              {/* STAGE STATUS */}
+              <div style={{
+                background: 'rgba(8, 14, 28, 0.9)',
+                border: '1px solid rgba(0, 243, 255, 0.3)',
+                padding: '12px',
+                borderRadius: '6px',
+                marginBottom: '16px'
+              }}>
+                <div style={{ fontSize: '9px', fontWeight: '800', color: '#64748b', fontFamily: 'JetBrains Mono', marginBottom: '4px' }}>
+                  ACTIVE FLOWCHART STAGE
+                </div>
+                <h2 style={{ fontSize: '14px', fontWeight: '900', color: '#00f3ff', margin: 0, textTransform: 'uppercase', fontFamily: 'Space Grotesk' }}>
+                  {pipelineStage.replace('_', ' ')}
+                </h2>
               </div>
-              <h2 style={{ fontSize: '14px', fontWeight: '900', color: '#00f3ff', margin: 0, textTransform: 'uppercase', fontFamily: 'Space Grotesk' }}>
-                {pipelineStage.replace('_', ' ')}
-              </h2>
-            </div>
 
-            {/* MULTI-SOURCE DATA LAYERS */}
-            <h3 style={{ fontSize: '10px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1px', fontFamily: 'JetBrains Mono', marginBottom: '10px', textTransform: 'uppercase' }}>
-              COMPREHENSIVE SENSOR LAYERS
-            </h3>
+              {/* MULTI-SOURCE DATA LAYERS */}
+              <h3 style={{ fontSize: '10px', fontWeight: '800', color: '#38bdf8', letterSpacing: '1px', fontFamily: 'JetBrains Mono', marginBottom: '10px', textTransform: 'uppercase' }}>
+                COMPREHENSIVE SENSOR LAYERS
+              </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {[
-                { id: 'optical', name: 'OPTICAL IMAGE', desc: 'LROC Narrow Angle Camera (0.5m Albedo)', icon: Eye },
-                { id: 'radar', name: 'RADAR IMAGE', desc: 'ISRO DFSAR & Mini-RF CPR (128-PPD)', icon: Radio },
-                { id: 'dem', name: 'DEM (TERRAIN)', desc: 'LOLA Elevation & Surface Roughness', icon: Layers },
-                { id: 'shadow', name: 'SHADOW MAP', desc: 'Permanently Shadowed Region (PSR <100K)', icon: Database }
-              ].map(layer => {
-                const LayerIcon = layer.icon;
-                const isSel = activeLayer === layer.id;
-                return (
-                  <button
-                    key={layer.id}
-                    onClick={() => setActiveLayer(layer.id)}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: isSel ? 'rgba(0, 243, 255, 0.15)' : 'rgba(255, 255, 255, 0.02)',
-                      border: isSel ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '6px',
-                      color: isSel ? '#00f3ff' : '#94a3b8',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                      <LayerIcon size={14} color={isSel ? '#00f3ff' : '#64748b'} />
-                      <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono' }}>{layer.name}</span>
-                    </div>
-                    <span style={{ fontSize: '9px', color: isSel ? '#38bdf8' : '#475569', fontFamily: 'JetBrains Mono', display: 'block', paddingLeft: '22px' }}>
-                      {layer.desc}
-                    </span>
-                  </button>
-                );
-              })}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {[
+                  { id: 'optical', name: 'OPTICAL IMAGE', desc: 'LROC Narrow Angle Camera (0.5m Albedo)', icon: Eye },
+                  { id: 'radar', name: 'RADAR IMAGE', desc: 'ISRO DFSAR & Mini-RF CPR (128-PPD)', icon: Radio },
+                  { id: 'dem', name: 'DEM (TERRAIN)', desc: 'LOLA Elevation & Surface Roughness', icon: Layers },
+                  { id: 'shadow', name: 'SHADOW MAP', desc: 'Permanently Shadowed Region (PSR <100K)', icon: Database }
+                ].map(layer => {
+                  const LayerIcon = layer.icon;
+                  const isSel = activeLayer === layer.id;
+                  return (
+                    <button
+                      key={layer.id}
+                      onClick={() => setActiveLayer(layer.id)}
+                      style={{
+                        width: '100%',
+                        padding: '10px 12px',
+                        background: isSel ? 'rgba(0, 243, 255, 0.15)' : 'rgba(255, 255, 255, 0.02)',
+                        border: isSel ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.08)',
+                        borderRadius: '6px',
+                        color: isSel ? '#00f3ff' : '#94a3b8',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
+                        <LayerIcon size={14} color={isSel ? '#00f3ff' : '#64748b'} />
+                        <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono' }}>{layer.name}</span>
+                      </div>
+                      <span style={{ fontSize: '9px', color: isSel ? '#38bdf8' : '#475569', fontFamily: 'JetBrains Mono', display: 'block', paddingLeft: '22px' }}>
+                        {layer.desc}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        )}
 
         {/* CENTER COLUMN: MAIN VIEWPORT (SWITCHES WITH FLOWCHART STAGE) */}
         <main style={{
