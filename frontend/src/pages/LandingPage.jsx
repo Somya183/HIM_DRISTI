@@ -15,12 +15,12 @@ import TelemetryDashboard from '../components/TelemetryDashboard';
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
 
-  // Navigation & Flowchart Pipeline State
   const [pipelineStage, setPipelineStage] = useState('acquisition'); // 'acquisition', 'preprocessing', 'extraction', 'ai_detection', 'outputs'
   const [selectedTarget, setSelectedTarget] = useState('shackleton');
   const [activeLayer, setActiveLayer] = useState('radar'); // 'optical', 'radar', 'dem', 'shadow'
   const [isExecuting, setIsExecuting] = useState(false);
   const [scanProgress, setScanProgress] = useState(100);
+  const [stageStatusMessage, setStageStatusMessage] = useState('READY');
   const [analysisData, setAnalysisData] = useState(null);
 
   // Fetch real backend data
@@ -43,30 +43,45 @@ export default function LandingPage({ isAuthenticated }) {
   const handleExecuteFullPipeline = () => {
     if (isExecuting) return;
     setIsExecuting(true);
-    setScanProgress(15);
+
+    // STAGE 01: DATA ACQUISITION (2 SECONDS)
     setPipelineStage('acquisition');
+    setScanProgress(20);
+    setStageStatusMessage('[STAGE 1/5] INGESTING MULTI-SOURCE OPTICAL, RADAR CPR & DEM DATA...');
 
     setTimeout(() => {
+      // STAGE 02: DATA PREPROCESSING (2 SECONDS)
       setPipelineStage('preprocessing');
       setScanProgress(40);
+      setStageStatusMessage('[STAGE 2/5] PREPROCESSING, ALIGNING & FILTERING SPECKLE NOISE...');
 
       setTimeout(() => {
+        // STAGE 03: FEATURE EXTRACTION (2 SECONDS)
         setPipelineStage('extraction');
-        setScanProgress(65);
+        setScanProgress(60);
+        setStageStatusMessage('[STAGE 3/5] EXTRACTING HIGH-CPR ANOMALIES & TERRAIN SLOPES...');
 
         setTimeout(() => {
+          // STAGE 04: AI DETECTION & DECISION (2 SECONDS)
           setPipelineStage('ai_detection');
-          setScanProgress(85);
+          setScanProgress(80);
+          setStageStatusMessage('[STAGE 4/5] EXECUTING PYTORCH UNET ICE SEGMENTATION...');
 
           setTimeout(() => {
+            // STAGE 05: OUTPUTS & REPORTS (2 SECONDS)
             setPipelineStage('outputs');
             setScanProgress(100);
-            setIsExecuting(false);
-            fetchAnalysis();
-          }, 1000);
-        }, 1000);
-      }, 1000);
-    }, 1000);
+            setStageStatusMessage('[STAGE 5/5] GENERATING ICE MAPS & A* ROVER PATH VECTORS...');
+
+            setTimeout(() => {
+              setIsExecuting(false);
+              setStageStatusMessage('PIPELINE EXECUTION COMPLETE');
+              fetchAnalysis();
+            }, 2000);
+          }, 2000);
+        }, 2000);
+      }, 2000);
+    }, 2000);
   };
 
   const handleDownloadPDF = () => {
@@ -153,11 +168,9 @@ export default function LandingPage({ isAuthenticated }) {
                 cursor: 'pointer'
               }}
             >
-              <option value="shackleton">🌕 Shackleton Crater (-89.9°S, 0.0°E)</option>
-              <option value="haworth">🌑 Haworth Crater (-87.5°S, -5.0°E)</option>
-              <option value="shoemaker">🌘 Shoemaker Crater (-88.1°S, 45.0°E)</option>
-              <option value="faustini">🌗 Faustini Crater (-87.3°S, 87.0°E)</option>
-              <option value="cabeus">🌖 Cabeus Crater (-84.9°S, 35.5°W)</option>
+              <option value="shackleton">Shackleton Crater (-89.9°S, 0.0°E)</option>
+              <option value="haworth">Haworth Crater (-87.5°S, -5.0°E)</option>
+              <option value="shoemaker">Shoemaker Crater (-88.1°S, 45.0°E)</option>
             </select>
           </div>
 
@@ -276,30 +289,58 @@ export default function LandingPage({ isAuthenticated }) {
           })}
         </div>
 
-        <button
-          onClick={handleExecuteFullPipeline}
-          disabled={isExecuting}
-          style={{
-            background: '#00f3ff',
-            color: '#02040a',
-            border: 'none',
-            padding: '6px 18px',
-            borderRadius: '6px',
-            fontSize: '11px',
-            fontWeight: '900',
-            fontFamily: 'JetBrains Mono',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            boxShadow: '0 0 15px rgba(0, 243, 255, 0.5)',
-            textTransform: 'uppercase'
-          }}
-        >
-          {isExecuting ? <Loader2 size={13} className="animate-spin" /> : <Play size={13} />}
-          {isExecuting ? 'RUNNING PIPELINE...' : 'EXECUTE PIPELINE'}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {isExecuting && (
+            <span style={{
+              fontSize: '10px',
+              fontFamily: 'JetBrains Mono',
+              color: '#00f3ff',
+              fontWeight: 'bold',
+              letterSpacing: '0.5px'
+            }}>
+              {stageStatusMessage}
+            </span>
+          )}
+
+          <button
+            onClick={handleExecuteFullPipeline}
+            disabled={isExecuting}
+            style={{
+              background: isExecuting ? 'rgba(0, 243, 255, 0.2)' : '#00f3ff',
+              color: isExecuting ? '#00f3ff' : '#02040a',
+              border: isExecuting ? '1px solid #00f3ff' : 'none',
+              padding: '6px 18px',
+              borderRadius: '6px',
+              fontSize: '11px',
+              fontWeight: '900',
+              fontFamily: 'JetBrains Mono',
+              cursor: isExecuting ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              boxShadow: '0 0 15px rgba(0, 243, 255, 0.5)',
+              textTransform: 'uppercase',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            {isExecuting ? <Loader2 size={13} className="animate-spin" /> : <Play size={13} />}
+            {isExecuting ? `EXECUTING (${scanProgress}%)` : 'EXECUTE PIPELINE'}
+          </button>
+        </div>
       </div>
+
+      {/* GLOWING PROGRESS BAR WHEN EXECUTING PIPELINE */}
+      {isExecuting && (
+        <div style={{ width: '100%', height: '3px', background: 'rgba(255, 255, 255, 0.1)', position: 'relative', zIndex: 25 }}>
+          <div style={{
+            height: '100%',
+            width: `${scanProgress}%`,
+            background: 'linear-gradient(90deg, #00f3ff, #00ff9d)',
+            boxShadow: '0 0 10px #00f3ff',
+            transition: 'width 0.4s ease-in-out'
+          }} />
+        </div>
+      )}
 
       {/* MAIN 3-COLUMN WORKSPACE */}
       <div style={{
@@ -381,30 +422,6 @@ export default function LandingPage({ isAuthenticated }) {
                   </button>
                 );
               })}
-            </div>
-          </div>
-
-          {/* QUICK TELEMETRY SUMMARY */}
-          <div style={{
-            background: 'rgba(7, 15, 32, 0.8)',
-            border: '1px solid rgba(0, 243, 255, 0.2)',
-            borderRadius: '6px',
-            padding: '12px',
-            fontSize: '10px',
-            fontFamily: 'JetBrains Mono'
-          }}>
-            <div style={{ color: '#64748b', marginBottom: '6px' }}>PIPELINE TELEMETRY:</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span>LAT/LON:</span>
-              <span style={{ color: '#00f3ff' }}>-89.9°S, 0.0°E</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span>ICE MASS:</span>
-              <span style={{ color: '#00ff9d' }}>0.04M Tonnes</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>UNet F1:</span>
-              <span style={{ color: '#38bdf8' }}>96.4%</span>
             </div>
           </div>
         </aside>
@@ -513,25 +530,13 @@ export default function LandingPage({ isAuthenticated }) {
               selectedTarget={selectedTarget}
               targetInfo={analysisData?.target}
               iceGrid={analysisData?.ice_grid}
+              analysisData={analysisData}
             />
           )}
 
-          {/* STAGE 05: OUTPUTS & REPORTS VIEWPORT (EXECUTIVE TELEMETRY DASHBOARD & GPS ROVER TRAVERSAL) */}
+          {/* STAGE 05: OUTPUTS & REPORTS VIEWPORT (GPS & ROVER TRAVERSAL VECTORS) */}
           {pipelineStage === 'outputs' && (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {/* EXECUTIVE METRICS: ICE PROBABILITY, VOLUME, MASS & ROVER DISTANCE */}
-              <div style={{ background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '16px' }}>
-                <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#00f3ff', fontFamily: 'JetBrains Mono', margin: '0 0 14px 0', textTransform: 'uppercase' }}>
-                  📊 MISSION CONTROL EXECUTIVE METRICS & ICE INVENTORY
-                </h3>
-                <TelemetryDashboard
-                  metrics={analysisData?.metrics}
-                  landingSite={analysisData?.landing_site}
-                  roverPath={analysisData?.rover_path}
-                />
-              </div>
-
-              {/* TACTICAL LUNAR GPS & ROVER TRAVERSAL VECTORS */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ flex: 1, background: '#050a14', border: '1px solid rgba(0, 243, 255, 0.3)', borderRadius: '8px', padding: '16px' }}>
                 <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 14px 0', textTransform: 'uppercase' }}>
                   🗺️ TACTICAL LUNAR GPS & A* ROVER PATH VECTORS
