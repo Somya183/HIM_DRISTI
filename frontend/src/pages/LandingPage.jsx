@@ -257,7 +257,7 @@ export default function LandingPage({ isAuthenticated }) {
             { id: 'preprocessing', num: '02', name: 'DATA PREPROCESSING', sub: 'NORM • ALIGN • CALIBRATE • FILTER' },
             { id: 'extraction', num: '03', name: 'FEATURE EXTRACTION', sub: 'HIGH CPR • SLOPE • PSR COLD TRAPS' },
             { id: 'ai_detection', num: '04', name: 'AI DETECTION & DECISION', sub: 'PYTORCH UNET • MULTI-CRITERIA RANK' },
-            { id: 'outputs', num: '05', name: 'OUTPUTS & REPORTS', sub: 'ICE MAP • LANDING • 3D • ROVER PATH' }
+            { id: 'outputs', num: '05', name: 'ROVER PATH PLANNING', sub: 'ICE MAP • LANDING • 3D • ROVER PATH' }
           ].map((stage, idx) => {
             const isActive = pipelineStage === stage.id;
             return (
