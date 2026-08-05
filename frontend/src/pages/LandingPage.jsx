@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 import StarfieldBackground from '../components/StarfieldBackground';
+import AutoRotatingMoon3D from '../components/AutoRotatingMoon3D';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
@@ -289,19 +290,7 @@ export default function LandingPage({ isAuthenticated }) {
               border: '2px solid rgba(0, 243, 255, 0.85)',
               boxShadow: '0 0 30px rgba(0, 243, 255, 0.8), inset 0 0 35px rgba(0, 243, 255, 0.6), 0 40px 120px rgba(0, 0, 0, 0.98), 0 0 90px rgba(56, 189, 248, 0.75)'
             }}>
-              <iframe
-                src="https://solarsystem.nasa.gov/gltf_embed/2366/"
-                title="Official NASA Photorealistic 3D Moon Model"
-                width="100%"
-                height="100%"
-                style={{
-                  border: 'none',
-                  background: 'transparent',
-                  transform: 'scale(1.42)',
-                  transformOrigin: 'center center'
-                }}
-                allowFullScreen
-              />
+              <AutoRotatingMoon3D width="100%" height="100%" />
 
               {/* Volumetric Realistic 3D Solar Shadow & Terminator Overlay */}
               <div style={{
