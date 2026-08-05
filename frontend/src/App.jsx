@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
+import LoginPage from './components/LoginPage';
 import TelemetryDashboard from './components/TelemetryDashboard';
 import Moon3DViewer from './components/Moon3DViewer';
 import PreprocessingPanel from './components/PreprocessingPanel';
@@ -8,9 +9,22 @@ import StarfieldBackground from './components/StarfieldBackground';
 import { Compass, Cpu, Activity, Database, Layers, Radio, Globe2, Sparkles } from 'lucide-react';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
   const [selectedTarget, setSelectedTarget] = useState('shackleton');
   const [analysisData, setAnalysisData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleLoginSuccess = (userData) => {
+    setCurrentUser(userData);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+  };
 
   const fetchAnalysis = async () => {
     setIsLoading(true);
@@ -61,8 +75,14 @@ export default function App() {
   };
 
   useEffect(() => {
-    fetchAnalysis();
-  }, [selectedTarget]);
+    if (isAuthenticated) {
+      fetchAnalysis();
+    }
+  }, [selectedTarget, isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
 
   return (
     <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '20px', position: 'relative', color: '#f8fafc' }}>
@@ -76,6 +96,8 @@ export default function App() {
         onRunAnalysis={fetchAnalysis}
         isAnalyzing={isLoading}
         analysisData={analysisData}
+        user={currentUser}
+        onLogout={handleLogout}
       />
 
       {/* SECTION 01: EXECUTIVE MISSION TELEMETRY & MODEL ACCURACY DASHBOARD */}

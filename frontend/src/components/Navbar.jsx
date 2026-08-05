@@ -1,8 +1,8 @@
 import React from 'react';
-import { Activity, Sparkles, FileText, Download, Table, Database, Upload, Compass, Navigation } from 'lucide-react';
+import { Activity, Sparkles, FileText, Download, Table, Database, Upload, Compass, Navigation, LogOut } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
-export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, isAnalyzing, analysisData }) {
+export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, isAnalyzing, analysisData, onLogout, user }) {
   const targets = [
     { id: 'shackleton', name: 'Shackleton Crater (89.9°S, 0°E)' },
     { id: 'haworth', name: 'Haworth Crater (87.5°S, -5°E)' },
@@ -232,6 +232,25 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
             ))}
           </select>
         </div>
+
+        {/* LOGOUT / LOCK MISSION CONTROL BUTTON */}
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            title="Lock Session / Sign Out"
+            className="hud-btn"
+            style={{
+              padding: '6px 10px',
+              fontSize: '11px',
+              color: '#f87171',
+              borderColor: 'rgba(248, 113, 113, 0.4)',
+              background: 'rgba(248, 113, 113, 0.12)'
+            }}
+          >
+            <LogOut size={13} color="#f87171" />
+            Lock Session
+          </button>
+        )}
       </div>
     </nav>
   );
