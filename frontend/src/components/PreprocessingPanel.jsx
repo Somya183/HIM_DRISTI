@@ -40,7 +40,7 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <label className="glass-button" style={{ fontSize: '11px', padding: '6px 14px', cursor: 'pointer' }}>
-            <Upload size={14} color="#00f3ff" /> Upload Custom Dataset
+            <Upload size={14} color="#00f3ff" /> Upload Chandrayaan Dataset
             <input type="file" accept="image/*" onChange={handleCustomUpload} style={{ display: 'none' }} />
           </label>
 
