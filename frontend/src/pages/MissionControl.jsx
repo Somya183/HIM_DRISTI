@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Radio, Compass, Cpu, Database, Layers, Activity, Bell, Settings, HelpCircle,
+  Radio, Compass, Cpu, Database, Activity, Bell, Settings, HelpCircle,
   User, CheckCircle2, Loader2, ArrowRight, Download, FileText, Play, RotateCcw,
-  Sparkles, ShieldCheck, MapPin, Sliders, ChevronRight
+  Sparkles, ShieldCheck, MapPin, Sliders, ChevronRight, Terminal, AlertTriangle,
+  HardDrive, CpuIcon, Signal
 } from 'lucide-react';
 import StarfieldBackground from '../components/StarfieldBackground';
 import PreprocessingPanel from '../components/PreprocessingPanel';
@@ -21,16 +22,27 @@ export default function MissionControl({ user, onLogout }) {
 
   // Execution & Pipeline States
   const [pipelineStatus, setPipelineStatus] = useState({
-    acquisition: 'complete',
-    preprocessing: 'processing', // 'pending', 'processing', 'complete'
-    extraction: 'pending',
-    detection: 'pending',
-    decision: 'pending'
+    acquisition: 'active',
+    preprocessing: 'awaiting', // 'awaiting', 'processing', 'complete'
+    extraction: 'idle',
+    detection: 'standby',
+    decision: 'locked'
   });
 
   const [scanProgress, setScanProgress] = useState(45);
   const [isExecuting, setIsExecuting] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
+
+  // Live Telemetry Terminal Stream Logs
+  const [logs, setLogs] = useState([
+    { time: '00:45:12.10', text: 'INITIATING SENSOR SWEEP... OK', type: 'info' },
+    { time: '00:45:12.45', text: 'CALIBRATING THERMAL IMAGER... OK', type: 'info' },
+    { time: '00:45:13.02', text: 'RECEIVING SAR DATA PACKET 1682...', type: 'info' },
+    { time: '00:45:13.50', text: 'WRN: ANOMALOUS ALBEDO READING SEC_7A', type: 'warn' },
+    { time: '00:45:14.11', text: 'COMPENSATING FOR SIGNAL NOISE... OK', type: 'info' },
+    { time: '00:45:14.89', text: 'ACQUIRING NEUTRON SPECTROMETER DATA...', type: 'info' },
+    { time: '00:45:15.20', text: 'POSITIVE HYDROGEN SIGNATURE DETECTED', type: 'success' }
+  ]);
 
   // Fetch analysis data from backend
   const fetchAnalysis = async () => {
@@ -49,31 +61,44 @@ export default function MissionControl({ user, onLogout }) {
     }
   };
 
-  const handleExecuteScan = () => {
+  const handleInitScanSeq = () => {
     if (isExecuting) return;
     setIsExecuting(true);
+
+    const addLog = (text, type = 'info') => {
+      const now = new Date();
+      const timeStr = `00:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now.getMilliseconds().toString().padStart(3, '0').slice(0, 2)}`;
+      setLogs(prev => [...prev.slice(-12), { time: timeStr, text, type }]);
+    };
+
+    addLog('INITIATING TACTICAL LUNAR SCAN SEQUENCE...', 'info');
 
     // Step 1: Preprocessing
     setPipelineStatus({
       acquisition: 'complete',
       preprocessing: 'processing',
-      extraction: 'pending',
-      detection: 'pending',
-      decision: 'pending'
+      extraction: 'idle',
+      detection: 'standby',
+      decision: 'locked'
     });
-    setScanProgress(25);
+    setScanProgress(30);
 
     setTimeout(() => {
+      addLog('RADIOMETRIC CALIBRATION & NOISE FILTERING COMPLETE', 'info');
       // Step 2: Feature Extraction
       setPipelineStatus(prev => ({ ...prev, preprocessing: 'complete', extraction: 'processing' }));
-      setScanProgress(55);
+      setScanProgress(60);
 
       setTimeout(() => {
+        addLog('ISRO DFSAR HIGH-CPR ANOMALY DETECTED IN PSR', 'warn');
+        addLog('EXECUTING PYTORCH UNET TENSOR SEGMENTATION...', 'info');
         // Step 3: AI Detection
         setPipelineStatus(prev => ({ ...prev, extraction: 'complete', detection: 'processing' }));
-        setScanProgress(85);
+        setScanProgress(90);
 
         setTimeout(() => {
+          addLog('HIGH ICE PROBABILITY CONFIRMED: 94.2%', 'success');
+          addLog('SAFE LANDING SITE & ROVER PATH GENERATED', 'success');
           // Step 4: Decision & Complete
           setPipelineStatus({
             acquisition: 'complete',
@@ -91,11 +116,11 @@ export default function MissionControl({ user, onLogout }) {
   };
 
   const handleDownloadPDF = () => {
-    alert("Generating official HImDristi Lunar Ops Command Mission Report (PDF)...");
+    alert("Downloading LUNAR_OPS_CMD Mission Intelligence Report (PDF)...");
   };
 
   const handleExportCSV = () => {
-    alert("Exporting raw DFSAR Radar CPR & Water Ice Inventory Data (CSV)...");
+    alert("Exporting Raw DFSAR Radar Telemetry & Ice Matrix Data (CSV)...");
   };
 
   useEffect(() => {
@@ -107,9 +132,9 @@ export default function MissionControl({ user, onLogout }) {
     <div style={{
       minHeight: '100vh',
       width: '100%',
-      background: '#040711',
+      background: '#02040a',
       color: '#ffffff',
-      fontFamily: "'Outfit', sans-serif",
+      fontFamily: "'Space Grotesk', 'Outfit', sans-serif",
       position: 'relative',
       overflowX: 'hidden',
       display: 'flex',
@@ -118,38 +143,47 @@ export default function MissionControl({ user, onLogout }) {
       {/* 3D STARFIELD BACKGROUND */}
       <StarfieldBackground />
 
-      {/* TOP HEADER: LUNAR OPS COMMAND */}
+      {/* TOP HEADER: LUNAR_OPS_CMD [SYS.VER 4.2.1] */}
       <header style={{
-        height: '64px',
-        padding: '0 32px',
-        background: '#070b16',
-        borderBottom: '1px solid rgba(0, 243, 255, 0.2)',
+        height: '56px',
+        padding: '0 24px',
+        background: '#050a14',
+        borderBottom: '1px solid rgba(0, 243, 255, 0.25)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         position: 'relative',
         zIndex: 30
       }}>
-        {/* BRAND TITLE */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+        {/* BRAND & VERSION */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <h1 style={{
-            fontSize: '24px',
+            fontSize: '20px',
             fontWeight: '900',
             fontFamily: "'Space Grotesk', sans-serif",
             color: '#00f3ff',
-            letterSpacing: '1px',
+            letterSpacing: '1.5px',
             margin: 0,
             textTransform: 'uppercase'
           }}>
-            LUNAR OPS COMMAND
+            LUNAR_OPS_CMD
           </h1>
+          <span style={{
+            fontSize: '10px',
+            fontWeight: '800',
+            color: '#64748b',
+            letterSpacing: '1px',
+            fontFamily: 'JetBrains Mono'
+          }}>
+            [SYS.VER 4.2.1]
+          </span>
         </div>
 
-        {/* CENTER TABS */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '100%' }}>
+        {/* CENTER TABS: TELEMETRY | MAP_VIEW | ANALYTICS */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '100%' }}>
           {[
-            { id: 'telemetry', label: 'Telemetry' },
-            { id: 'map', label: 'Map View' },
+            { id: 'telemetry', label: 'TELEMETRY' },
+            { id: 'map', label: 'Map_View' },
             { id: 'analytics', label: 'Analytics' }
           ].map(tab => (
             <button
@@ -157,15 +191,17 @@ export default function MissionControl({ user, onLogout }) {
               onClick={() => setTopTab(tab.id)}
               style={{
                 height: '100%',
-                padding: '0 24px',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: topTab === tab.id ? '2px solid #00f3ff' : '2px solid transparent',
+                padding: '0 28px',
+                background: topTab === tab.id ? 'rgba(0, 243, 255, 0.08)' : 'transparent',
+                border: '1px solid rgba(0, 243, 255, 0.2)',
+                borderBottom: topTab === tab.id ? '2px solid #00f3ff' : '1px solid rgba(0, 243, 255, 0.2)',
                 color: topTab === tab.id ? '#ffffff' : '#94a3b8',
-                fontSize: '14px',
-                fontWeight: '600',
+                fontSize: '12px',
+                fontWeight: '700',
+                fontFamily: 'JetBrains Mono',
                 cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                letterSpacing: '1px'
               }}
             >
               {tab.label}
@@ -173,513 +209,499 @@ export default function MissionControl({ user, onLogout }) {
           ))}
         </nav>
 
-        {/* RIGHT SYSTEM UTILITIES & PROFILE */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', color: '#94a3b8' }}>
-          <Bell size={18} style={{ cursor: 'pointer' }} />
-          <Settings size={18} style={{ cursor: 'pointer' }} />
-          <HelpCircle size={18} style={{ cursor: 'pointer' }} />
+        {/* RIGHT SYSTEM UTILITIES & USER PROFILE */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', color: '#94a3b8' }}>
+          <Bell size={16} style={{ cursor: 'pointer' }} />
+          <Settings size={16} style={{ cursor: 'pointer' }} />
+          <HelpCircle size={16} style={{ cursor: 'pointer' }} />
+          
           <div style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '50%',
-            background: 'rgba(0, 243, 255, 0.15)',
-            border: '1px solid rgba(0, 243, 255, 0.5)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            color: '#00f3ff',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            cursor: 'pointer'
+            gap: '8px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            padding: '4px 10px',
+            borderRadius: '6px',
+            fontSize: '10px',
+            fontFamily: 'JetBrains Mono'
           }}>
-            <User size={16} />
+            <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>CMD_AUTH_OK</span>
+            <div style={{
+              width: '24px',
+              height: '24px',
+              borderRadius: '50%',
+              background: '#00f3ff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#02040a'
+            }}>
+              <User size={14} />
+            </div>
           </div>
         </div>
       </header>
 
-      {/* MAIN THREE-COLUMN LUNAR OPS DASHBOARD */}
+      {/* MAIN LUNAR_OPS GRID DASHBOARD */}
       <div style={{
         flex: 1,
         display: 'grid',
-        gridTemplateColumns: '260px 1fr 340px',
-        gap: '1px',
-        background: 'rgba(0, 243, 255, 0.12)',
+        gridTemplateColumns: '260px 1fr 320px',
+        gap: '2px',
+        background: 'rgba(0, 243, 255, 0.15)',
         position: 'relative',
         zIndex: 10
       }}>
-        {/* LEFT COLUMN: SIDEBAR MENU & PIPELINE STAGES */}
+        {/* LEFT COLUMN: MISSION FEED & PIPELINE STAGES */}
         <aside style={{
-          background: '#070b16',
-          padding: '20px',
+          background: '#040814',
+          padding: '16px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          borderRight: '1px solid rgba(0, 243, 255, 0.15)'
+          borderRight: '1px solid rgba(0, 243, 255, 0.2)'
         }}>
           <div>
-            {/* MISSION HEADER BOX */}
+            {/* LIVE FEED STATUS BAR */}
             <div style={{
-              background: 'rgba(11, 18, 36, 0.8)',
-              border: '1px solid rgba(0, 243, 255, 0.25)',
-              borderRadius: '10px',
-              padding: '14px',
-              marginBottom: '24px'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '9px',
+              fontWeight: '800',
+              color: '#64748b',
+              fontFamily: 'JetBrains Mono',
+              marginBottom: '12px'
             }}>
-              <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#ffffff', margin: 0, fontFamily: "'Space Grotesk', sans-serif" }}>
-                MISSION LUNAR-ICE
-              </h3>
-              <span style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginTop: '4px' }}>
-                Sector: South Pole-Aitken
-              </span>
+              <span>LIVE FEED // SECURE</span>
+              <span style={{ color: '#00f3ff' }}>T-MINUS 00:45:12</span>
             </div>
 
-            {/* PIPELINE NAVIGATION ITEMS */}
+            {/* OP: LUNAR-ICE MISSION CARD */}
+            <div style={{
+              background: 'rgba(8, 14, 28, 0.9)',
+              border: '1px solid rgba(0, 243, 255, 0.3)',
+              padding: '14px',
+              borderRadius: '6px',
+              marginBottom: '20px'
+            }}>
+              <h2 style={{ fontSize: '15px', fontWeight: '900', color: '#ffffff', margin: '0 0 10px 0', letterSpacing: '1px', fontFamily: 'Space Grotesk' }}>
+                OP: LUNAR-ICE
+              </h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>SECTOR:</span>
+                  <span style={{ color: '#cbd5e1' }}>SPA_BASIN_S</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>TARGET:</span>
+                  <span style={{ color: '#38bdf8' }}>H2O_DEPOSIT</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>STATUS:</span>
+                  <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>NOMINAL</span>
+                </div>
+              </div>
+            </div>
+
+            {/* PIPELINE NAVIGATION STAGES */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {[
-                { id: 'acquisition', label: 'Data Acquisition', icon: Radio },
-                { id: 'preprocessing', label: 'Preprocessing', icon: Sliders },
-                { id: 'extraction', label: 'Feature Extraction', icon: Activity },
-                { id: 'detection', label: 'AI Detection', icon: Cpu },
-                { id: 'decision', label: 'Mission Decision', icon: Compass }
-              ].map(item => {
-                const IconComponent = item.icon;
-                const isActive = activeStep === item.id;
+                { id: 'acquisition', label: 'DATA_ACQ_PHASE', sub: 'OPTICAL // SAR // THERMAL [ACTV]', icon: Radio },
+                { id: 'preprocessing', label: 'SIG_PREPROC', sub: pipelineStatus.preprocessing === 'complete' ? 'COMPLETE' : 'AWAITING_DATA_STREAM', icon: Sliders },
+                { id: 'extraction', label: 'FEAT_EXTRACT', sub: pipelineStatus.extraction === 'complete' ? 'COMPLETE' : 'IDLE', icon: Activity },
+                { id: 'detection', label: 'NEURAL_NET_EVAL', sub: pipelineStatus.detection === 'complete' ? 'COMPLETE' : 'MODEL_V4.2_STANDBY', icon: Cpu },
+                { id: 'decision', label: 'EXEC_DECISION', sub: pipelineStatus.decision === 'complete' ? 'COMPLETE' : 'LOCKED', icon: Compass }
+              ].map(stage => {
+                const IconComp = stage.icon;
+                const isActive = activeStep === stage.id;
                 return (
                   <button
-                    key={item.id}
-                    onClick={() => setActiveStep(item.id)}
+                    key={stage.id}
+                    onClick={() => setActiveStep(stage.id)}
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '12px 14px',
-                      borderRadius: '8px',
-                      background: isActive ? '#00f3ff' : 'transparent',
-                      color: isActive ? '#040711' : '#94a3b8',
-                      border: 'none',
-                      fontSize: '13px',
-                      fontWeight: isActive ? '800' : '600',
+                      width: '100%',
+                      padding: '10px 12px',
+                      background: isActive ? 'rgba(0, 243, 255, 0.15)' : 'rgba(255, 255, 255, 0.02)',
+                      border: isActive ? '1px solid #00f3ff' : '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '6px',
+                      color: isActive ? '#00f3ff' : '#94a3b8',
                       cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      textAlign: 'left'
+                      textAlign: 'left',
+                      transition: 'all 0.2s ease'
                     }}
                   >
-                    <IconComponent size={17} color={isActive ? '#040711' : '#94a3b8'} />
-                    <span>{item.label}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                      <IconComp size={14} color={isActive ? '#00f3ff' : '#64748b'} />
+                      <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', letterSpacing: '0.5px' }}>
+                        {stage.label}
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '9px', color: isActive ? '#38bdf8' : '#475569', fontFamily: 'JetBrains Mono', display: 'block', paddingLeft: '22px' }}>
+                      {stage.sub}
+                    </span>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* BOTTOM ACTIONS */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {/* BOTTOM LEFT ACTION BUTTONS */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <button
-              onClick={handleExecuteScan}
+              onClick={handleInitScanSeq}
               disabled={isExecuting}
               style={{
                 width: '100%',
                 padding: '12px',
-                background: 'rgba(0, 243, 255, 0.12)',
+                background: 'rgba(0, 243, 255, 0.15)',
                 border: '1px solid #00f3ff',
                 color: '#00f3ff',
                 borderRadius: '6px',
                 fontSize: '12px',
-                fontWeight: '800',
-                letterSpacing: '1px',
+                fontWeight: '900',
+                letterSpacing: '1.5px',
                 fontFamily: 'JetBrains Mono',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                textTransform: 'uppercase',
+                boxShadow: '0 0 20px rgba(0, 243, 255, 0.3)',
                 transition: 'all 0.2s ease'
               }}
             >
-              {isExecuting ? <Loader2 size={16} className="animate-spin" /> : <Play size={15} />}
-              {isExecuting ? 'SCANNING...' : 'EXECUTE SCAN'}
+              {isExecuting ? <Loader2 size={15} className="animate-spin" /> : <Play size={14} />}
+              {isExecuting ? 'SCANNING...' : '► INIT_SCAN_SEQ'}
             </button>
 
-            <button
-              onClick={handleDownloadPDF}
-              style={{
-                background: 'transparent',
-                border: 'none',
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <button style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 color: '#94a3b8',
-                fontSize: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                padding: '6px 0'
-              }}
-            >
-              <Download size={14} /> Export Reports
-            </button>
-
-            <button
-              style={{
-                background: 'transparent',
-                border: 'none',
+                padding: '8px',
+                borderRadius: '4px',
+                fontSize: '10px',
+                fontFamily: 'JetBrains Mono',
+                cursor: 'pointer'
+              }}>
+                📜 LOGS
+              </button>
+              <button style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 color: '#94a3b8',
-                fontSize: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                padding: '6px 0'
-              }}
-            >
-              <Settings size={14} /> System Status
-            </button>
+                padding: '8px',
+                borderRadius: '4px',
+                fontSize: '10px',
+                fontFamily: 'JetBrains Mono',
+                cursor: 'pointer'
+              }}>
+                ⚙️ SYS
+              </button>
+            </div>
           </div>
         </aside>
 
-        {/* CENTER COLUMN: MAIN VIEWPORT & ACTIONABLE OUTPUTS */}
+        {/* CENTER COLUMN: MAIN RADAR VIEWPORT & LIVE TERMINAL STREAM */}
         <main style={{
-          background: '#040711',
-          padding: '24px',
+          background: '#02040a',
+          padding: '16px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '24px',
+          gap: '16px',
           overflowY: 'auto'
         }}>
-          {/* TOP STATUS BADGES */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'rgba(0, 243, 255, 0.12)',
-              border: '1px solid rgba(0, 243, 255, 0.35)',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: '11px',
-              fontWeight: '800',
-              color: '#00f3ff',
-              fontFamily: 'JetBrains Mono'
-            }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00f3ff' }} className="pulse-glow" />
-              SYS_ON_LINE
-            </div>
-
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: '11px',
-              fontWeight: '700',
-              color: '#cbd5e1',
-              fontFamily: 'JetBrains Mono'
-            }}>
-              <MapPin size={13} color="#38bdf8" /> COORD: -89.9°S, 180.0°E
-            </div>
-          </div>
-
-          {/* MAIN VIEWPORT PANEL */}
+          {/* MAIN RADAR HUD CONTAINER */}
           <div style={{
             flex: 1,
-            minHeight: '420px',
-            background: '#070b16',
-            border: '1px solid rgba(0, 243, 255, 0.25)',
-            borderRadius: '12px',
-            padding: '20px',
-            position: 'relative'
+            minHeight: '440px',
+            background: '#050a14',
+            border: '1px solid rgba(0, 243, 255, 0.3)',
+            borderRadius: '8px',
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column'
           }}>
-            {topTab === 'telemetry' && (
-              <div>
-                {activeStep === 'acquisition' || activeStep === 'preprocessing' ? (
-                  <PreprocessingPanel
-                    images={analysisData?.images}
-                    onRunAnalysis={fetchAnalysis}
-                    isAnalyzing={isExecuting}
-                  />
-                ) : activeStep === 'detection' ? (
-                  <Moon3DViewer
-                    selectedTarget={selectedTarget}
-                    targetInfo={analysisData?.target}
-                    iceGrid={analysisData?.ice_grid}
-                  />
-                ) : (
-                  <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
-                )}
+            {/* RADAR HEADER BAR */}
+            <div style={{
+              padding: '10px 16px',
+              background: 'rgba(0, 243, 255, 0.05)',
+              borderBottom: '1px solid rgba(0, 243, 255, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '10px',
+              fontFamily: 'JetBrains Mono',
+              color: '#38bdf8'
+            }}>
+              <span>☒ TOPOGRAPHIC_RADAR_MAP_v2.0</span>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <span>SCALE: 1:1000</span>
+                <span>MODE: TACTICAL</span>
               </div>
-            )}
+            </div>
 
-            {topTab === 'map' && (
-              <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
-            )}
+            {/* RADAR GRID & VIEWPORT */}
+            <div style={{
+              flex: 1,
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.05) 0%, transparent 70%)'
+            }}>
+              {/* TARGET COORDINATES OVERLAY BOX */}
+              <div style={{
+                position: 'absolute',
+                top: '16px',
+                left: '16px',
+                background: 'rgba(4, 8, 20, 0.85)',
+                border: '1px solid rgba(0, 243, 255, 0.3)',
+                padding: '8px 12px',
+                borderRadius: '4px',
+                fontSize: '10px',
+                fontFamily: 'JetBrains Mono',
+                color: '#00f3ff',
+                zIndex: 10
+              }}>
+                <div>LAT: -89.9°S</div>
+                <div>LON: 180.0°E</div>
+                <div>ALT: 2.4KM</div>
+              </div>
 
-            {topTab === 'analytics' && (
-              <TelemetryDashboard
-                metrics={analysisData?.metrics}
-                landingSite={analysisData?.landing_site}
-                roverPath={analysisData?.rover_path}
-              />
-            )}
+              {/* RENDER VIEWPORT DEPENDING ON TOP TAB */}
+              {topTab === 'telemetry' ? (
+                activeStep === 'detection' ? (
+                  <Moon3DViewer selectedTarget={selectedTarget} targetInfo={analysisData?.target} iceGrid={analysisData?.ice_grid} />
+                ) : (
+                  <PreprocessingPanel images={analysisData?.images} onRunAnalysis={fetchAnalysis} isAnalyzing={isExecuting} />
+                )
+              ) : topTab === 'map' ? (
+                <LunarGPSMap analysisData={analysisData} selectedTarget={selectedTarget} />
+              ) : (
+                <TelemetryDashboard metrics={analysisData?.metrics} landingSite={analysisData?.landing_site} roverPath={analysisData?.rover_path} />
+              )}
+
+              {/* HAZARD DETECTED WARNING BADGE */}
+              <div style={{
+                position: 'absolute',
+                bottom: '16px',
+                right: '16px',
+                background: 'rgba(245, 158, 11, 0.15)',
+                border: '1px solid rgba(245, 158, 11, 0.5)',
+                color: '#f59e0b',
+                padding: '6px 12px',
+                borderRadius: '4px',
+                fontSize: '10px',
+                fontFamily: 'JetBrains Mono',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                zIndex: 10
+              }}>
+                <AlertTriangle size={13} /> HAZARD_DETECTED | CONFIDENCE: 87%
+              </div>
+            </div>
           </div>
 
-          {/* BOTTOM SECTION: ACTIONABLE OUTPUTS */}
-          <div>
-            <h3 style={{
-              fontSize: '12px',
-              fontWeight: '800',
-              color: '#38bdf8',
-              letterSpacing: '1px',
+          {/* BOTTOM TERMINAL LOG CONSOLE (`LIVE_TELEMETRY_STREAM`) */}
+          <div style={{
+            height: '140px',
+            background: '#050a14',
+            border: '1px solid rgba(0, 243, 255, 0.25)',
+            borderRadius: '8px',
+            padding: '12px',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '10px',
               fontFamily: 'JetBrains Mono',
-              marginBottom: '14px',
-              textTransform: 'uppercase'
+              color: '#38bdf8',
+              marginBottom: '8px',
+              borderBottom: '1px solid rgba(0, 243, 255, 0.15)',
+              paddingBottom: '6px'
             }}>
-              ACTIONABLE OUTPUTS
-            </h3>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-              {/* CARD 1: FINAL ICE PROBABILITY MAP */}
-              <div style={{
-                background: '#070b16',
-                border: '1px solid rgba(0, 243, 255, 0.35)',
-                borderRadius: '10px',
-                padding: '16px',
-                position: 'relative'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <Layers size={18} color="#00f3ff" />
-                  <span style={{ fontSize: '10px', fontWeight: '800', color: scanProgress === 100 ? '#00ff9d' : '#00f3ff', fontFamily: 'JetBrains Mono' }}>
-                    {scanProgress === 100 ? 'COMPLETE' : 'GENERATING'}
-                  </span>
-                </div>
-                <h4 style={{ fontSize: '13px', fontWeight: '700', margin: '0 0 12px 0' }}>
-                  Final Ice Probability Map
-                </h4>
-                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
-                  <div style={{ width: `${scanProgress}%`, height: '100%', background: '#00f3ff', transition: 'width 0.5s ease' }} />
-                </div>
+              <span style={{ fontWeight: 'bold' }}>LIVE_TELEMETRY_STREAM</span>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <span style={{ background: 'rgba(0,243,255,0.1)', padding: '2px 6px', borderRadius: '3px', cursor: 'pointer' }}>RAW_DATA</span>
+                <span style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '3px', cursor: 'pointer' }}>FILTERED</span>
               </div>
+            </div>
 
-              {/* CARD 2: SAFE LANDING SITE MAP */}
-              <div style={{
-                background: '#070b16',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '10px',
-                padding: '16px',
-                position: 'relative'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <Compass size={18} color="#94a3b8" />
-                  <span style={{ fontSize: '10px', fontWeight: '800', color: pipelineStatus.decision === 'complete' ? '#00ff9d' : '#64748b', fontFamily: 'JetBrains Mono' }}>
-                    {pipelineStatus.decision === 'complete' ? 'COMPLETE' : 'PENDING'}
-                  </span>
+            <div style={{
+              flex: 1,
+              overflowY: 'auto',
+              fontFamily: 'JetBrains Mono',
+              fontSize: '10px',
+              lineHeight: '1.6',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2px'
+            }}>
+              {logs.map((log, idx) => (
+                <div key={idx} style={{
+                  color: log.type === 'warn' ? '#f59e0b' : log.type === 'success' ? '#00ff9d' : '#94a3b8'
+                }}>
+                  <span style={{ color: '#475569', marginRight: '8px' }}>[{log.time}]</span>
+                  <span>{log.text}</span>
                 </div>
-                <h4 style={{ fontSize: '13px', fontWeight: '700', margin: 0, color: pipelineStatus.decision === 'complete' ? '#ffffff' : '#94a3b8' }}>
-                  Safe Landing Site Map
-                </h4>
-              </div>
-
-              {/* CARD 3: ROVER PATH PLAN */}
-              <div style={{
-                background: '#070b16',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '10px',
-                padding: '16px',
-                position: 'relative'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <Activity size={18} color="#94a3b8" />
-                  <span style={{ fontSize: '10px', fontWeight: '800', color: pipelineStatus.decision === 'complete' ? '#00ff9d' : '#64748b', fontFamily: 'JetBrains Mono' }}>
-                    {pipelineStatus.decision === 'complete' ? 'COMPLETE' : 'PENDING'}
-                  </span>
-                </div>
-                <h4 style={{ fontSize: '13px', fontWeight: '700', margin: 0, color: pipelineStatus.decision === 'complete' ? '#ffffff' : '#94a3b8' }}>
-                  Rover Path Plan
-                </h4>
-              </div>
+              ))}
             </div>
           </div>
         </main>
 
-        {/* RIGHT COLUMN: AUTOMATED PIPELINE STATUS */}
+        {/* RIGHT COLUMN: OUTPUT CARDS & PIPELINE DIAGNOSTICS */}
         <aside style={{
-          background: '#070b16',
-          padding: '20px',
+          background: '#040814',
+          padding: '16px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          borderLeft: '1px solid rgba(0, 243, 255, 0.15)'
+          borderLeft: '1px solid rgba(0, 243, 255, 0.2)'
         }}>
-          <div>
-            <h3 style={{
-              fontSize: '12px',
-              fontWeight: '800',
-              color: '#38bdf8',
-              letterSpacing: '1px',
-              fontFamily: 'JetBrains Mono',
-              marginBottom: '20px',
-              textTransform: 'uppercase'
+          {/* TOP THREE ACTIONABLE CARDS */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {/* CARD 1: MAP_GEN */}
+            <div style={{
+              background: '#070f20',
+              border: '1px solid rgba(0, 243, 255, 0.35)',
+              borderRadius: '6px',
+              padding: '14px',
+              position: 'relative'
             }}>
-              AUTOMATED PIPELINE STATUS
-            </h3>
-
-            {/* TIMELINE STEPS */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {/* STAGE 1: DATA ACQUISITION */}
-              <div style={{ position: 'relative', paddingLeft: '24px' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: '4px',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: '#00f3ff',
-                  boxShadow: '0 0 10px #00f3ff'
-                }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <h4 style={{ fontSize: '12px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
-                    DATA ACQUISITION
-                  </h4>
-                  <span style={{ fontSize: '10px', fontWeight: '800', color: '#00ff9d', fontFamily: 'JetBrains Mono' }}>
-                    COMPLETE
-                  </span>
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {['OPTICAL', 'RADAR', 'DEM', 'SHADOW MAP'].map(tag => (
-                    <span key={tag} style={{
-                      fontSize: '9px',
-                      fontWeight: '700',
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      padding: '3px 8px',
-                      borderRadius: '4px',
-                      color: '#cbd5e1'
-                    }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
+                <span style={{ color: '#38bdf8' }}>MAP_GEN</span>
+                <span style={{ color: '#00ff9d', fontWeight: 'bold' }}>
+                  {scanProgress === 100 ? 'COMPLETE' : 'PROCESSING'}
+                </span>
               </div>
 
-              {/* STAGE 2: DATA PREPROCESSING */}
-              <div style={{ position: 'relative', paddingLeft: '24px' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: '4px',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: pipelineStatus.preprocessing === 'complete' ? '#00ff9d' : '#f59e0b',
-                  boxShadow: '0 0 10px #f59e0b'
-                }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <h4 style={{ fontSize: '12px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
-                    DATA PREPROCESSING
-                  </h4>
-                  <span style={{ fontSize: '10px', fontWeight: '800', color: pipelineStatus.preprocessing === 'complete' ? '#00ff9d' : '#f59e0b', fontFamily: 'JetBrains Mono' }}>
-                    {pipelineStatus.preprocessing.toUpperCase()}
-                  </span>
-                </div>
-                <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '11px', color: '#94a3b8', lineHeight: '1.6' }}>
-                  <li>Normalization</li>
-                  <li>Data Alignment</li>
-                  <li style={{ color: '#f59e0b', fontWeight: '600' }}>Radiometric Calibration</li>
-                  <li>Noise Filtering</li>
-                </ul>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Layers size={18} color="#00f3ff" />
+                <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', color: '#ffffff' }}>
+                  ICE_PROBABILITY_MATRIX_V3
+                </span>
               </div>
 
-              {/* STAGE 3: FEATURE EXTRACTION */}
-              <div style={{ position: 'relative', paddingLeft: '24px' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: '4px',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: pipelineStatus.extraction === 'complete' ? '#00ff9d' : '#475569'
-                }} />
-                <h4 style={{ fontSize: '12px', fontWeight: '800', margin: '0 0 4px 0', color: pipelineStatus.extraction === 'complete' ? '#ffffff' : '#64748b' }}>
-                  FEATURE EXTRACTION
-                </h4>
-                <p style={{ fontSize: '11px', color: '#64748b', margin: 0 }}>
-                  {pipelineStatus.extraction === 'complete' ? 'Extracted 128-PPD high CPR features.' : 'Pending prior step completion.'}
-                </p>
+              <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                <div style={{ width: `${scanProgress}%`, height: '100%', background: '#00f3ff', transition: 'width 0.5s ease' }} />
+              </div>
+            </div>
+
+            {/* CARD 2: SITE_EVAL */}
+            <div style={{
+              background: '#070f20',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '6px',
+              padding: '14px',
+              position: 'relative'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
+                <span style={{ color: '#64748b' }}>SITE_EVAL</span>
+                <span style={{ color: pipelineStatus.decision === 'complete' ? '#00ff9d' : '#64748b', fontWeight: 'bold' }}>
+                  {pipelineStatus.decision === 'complete' ? 'COMPLETE' : 'QUEUED'}
+                </span>
               </div>
 
-              {/* STAGE 4: AI DETECTION & DECISION */}
-              <div style={{ position: 'relative', paddingLeft: '24px' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: '4px',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: pipelineStatus.decision === 'complete' ? '#00ff9d' : '#475569'
-                }} />
-                <h4 style={{ fontSize: '12px', fontWeight: '800', margin: '0 0 4px 0', color: pipelineStatus.decision === 'complete' ? '#ffffff' : '#64748b' }}>
-                  AI DETECTION & DECISION
-                </h4>
-                <p style={{ fontSize: '11px', color: '#64748b', margin: 0 }}>
-                  {pipelineStatus.decision === 'complete' ? 'UNet segmentation & A* traversal ready.' : 'Pending prior step completion.'}
-                </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Compass size={18} color={pipelineStatus.decision === 'complete' ? '#00f3ff' : '#64748b'} />
+                <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', color: pipelineStatus.decision === 'complete' ? '#ffffff' : '#64748b' }}>
+                  SAFE_LANDING_ZONES
+                </span>
+              </div>
+            </div>
+
+            {/* CARD 3: PATH_CALC */}
+            <div style={{
+              background: '#070f20',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '6px',
+              padding: '14px',
+              position: 'relative'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'JetBrains Mono', marginBottom: '8px' }}>
+                <span style={{ color: '#64748b' }}>PATH_CALC</span>
+                <span style={{ color: pipelineStatus.decision === 'complete' ? '#00ff9d' : '#64748b', fontWeight: 'bold' }}>
+                  {pipelineStatus.decision === 'complete' ? 'COMPLETE' : 'LOCKED'}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Activity size={18} color={pipelineStatus.decision === 'complete' ? '#00f3ff' : '#64748b'} />
+                <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'JetBrains Mono', color: pipelineStatus.decision === 'complete' ? '#ffffff' : '#64748b' }}>
+                  ROVER_TRAVERSAL_VECTORS
+                </span>
               </div>
             </div>
           </div>
 
-          {/* BOTTOM EXPORT ACTION BUTTONS */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button
-              onClick={handleDownloadPDF}
-              style={{
-                width: '100%',
-                padding: '12px',
-                background: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#ffffff',
-                borderRadius: '6px',
-                fontSize: '11px',
-                fontWeight: '800',
-                letterSpacing: '1px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                textTransform: 'uppercase',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <Download size={14} /> DOWNLOAD REPORTS (PDF)
-            </button>
+          {/* BOTTOM PIPELINE DIAGNOSTICS PANEL */}
+          <div style={{
+            background: '#070f20',
+            border: '1px solid rgba(0, 243, 255, 0.25)',
+            borderRadius: '6px',
+            padding: '14px'
+          }}>
+            <h4 style={{ fontSize: '10px', fontWeight: '800', color: '#38bdf8', fontFamily: 'JetBrains Mono', margin: '0 0 12px 0', textTransform: 'uppercase' }}>
+              PIPELINE_DIAGNOSTICS
+            </h4>
 
-            <button
-              onClick={handleExportCSV}
-              style={{
-                width: '100%',
-                padding: '12px',
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                color: '#94a3b8',
-                borderRadius: '6px',
-                fontSize: '11px',
-                fontWeight: '800',
-                letterSpacing: '1px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                textTransform: 'uppercase',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <FileText size={14} /> EXPORT RAW CSV
-            </button>
+            {/* RESOURCE BARS */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '10px', fontFamily: 'JetBrains Mono', marginBottom: '14px' }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', marginBottom: '4px' }}>
+                  <span>CPU_LOAD</span>
+                  <span style={{ color: '#00f3ff' }}>78%</span>
+                </div>
+                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
+                  <div style={{ width: '78%', height: '100%', background: '#00f3ff' }} />
+                </div>
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', marginBottom: '4px' }}>
+                  <span>MEM_USE</span>
+                  <span style={{ color: '#38bdf8' }}>62%</span>
+                </div>
+                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
+                  <div style={{ width: '62%', height: '100%', background: '#38bdf8' }} />
+                </div>
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', marginBottom: '4px' }}>
+                  <span>UPLINK</span>
+                  <span style={{ color: '#00ff9d' }}>95%</span>
+                </div>
+                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
+                  <div style={{ width: '95%', height: '100%', background: '#00ff9d' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* SUB METRICS */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', fontSize: '9px', fontFamily: 'JetBrains Mono', textAlign: 'center' }}>
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '6px', borderRadius: '4px' }}>
+                <span style={{ color: '#64748b', display: 'block' }}>NET_LATENCY</span>
+                <strong style={{ color: '#ffffff' }}>1.24s</strong>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '6px', borderRadius: '4px' }}>
+                <span style={{ color: '#64748b', display: 'block' }}>DATA_RATE</span>
+                <strong style={{ color: '#ffffff' }}>14.2 MB/s</strong>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '6px', borderRadius: '4px' }}>
+                <span style={{ color: '#64748b', display: 'block' }}>ERR_RATE</span>
+                <strong style={{ color: '#00ff9d' }}>0.001%</strong>
+              </div>
+            </div>
           </div>
         </aside>
       </div>
