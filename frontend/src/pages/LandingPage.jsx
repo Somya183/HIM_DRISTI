@@ -12,7 +12,7 @@ export default function LandingPage({ isAuthenticated }) {
     setIsWarping(true);
     setTimeout(() => {
       navigate(targetPath);
-    }, 1100);
+    }, 3000);
   };
 
   const handleInitiateScan = () => {
