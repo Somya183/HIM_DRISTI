@@ -191,7 +191,7 @@ export default function LandingPage({ isAuthenticated }) {
               margin: '0 0 40px 0',
               fontWeight: '400'
             }}>
-              Multi-modal deep learning models analyzing ISRO Chandrayaan-2 Dual-Frequency SAR radar & polar telemetry to map subsurface water ice deposits and calculate safe rover traversal routes inside Shackleton Crater in real-time.
+              Multi-modal deep learning models analyzing ISRO Chandrayaan-2 Dual-Frequency SAR radar & polar telemetry to map subsurface water ice deposits and calculate safe rover traversal routes across the Lunar South Pole in real-time.
             </p>
 
             {/* RECTANGULAR ACTION BUTTONS */}
