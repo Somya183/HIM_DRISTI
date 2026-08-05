@@ -252,28 +252,33 @@ export default function LandingPage({ isAuthenticated }) {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: FLOATING SCANNING WIDGET & 3D MOON BACKDROP */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {/* Ambient Blue Halo */}
+        {/* RIGHT COLUMN: DRAMATIC ELEVATED 3D MOON MODEL */}
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', zIndex: 25 }}>
+          {/* Ambient Glowing 3D Light Aura */}
           <div style={{
             position: 'absolute',
-            width: '450px',
-            height: '450px',
+            width: '600px',
+            height: '600px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)',
-            filter: 'blur(50px)',
-            pointerEvents: 'none'
+            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(0, 243, 255, 0.08) 45%, transparent 70%)',
+            filter: 'blur(60px)',
+            pointerEvents: 'none',
+            right: '-40px',
+            top: '50%',
+            transform: 'translateY(-50%)'
           }} />
 
-          {/* 3D NASA Interactive Animated Moon Model Embed */}
-          <div style={{
-            width: '420px',
-            height: '420px',
+          {/* 3D NASA Interactive Animated Moon Model Floating Container */}
+          <div className="float-moon" style={{
+            width: '520px',
+            height: '520px',
             borderRadius: '50%',
             overflow: 'hidden',
             position: 'relative',
             background: 'transparent',
-            boxShadow: '0 0 50px rgba(56, 189, 248, 0.35)'
+            boxShadow: '0 0 65px rgba(56, 189, 248, 0.45), 0 0 120px rgba(0, 243, 255, 0.2)',
+            marginRight: '-40px',
+            marginTop: '-20px'
           }}>
             <iframe
               src="https://solarsystem.nasa.gov/gltf_embed/2366/"
@@ -283,14 +288,12 @@ export default function LandingPage({ isAuthenticated }) {
               style={{
                 border: 'none',
                 background: 'transparent',
-                transform: 'scale(1.32)',
+                transform: 'scale(1.35)',
                 transformOrigin: 'center center'
               }}
               allowFullScreen
             />
           </div>
-
-
         </div>
       </main>
 
