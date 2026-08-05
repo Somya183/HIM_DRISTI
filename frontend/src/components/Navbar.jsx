@@ -79,19 +79,20 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
     <nav 
       className="glass-card" 
       style={{ 
-        padding: '10px 20px', 
-        marginBottom: '24px', 
+        padding: '12px 28px', 
+        marginBottom: '28px', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
         position: 'sticky',
         top: '12px',
         zIndex: 100,
-        borderRadius: '16px'
+        borderRadius: '16px',
+        width: '100%'
       }}
     >
-      {/* Brand Logo & Name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      {/* Brand Logo & Clean Expanded Title */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         <div 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           style={{ 
@@ -99,38 +100,37 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
             alignItems: 'center',
             justifyContent: 'center',
             background: 'rgba(0, 243, 255, 0.08)',
-            padding: '6px',
+            padding: '8px 12px',
             borderRadius: '12px',
-            border: '1px solid rgba(0, 243, 255, 0.3)',
+            border: '1px solid rgba(0, 243, 255, 0.35)',
             cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            transition: 'all 0.2s ease',
+            boxShadow: '0 0 15px rgba(0, 243, 255, 0.2)'
           }}
         >
           <img 
             src={logoImg} 
             alt="HImDristi Logo" 
             style={{ 
-              height: '42px', 
+              height: '36px', 
               width: 'auto', 
               objectFit: 'contain',
-              filter: 'drop-shadow(0 0 8px rgba(0, 243, 255, 0.4))'
+              filter: 'drop-shadow(0 0 8px rgba(0, 243, 255, 0.5))'
             }} 
           />
         </div>
 
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h1 style={{ fontSize: '18px', fontWeight: '800', color: '#f8fafc', margin: 0, letterSpacing: '-0.3px', fontFamily: 'Space Grotesk' }}>
-              HImDristi <span style={{ color: '#00f3ff', fontWeight: '400', fontSize: '14px' }}>हिम दृष्टि</span>
-            </h1>
-            <span className="neon-badge badge-cyan" style={{ fontSize: '10px', padding: '2px 8px' }}>
-              v2.0 LUNAR MISSION
-            </span>
-          </div>
-          <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0 0', fontWeight: '500' }}>
-            Multi-Modal Water Ice AI Pipeline & Traversal System
-          </p>
-        </div>
+        <h1 style={{ 
+          fontSize: '20px', 
+          fontWeight: '800', 
+          color: '#f8fafc', 
+          margin: 0, 
+          letterSpacing: '-0.5px', 
+          fontFamily: 'Space Grotesk',
+          whiteSpace: 'nowrap'
+        }}>
+          HImDristi <span style={{ color: '#00f3ff', fontWeight: '400', fontSize: '13px', marginLeft: '6px' }}>• MISSION CONTROL</span>
+        </h1>
       </div>
 
       {/* QUICK NAVIGATION HEADER LINKS (DIRECT SCROLL TO SECTIONS IN SEQUENCE) */}
