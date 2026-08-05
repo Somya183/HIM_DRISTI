@@ -22,7 +22,7 @@ export default function LandingPage({ isAuthenticated }) {
     <div style={{
       minHeight: '100vh',
       width: '100%',
-      background: '#040711',
+      background: '#02040a',
       color: '#ffffff',
       fontFamily: "'Outfit', sans-serif",
       position: 'relative',
