@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Target, Layers, Radio, Satellite, MapPinned, ArrowUpRight, ShieldCheck, Cpu, Database, Activity } from 'lucide-react';
 import logoImg from '../assets/logo.png';
-import moonSphereImg from '../assets/moon_sphere.png';
-import ThreeMoonGlobe from '../components/ThreeMoonGlobe';
+import StarfieldBackground from '../components/StarfieldBackground';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
@@ -33,7 +31,7 @@ export default function LandingPage({ isAuthenticated }) {
       flexDirection: 'column',
       justifyContent: 'space-between'
     }}>
-      {/* 3D MOVING STARFIELD */}
+      {/* 3D MOVING STARFIELD BACKGROUND */}
       <StarfieldBackground />
 
       {/* TOP NAVIGATION HEADER */}
@@ -254,7 +252,7 @@ export default function LandingPage({ isAuthenticated }) {
 
         {/* RIGHT COLUMN: OFFICIAL NASA 3D INTERACTIVE MOON MODEL */}
         <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {/* Ambient Moonlight Light Halo */}
+          {/* Ambient Moonlight Halo */}
           <div style={{
             position: 'absolute',
             width: '520px',
@@ -265,21 +263,33 @@ export default function LandingPage({ isAuthenticated }) {
             pointerEvents: 'none'
           }} />
 
-          {/* REAL WEBGL THREE.JS INTERACTIVE 3D MOON GLOBE */}
+          {/* NASA 3D Moon Interactive Model Container */}
           <div style={{
-            width: '480px',
-            height: '480px',
+            width: '460px',
+            height: '460px',
             borderRadius: '50%',
+            overflow: 'hidden',
             position: 'relative',
             background: 'transparent',
-            filter: 'drop-shadow(0 0 35px rgba(0, 243, 255, 0.4))'
+            border: '1px solid rgba(0, 243, 255, 0.5)',
+            boxShadow: '0 0 30px rgba(0, 243, 255, 0.35)'
           }}>
-            <ThreeMoonGlobe width="480px" height="480px" />
+            <iframe
+              src="https://solarsystem.nasa.gov/gltf_embed/2366/"
+              title="Official NASA 3D Moon Model"
+              width="100%"
+              height="100%"
+              style={{
+                border: 'none',
+                background: 'transparent',
+                transform: 'scale(1.36)',
+                transformOrigin: 'center center'
+              }}
+              allowFullScreen
+            />
           </div>
         </div>
       </main>
-
-
 
       {/* FOOTER */}
       <footer style={{
