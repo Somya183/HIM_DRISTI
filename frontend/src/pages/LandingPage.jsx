@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 import StarfieldBackground from '../components/StarfieldBackground';
@@ -6,6 +6,25 @@ import AutoRotatingMoon3D from '../components/AutoRotatingMoon3D';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
+  const [moonLoaded, setMoonLoaded] = useState(false);
+  const [textLoaded, setTextLoaded] = useState(false);
+
+  useEffect(() => {
+    // Phase 1: Moon rises from bottom center
+    const moonTimer = setTimeout(() => {
+      setMoonLoaded(true);
+    }, 150);
+
+    // Phase 2: Left text slides in after Moon arrives
+    const textTimer = setTimeout(() => {
+      setTextLoaded(true);
+    }, 1100);
+
+    return () => {
+      clearTimeout(moonTimer);
+      clearTimeout(textTimer);
+    };
+  }, []);
 
   const handleInitiateScan = () => {
     navigate('/dashboard');
@@ -136,8 +155,13 @@ export default function LandingPage({ isAuthenticated }) {
           position: 'relative',
           zIndex: 20
         }}>
-          {/* LEFT COLUMN: HERO HEADLINE & ACTIONS */}
-          <div>
+          {/* LEFT COLUMN: HERO HEADLINE & ACTIONS (FADES & SLIDES IN AFTER MOON ARRIVES) */}
+          <div style={{
+            transition: 'all 1.0s cubic-bezier(0.16, 1, 0.3, 1)',
+            opacity: textLoaded ? 1 : 0,
+            transform: textLoaded ? 'translateX(0)' : 'translateX(-60px)',
+            filter: textLoaded ? 'none' : 'blur(8px)'
+          }}>
             {/* LIVE TELEMETRY PILL BADGE */}
             <div style={{
               display: 'inline-flex',
@@ -259,14 +283,17 @@ export default function LandingPage({ isAuthenticated }) {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: DRAMATIC 3D POP-OUT MOON MODEL */}
+          {/* RIGHT COLUMN: DRAMATIC 3D POP-OUT MOON MODEL (RISES FROM BOTTOM CENTER) */}
           <div style={{
             position: 'relative',
             display: 'flex',
             justify: 'center',
             alignItems: 'center',
             zIndex: 999,
-            marginRight: '-30px'
+            marginRight: '-30px',
+            transition: 'all 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+            opacity: moonLoaded ? 1 : 0,
+            transform: moonLoaded ? 'translateY(0) scale(1)' : 'translateY(80vh) scale(0.6)'
           }}>
             {/* Ambient Moonlight Halo */}
             <div style={{
