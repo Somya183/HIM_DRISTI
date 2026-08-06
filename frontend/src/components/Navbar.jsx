@@ -269,7 +269,7 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
             }}
           >
             <LogOut size={13} color="#f87171" />
-            Lock Session
+            LOG OUT
           </button>
         )}
       </div>

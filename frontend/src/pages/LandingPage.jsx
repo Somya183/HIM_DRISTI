@@ -354,7 +354,10 @@ export default function LandingPage({ isAuthenticated }) {
           <HelpCircle size={16} style={{ cursor: 'pointer' }} />
 
           <button
-            onClick={() => navigate(isAuthenticated ? '/dashboard' : '/login')}
+            onClick={() => {
+              localStorage.removeItem('himdrishti_auth_token');
+              navigate('/login');
+            }}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -371,7 +374,7 @@ export default function LandingPage({ isAuthenticated }) {
             }}
           >
             <User size={13} />
-            {isAuthenticated ? 'CMD_AUTH_OK' : 'LOGIN_PORTAL'}
+            LOG OUT
           </button>
         </div>
       </header>
