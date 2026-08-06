@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './components/LoginPage';
-import MissionControl from './pages/MissionControl';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,18 +26,8 @@ export default function App() {
           path="/login"
           element={
             isAuthenticated
-              ? <Navigate to="/dashboard" replace />
+              ? <Navigate to="/" replace />
               : <LoginPage onLoginSuccess={handleLoginSuccess} />
-          }
-        />
-
-        <Route
-          path="/dashboard"
-          element={
-            <MissionControl
-              user={currentUser || { name: 'Commander Somya Dubey', role: 'Chief Mission Director' }}
-              onLogout={handleLogout}
-            />
           }
         />
 
