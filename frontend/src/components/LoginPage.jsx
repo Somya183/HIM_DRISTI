@@ -17,7 +17,7 @@ export default function LoginPage({ onLoginSuccess }) {
   const completeLogin = (userData) => {
     setIsLoading(false);
     onLoginSuccess(userData);
-    navigate('/dashboard');
+    navigate('/app');
   };
 
   const handleLoginSubmit = (e) => {
