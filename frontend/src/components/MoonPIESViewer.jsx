@@ -146,7 +146,7 @@ export default function MoonPIESViewer({ selectedTarget = 'shackleton' }) {
             className="glass-button"
             style={{ fontSize: '10px', padding: '4px 8px' }}
           >
-            🎲 Randomize
+            Randomize
           </button>
         </div>
 
@@ -158,7 +158,7 @@ export default function MoonPIESViewer({ selectedTarget = 'shackleton' }) {
               checked={sources.cometary}
               onChange={(e) => setSources({ ...sources, cometary: e.target.checked })}
             />
-            ☄️ Cometary Delivery
+            Cometary Delivery
           </label>
 
           <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
@@ -167,7 +167,7 @@ export default function MoonPIESViewer({ selectedTarget = 'shackleton' }) {
               checked={sources.solarWind}
               onChange={(e) => setSources({ ...sources, solarWind: e.target.checked })}
             />
-            ☀️ Solar Wind Protons
+            Solar Wind Protons
           </label>
 
           <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
@@ -176,7 +176,7 @@ export default function MoonPIESViewer({ selectedTarget = 'shackleton' }) {
               checked={sources.volcanic}
               onChange={(e) => setSources({ ...sources, volcanic: e.target.checked })}
             />
-            🌋 Volcanic Outgassing
+            Volcanic Outgassing
           </label>
         </div>
 
@@ -197,7 +197,7 @@ export default function MoonPIESViewer({ selectedTarget = 'shackleton' }) {
         {/* VERTICAL CORE SAMPLE COLUMN (0.0m to 5.5m depth) */}
         <div>
           <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold', marginBottom: '8px', textAlign: 'center' }}>
-            📍 Core Sample (0 - 5.5m)
+            Core Sample (0 - 5.5m)
           </div>
 
           <div style={{
@@ -279,7 +279,7 @@ export default function MoonPIESViewer({ selectedTarget = 'shackleton' }) {
               </span>
 
               <span style={{ fontSize: '12px', color: '#00f3ff', fontWeight: 'bold' }}>
-                🧊 Ice Fraction: {selectedLayer.icePct}%
+                Ice Fraction: {selectedLayer.icePct}%
               </span>
             </div>
 
@@ -329,7 +329,7 @@ export default function MoonPIESViewer({ selectedTarget = 'shackleton' }) {
         justify: 'space-between',
         alignItems: 'center'
       }}>
-        <span>📖 Reference Model: <strong>Tai Udovicic et al. (2022) MoonPIES Zenodo DOI: 10.5281/zenodo.7055800</strong></span>
+        <span>Reference Model: <strong>Tai Udovicic et al. (2022) MoonPIES Zenodo DOI: 10.5281/zenodo.7055800</strong></span>
         <span style={{ color: '#00f3ff', fontWeight: 'bold' }}>Lunar Cold Trap Ejecta & Volatile Deposition Simulator</span>
       </div>
     </div>

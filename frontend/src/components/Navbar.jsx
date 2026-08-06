@@ -1,8 +1,9 @@
 import React from 'react';
 import { Activity, Sparkles, FileText, Download, Table, Database, Upload, Compass, Navigation, LogOut } from 'lucide-react';
 import logoImg from '../assets/logo.png';
+import { API_BASE } from '../config';
 
-export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, isAnalyzing, analysisData, onLogout, user }) {
+export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, isAnalyzing, analysisData, onLogout, onUploadCustomFile, user }) {
   const targets = [
     { id: 'shackleton', name: 'Shackleton Crater (89.9°S, 0°E)' },
     { id: 'haworth', name: 'Haworth Crater (87.5°S, -5°E)' },
@@ -19,7 +20,7 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
   const handleExportPDF = async () => {
     if (!analysisData) return;
     try {
-      const resp = await fetch('http://127.0.0.1:5000/api/export/pdf', {
+      const resp = await fetch(`${API_BASE}/api/export/pdf`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(analysisData)
@@ -29,16 +30,20 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
       const a = document.createElement('a');
       a.href = url;
       a.download = `HImDristi_Lunar_Mission_Assessment_Report.pdf`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error("PDF Export Error:", err);
+      alert("Error generating PDF report. Please verify backend connection.");
     }
   };
 
   const handleExportGeoJSON = async () => {
     if (!analysisData) return;
     try {
-      const resp = await fetch('http://127.0.0.1:5000/api/export/geojson', {
+      const resp = await fetch(`${API_BASE}/api/export/geojson`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(analysisData)
@@ -49,7 +54,10 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
       const a = document.createElement('a');
       a.href = url;
       a.download = `lunar_rover_path_shackleton.geojson`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error("GeoJSON Export Error:", err);
     }
@@ -58,7 +66,7 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
   const handleExportCSV = async () => {
     if (!analysisData) return;
     try {
-      const resp = await fetch('http://127.0.0.1:5000/api/export/csv', {
+      const resp = await fetch(`${API_BASE}/api/export/csv`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(analysisData)
@@ -69,7 +77,10 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
       const a = document.createElement('a');
       a.href = url;
       a.download = `lunar_telemetry_shackleton.csv`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error("CSV Export Error:", err);
     }
@@ -210,6 +221,16 @@ export default function Navbar({ selectedTarget, onSelectTarget, onRunAnalysis, 
         )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <label className="glass-button" style={{ fontSize: '11px', padding: '6px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: '#00f3ff', borderColor: 'rgba(0, 243, 255, 0.4)', background: 'rgba(0, 243, 255, 0.12)' }}>
+            <Upload size={13} color="#00f3ff" /> Upload Dataset
+            <input type="file" accept="image/*,.bin,.raw,.tif" onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file && onUploadCustomFile) {
+                onUploadCustomFile(file);
+              }
+            }} style={{ display: 'none' }} />
+          </label>
+
           <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Crater:</label>
           <select
             value={selectedTarget}

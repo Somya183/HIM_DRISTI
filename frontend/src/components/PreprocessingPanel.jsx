@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sliders, RefreshCw, Upload, Eye, CheckCircle2 } from 'lucide-react';
 
-export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCustomFile, isAnalyzing }) {
+export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCustomFile, isAnalyzing, onExpandImage }) {
   const [activeTab, setActiveTab] = useState('optical');
   const [denoiseLevel, setDenoiseLevel] = useState(5);
   const [contrastClip, setContrastClip] = useState(3.0);
@@ -15,7 +15,7 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
     { id: 'shadow', name: 'Shadow Map (PSR)', desc: 'Strict Binary Thresholding & Morphological Cleanup' }
   ];
 
-  const rawPhoto = images?.raw?.optical || images?.raw?.radar || '';
+  const rawPhoto = images?.raw?.[activeTab] || images?.raw?.optical || images?.raw?.radar || '';
   const prepImg = images?.preprocessed?.[activeTab] || '';
 
   const handleCustomUpload = (e) => {
@@ -88,9 +88,12 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
             <span style={{ fontSize: '12px', fontWeight: '700', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Eye size={14} /> RAW UNFILTERED SATELLITE TENSOR
             </span>
-            <span className="neon-badge badge-warning" style={{ fontSize: '10px' }}>RAW SATELLITE PHOTO</span>
+            <span className="neon-badge badge-warning" style={{ fontSize: '10px' }}>CLICK TO VIEW FULL IMAGE</span>
           </div>
-          <div style={{ width: '100%', height: '260px', borderRadius: '8px', overflow: 'hidden', background: '#000', border: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            onClick={() => rawPhoto && onExpandImage && onExpandImage({ src: rawPhoto, title: `RAW SATELLITE IMAGE (${activeTab.toUpperCase()})`, subtitle: 'Original uncropped satellite channel raster tensor (512x512)' })}
+            style={{ width: '100%', height: '260px', borderRadius: '8px', overflow: 'hidden', background: '#000', border: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: rawPhoto ? 'zoom-in' : 'default' }}
+          >
             {rawPhoto ? (
               <img src={rawPhoto} alt="Raw Unchanged Satellite Photo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             ) : (
@@ -106,10 +109,13 @@ export default function PreprocessingPanel({ images, onRunAnalysis, onUploadCust
               <CheckCircle2 size={14} /> PREPROCESSED CLEANED SENSOR OUTPUT
             </span>
             <span className="neon-badge badge-cyan" style={{ fontSize: '10px' }}>
-              {isAnalyzing ? 'PREPROCESSING...' : 'PREPROCESSED'}
+              {isAnalyzing ? 'PREPROCESSING...' : 'CLICK TO VIEW FULL IMAGE'}
             </span>
           </div>
-          <div style={{ width: '100%', height: '260px', borderRadius: '8px', overflow: 'hidden', background: '#000', border: '1px solid rgba(0, 243, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+          <div
+            onClick={() => prepImg && onExpandImage && onExpandImage({ src: prepImg, title: `PREPROCESSED OUTPUT (${activeTab.toUpperCase()})`, subtitle: 'Cleaned, noise-filtered, and radiometrically calibrated sensor raster' })}
+            style={{ width: '100%', height: '260px', borderRadius: '8px', overflow: 'hidden', background: '#000', border: '1px solid rgba(0, 243, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', cursor: prepImg ? 'zoom-in' : 'default' }}
+          >
             {isAnalyzing ? (
               <div style={{
                 width: '100%',

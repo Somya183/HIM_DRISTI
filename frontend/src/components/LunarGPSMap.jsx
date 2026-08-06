@@ -381,8 +381,8 @@ export default function LunarGPSMap({ analysisData, selectedTarget = 'shackleton
             </div>
           )}
 
-          {/* DETECTED ICE DEPOSIT LOCATION MARKERS */}
-          {iceDeposits.map((dep, idx) => {
+          {/* DETECTED ICE DEPOSIT LOCATION MARKERS (TOP 3 PRIMARY DEPOSITS ONLY) */}
+          {iceDeposits.slice(0, 3).map((dep, idx) => {
             const isSelected = selectedDepositId === dep.id;
             const topPct = (dep.centroid_pixel[0] / 512) * 100;
             const leftPct = (dep.centroid_pixel[1] / 512) * 100;
@@ -421,7 +421,7 @@ export default function LunarGPSMap({ analysisData, selectedTarget = 'shackleton
                   <span>{dep.name} ({dep.peak_confidence_pct}%)</span>
                 </div>
                 <div style={{
-                  fontSize: '8px',
+                  fontSize: '9px',
                   color: '#e0f2fe',
                   background: 'rgba(2, 6, 23, 0.85)',
                   padding: '1px 5px',
@@ -429,7 +429,7 @@ export default function LunarGPSMap({ analysisData, selectedTarget = 'shackleton
                   marginTop: '2px',
                   fontFamily: 'monospace'
                 }}>
-                  📍 {dep.lunar_coords.lat}°S, {dep.lunar_coords.lon}°E | 📏 {dep.distance_from_landing_site_km ? `${dep.distance_from_landing_site_km} km` : `${(dep.distance_from_landing_site_m / 1000).toFixed(1)} km`}
+                  {dep.lunar_coords.lat}°S, {dep.lunar_coords.lon}°E | {dep.distance_from_landing_site_km ? `${dep.distance_from_landing_site_km} km` : `${(dep.distance_from_landing_site_m / 1000).toFixed(1)} km`}
                 </div>
                 <div style={{
                   width: isSelected ? '16px' : '12px',

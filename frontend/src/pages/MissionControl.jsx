@@ -87,6 +87,7 @@ export default function MissionControl({ user, onLogout }) {
         analysisData={analysisData}
         user={user}
         onLogout={handleLogout}
+        onUploadCustomFile={handleUploadCustomFile}
       />
 
       {/* SECTION 01: EXECUTIVE MISSION TELEMETRY & MODEL ACCURACY DASHBOARD */}

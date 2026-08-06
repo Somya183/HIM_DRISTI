@@ -5,7 +5,7 @@ import base64
 import numpy as np
 from PIL import Image
 import cv2
-from flask import Flask, request, jsonify, send_file, Response
+from flask import Flask, request, jsonify, send_file, Response, send_from_directory
 from flask_cors import CORS
 
 from preprocessing.preprocess_pipeline import LunarPreprocessor
@@ -13,10 +13,12 @@ from ai.ice_detector import LunarIceDetector
 from services.rover_planner import RoverPathPlanner
 from services.report_generator import MissionReportGenerator
 
-app = Flask(__name__)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+DIST_DIR = os.path.join(BASE_DIR, "frontend", "dist")
+
+app = Flask(__name__, static_folder=DIST_DIR, static_url_path="")
 CORS(app)
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATASET_DIR = os.path.join(BASE_DIR, "dataset")
 
 preprocessor = LunarPreprocessor(dataset_dir=DATASET_DIR)
@@ -315,6 +317,16 @@ def export_csv():
         )
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_frontend(path):
+    if path.startswith("api/"):
+        return jsonify({"status": "error", "message": "API endpoint not found"}), 404
+    target_file = os.path.join(DIST_DIR, path)
+    if path != "" and os.path.exists(target_file) and os.path.isfile(target_file):
+        return send_from_directory(DIST_DIR, path)
+    return send_from_directory(DIST_DIR, "index.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

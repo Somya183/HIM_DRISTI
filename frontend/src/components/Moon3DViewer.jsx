@@ -43,7 +43,7 @@ const CRATER_LOCATIONS = {
   }
 };
 
-export default function Moon3DViewer({ selectedTarget = 'shackleton', targetInfo, iceGrid, analysisData }) {
+export default function Moon3DViewer({ selectedTarget = 'shackleton', targetInfo, iceGrid, analysisData, onExpandImage }) {
   const crater = CRATER_LOCATIONS[selectedTarget] || {
     name: targetInfo?.name || 'Shackleton Crater',
     latLon: `${targetInfo?.coordinates?.lat || -89.9}°S, ${targetInfo?.coordinates?.lon || 0.0}°E`,
@@ -152,10 +152,13 @@ export default function Moon3DViewer({ selectedTarget = 'shackleton', targetInfo
       {/* HEATMAP & TENSOR VISUALIZATION */}
       <div style={{ background: '#070f20', border: '1px solid rgba(0, 243, 255, 0.25)', borderRadius: '8px', padding: '14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'JetBrains Mono', marginBottom: '10px' }}>
-          <strong style={{ color: '#00f3ff' }}>🧊 WATER ICE CONFIDENCE HEATMAP</strong>
-          <span style={{ color: '#00ff9d' }}>94.2% PEAK</span>
+          <strong style={{ color: '#00f3ff' }}>WATER ICE CONFIDENCE HEATMAP</strong>
+          <span style={{ color: '#00ff9d', cursor: 'pointer' }} className="neon-badge badge-cyan">CLICK TO VIEW FULL IMAGE</span>
         </div>
-        <div style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div
+          onClick={() => analysisData?.images?.results?.ice_confidence && onExpandImage && onExpandImage({ src: analysisData.images.results.ice_confidence, title: `WATER ICE CONFIDENCE HEATMAP (${crater.name})`, subtitle: 'PyTorch UNet segmented water ice probability distribution map' })}
+          style={{ height: '240px', background: '#020408', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: analysisData?.images?.results?.ice_confidence ? 'zoom-in' : 'default' }}
+        >
           {analysisData?.images?.results?.ice_confidence ? (
             <img src={analysisData.images.results.ice_confidence} alt="Ice Confidence" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
@@ -177,7 +180,7 @@ export default function Moon3DViewer({ selectedTarget = 'shackleton', targetInfo
           gap: '8px'
         }}>
           <div style={{ fontSize: '10px', fontWeight: '800', color: '#00f3ff', fontFamily: 'JetBrains Mono', letterSpacing: '1px' }}>
-            🎨 COLOR MAP LEGEND & ICE PROBABILITY SCALE:
+            COLOR MAP LEGEND & ICE PROBABILITY SCALE:
           </div>
 
           {/* GRADIENT COLOR BAR */}
