@@ -745,7 +745,7 @@ export default function LandingPage({ isAuthenticated }) {
                             <strong style={{ color: activeLayer === item.key ? '#00f3ff' : '#ffffff' }}>{item.title}</strong>
                             <span style={{ color: '#00ff9d' }}>CLICK TO EXPAND</span>
                           </div>
-                          <div style={{ height: '160px', borderRadius: '6px', overflow: 'hidden', background: '#020408', border: '1px solid rgba(0,243,255,0.2)' }}>
+                          <div style={{ height: '230px', borderRadius: '6px', overflow: 'hidden', background: '#020408', border: '1px solid rgba(0,243,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {imgUrl ? (
                               <img src={imgUrl} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             ) : (
