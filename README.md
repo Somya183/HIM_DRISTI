@@ -8,6 +8,14 @@ By integrating multi-sensor lunar remote sensing datasets—specifically NASA Lu
 
 ---
 
+## Live Production Deployment
+
+The application is deployed live in production:
+
+- **Live Application URL**: https://him-dristi-1.onrender.com
+
+---
+
 ## Technical Overview
 
 ### Multi-Modal Data Ingestion
@@ -154,6 +162,8 @@ The web application will open at `http://localhost:5173`.
 ## Cloud Production Deployment
 
 HImDristi is configured for single-service cloud deployment on Render, Heroku, or Railway.
+
+- **Live Web Service**: https://him-dristi-1.onrender.com
 
 ### Build Command
 ```bash
