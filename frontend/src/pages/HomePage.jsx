@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Rocket, Settings, User, FileText, ArrowRight, Upload, Layers, ShieldCheck, Database } from 'lucide-react';
+import { Rocket, Settings, User, FileText, ArrowRight, Upload } from 'lucide-react';
 import StarfieldBackground from '../components/StarfieldBackground';
 import AutoRotatingMoon3D from '../components/AutoRotatingMoon3D';
-import { API_BASE } from '../config';
 
 export default function HomePage({ isAuthenticated }) {
   const navigate = useNavigate();
 
-  const handleDownloadPdf = async () => {
-    try {
-      window.open(`${API_BASE}/api/export/pdf?target=shackleton`, '_blank');
-    } catch (err) {
-      console.error("PDF Export Error:", err);
-    }
+  const handleNavToLogin = () => {
+    navigate('/login');
   };
 
   return (
@@ -32,13 +27,13 @@ export default function HomePage({ isAuthenticated }) {
       {/* DEEP SPACE STARFIELD BACKGROUND */}
       <StarfieldBackground />
 
-      {/* TOP HEADER NAVBAR (EXACT MATCH TO SCREENSHOT) */}
+      {/* TOP HEADER NAVBAR */}
       <header style={{
         height: '70px',
         padding: '0 40px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justify: 'space-between',
         borderBottom: '1px solid rgba(0, 243, 255, 0.15)',
         background: 'rgba(3, 7, 18, 0.85)',
         backdropFilter: 'blur(16px)',
@@ -46,7 +41,7 @@ export default function HomePage({ isAuthenticated }) {
         zIndex: 100
       }}>
         {/* LOGO */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={handleNavToLogin}>
           <h1 style={{
             fontSize: '24px',
             fontWeight: '900',
@@ -59,10 +54,10 @@ export default function HomePage({ isAuthenticated }) {
           </h1>
         </div>
 
-        {/* NAVIGATION LINKS: DATASET | UPLOAD | IMAGES */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+        {/* RIGHT ALIGNED NAV LINKS & LOGIN BUTTON */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '32px', marginLeft: 'auto' }}>
           <button
-            onClick={() => navigate('/app')}
+            onClick={handleNavToLogin}
             style={{
               background: 'transparent',
               border: 'none',
@@ -80,29 +75,27 @@ export default function HomePage({ isAuthenticated }) {
             DATASET
           </button>
 
-          <label style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#94a3b8',
-            fontSize: '13px',
-            fontWeight: '700',
-            letterSpacing: '1px',
-            cursor: 'pointer',
-            textTransform: 'uppercase',
-            transition: 'color 0.2s',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-          onMouseEnter={(e) => e.target.style.color = '#00f3ff'}
-          onMouseLeave={(e) => e.target.style.color = '#94a3b8'}
+          <button
+            onClick={handleNavToLogin}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#94a3b8',
+              fontSize: '13px',
+              fontWeight: '700',
+              letterSpacing: '1px',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              transition: 'color 0.2s'
+            }}
+            onMouseEnter={(e) => e.target.style.color = '#00f3ff'}
+            onMouseLeave={(e) => e.target.style.color = '#94a3b8'}
           >
             UPLOAD
-            <input type="file" accept="image/*,.bin,.raw,.tif" onChange={() => navigate('/app')} style={{ display: 'none' }} />
-          </label>
+          </button>
 
           <button
-            onClick={() => navigate('/app')}
+            onClick={handleNavToLogin}
             style={{
               background: 'transparent',
               border: 'none',
@@ -119,22 +112,9 @@ export default function HomePage({ isAuthenticated }) {
           >
             IMAGES
           </button>
-        </nav>
-
-        {/* RIGHT UTILITIES & SOLID CYAN LOGIN BUTTON */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <Rocket size={16} color="#94a3b8" style={{ cursor: 'pointer' }} onClick={() => navigate('/app')} />
-          <Settings size={16} color="#94a3b8" style={{ cursor: 'pointer' }} onClick={() => navigate('/app')} />
 
           <button
-            onClick={() => {
-              if (isAuthenticated) {
-                localStorage.removeItem('himdrishti_auth_token');
-                window.location.reload();
-              } else {
-                navigate('/login');
-              }
-            }}
+            onClick={handleNavToLogin}
             style={{
               background: '#00f3ff',
               color: '#030712',
@@ -164,18 +144,18 @@ export default function HomePage({ isAuthenticated }) {
         </div>
       </header>
 
-      {/* MAIN HERO CARD SECTION (EXACT MATCH TO SCREENSHOT) */}
+      {/* MAIN HERO CARD SECTION */}
       <main style={{
         flex: 1,
         display: 'flex',
         alignItems: 'center',
         justify: 'space-between',
-        padding: '0 80px',
-        maxWidth: '1440px',
+        padding: '0 20px 0 80px',
+        maxWidth: '100%',
         width: '100%',
-        margin: '0 auto',
         position: 'relative',
-        zIndex: 10
+        zIndex: 10,
+        overflow: 'hidden'
       }}>
         {/* LEFT COLUMN: TEXT HEADLINE & ACTIONS */}
         <div style={{ maxWidth: '580px' }}>
@@ -237,7 +217,7 @@ export default function HomePage({ isAuthenticated }) {
           {/* ACTION BUTTONS */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <button
-              onClick={() => navigate('/app')}
+              onClick={handleNavToLogin}
               style={{
                 background: '#00f3ff',
                 color: '#030712',
@@ -269,7 +249,7 @@ export default function HomePage({ isAuthenticated }) {
             </button>
 
             <button
-              onClick={handleDownloadPdf}
+              onClick={handleNavToLogin}
               style={{
                 background: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -301,109 +281,41 @@ export default function HomePage({ isAuthenticated }) {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: SCANNER HUD CARD & 3D ROTATING MOON */}
-        <div style={{ position: 'relative', width: '480px', height: '480px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {/* DIAMOND OVERLAY GRID LINES */}
+        {/* RIGHT COLUMN: 3D ROTATING MOON SHIFTED RIGHTWARDS */}
+        <div
+          style={{
+            position: 'relative',
+            width: '520px',
+            height: '520px',
+            display: 'flex',
+            alignItems: 'center',
+            justify: 'center',
+            flexShrink: 0,
+            transform: 'translateX(110px)'
+          }}
+        >
+          {/* AMBIENT MOONLIGHT GLOW HALO */}
           <div style={{
             position: 'absolute',
-            width: '360px',
-            height: '360px',
-            border: '1px solid rgba(0, 243, 255, 0.25)',
-            transform: 'rotate(45deg)',
-            pointerEvents: 'none',
-            boxShadow: '0 0 30px rgba(0, 243, 255, 0.1)'
+            width: '320px',
+            height: '320px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(0, 243, 255, 0.18) 0%, rgba(0,0,0,0) 70%)',
+            filter: 'blur(35px)',
+            pointerEvents: 'none'
           }} />
 
-          {/* FLOATING SCANNER CARD */}
-          <div
-            onClick={() => navigate('/app')}
-            style={{
-              width: '240px',
-              height: '240px',
-              background: 'rgba(7, 15, 32, 0.85)',
-              border: '1px solid rgba(0, 243, 255, 0.5)',
-              borderRadius: '16px',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 243, 255, 0.25)',
-              backdropFilter: 'blur(12px)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justify: 'center',
-              cursor: 'pointer',
-              zIndex: 20,
-              transition: 'transform 0.3s ease'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            {/* SPINNING TARGET HUD ICON */}
-            <div style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              border: '2px dashed #00f3ff',
-              display: 'flex',
-              alignItems: 'center',
-              justify: 'center',
-              marginBottom: '16px',
-              boxShadow: '0 0 20px rgba(0, 243, 255, 0.4)',
-              animation: 'spin 12s linear infinite'
-            }}>
-              <div style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                border: '2px solid #38bdf8',
-                display: 'flex',
-                alignItems: 'center',
-                justify: 'center'
-              }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00f3ff' }} />
-              </div>
-            </div>
-
-            <span style={{
-              fontSize: '11px',
-              fontWeight: '800',
-              color: '#00f3ff',
-              letterSpacing: '2px',
-              fontFamily: 'JetBrains Mono'
-            }}>
-              QUANTUM VECTOR 75
-            </span>
-          </div>
-
-          {/* BACKGROUND 3D MOON ROTATION */}
+          {/* 3D MOON ROTATION */}
           <div style={{
-            position: 'absolute',
-            inset: '-40px',
-            opacity: 0.8,
-            pointerEvents: 'none',
-            zIndex: 5
+            width: '100%',
+            height: '100%',
+            cursor: 'grab',
+            zIndex: 10
           }}>
             <AutoRotatingMoon3D />
           </div>
         </div>
       </main>
-
-      {/* FOOTER METRICS BAR */}
-      <footer style={{
-        height: '50px',
-        padding: '0 40px',
-        display: 'flex',
-        alignItems: 'center',
-        justify: 'space-between',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-        background: 'rgba(3, 7, 18, 0.9)',
-        fontSize: '11px',
-        color: '#64748b',
-        fontFamily: 'JetBrains Mono',
-        position: 'relative',
-        zIndex: 50
-      }}>
-        <div>ISRO CHANDRAYAAN-2 DFSAR • NASA LROC POLAR DATA INGESTION</div>
-        <div style={{ color: '#00f3ff' }}>PYTORCH UNET SEGMENTATION ACCURACY: 93.7% F1-SCORE</div>
-      </footer>
     </div>
   );
 }

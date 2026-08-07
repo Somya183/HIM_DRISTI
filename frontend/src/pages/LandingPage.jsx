@@ -29,7 +29,7 @@ export default function LandingPage({ isAuthenticated }) {
   // Fetch real backend data
   const fetchAnalysis = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/analyze', {
+      const response = await fetch(`${API_BASE}/api/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ target: selectedTarget })
@@ -319,6 +319,8 @@ export default function LandingPage({ isAuthenticated }) {
               <option value="shackleton">Shackleton Crater (-89.9°S, 0.0°E)</option>
               <option value="haworth">Haworth Crater (-87.5°S, -5.0°E)</option>
               <option value="shoemaker">Shoemaker Crater (-88.1°S, 45.0°E)</option>
+              <option value="faustini">Faustini Crater (-87.3°S, 87.0°E)</option>
+              <option value="cabeus">Cabeus Crater (-84.9°S, -35.5°E)</option>
             </select>
           </div>
 
@@ -356,7 +358,7 @@ export default function LandingPage({ isAuthenticated }) {
           <button
             onClick={() => {
               localStorage.removeItem('himdrishti_auth_token');
-              navigate('/login');
+              navigate('/');
             }}
             style={{
               display: 'flex',

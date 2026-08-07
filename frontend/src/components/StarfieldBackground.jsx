@@ -24,8 +24,8 @@ export default function StarfieldBackground({ isWarpSpeed = false }) {
 
     window.addEventListener('resize', handleResize);
 
-    // DENSE 3,200 SMALL FINE STARS FOR GITHUB-STYLE WARP TRANSITION
-    const numStars = 3200;
+    // DENSE 6,500 SMALL FINE STARS FOR RICH DEEP-SPACE NIGHT SKY
+    const numStars = 6500;
     const stars = [];
     const focalLength = width * 0.9;
 
@@ -44,19 +44,19 @@ export default function StarfieldBackground({ isWarpSpeed = false }) {
     const starColors = [
       '#ffffff', '#ffffff', '#ffffff', '#ffffff',
       '#38bdf8', '#00f3ff', '#7dd3fc', 
-      '#bae6fd', '#e0f2fe', '#fef08a'
+      '#bae6fd', '#e0f2fe', '#fef08a', '#c084fc'
     ];
 
-    // Initialize 3,200 small fine stars
+    // Initialize 6,500 small fine stars
     for (let i = 0; i < numStars; i++) {
       stars.push({
         x: (Math.random() - 0.5) * width * 4.0,
         y: (Math.random() - 0.5) * height * 4.0,
         z: Math.random() * width * 1.4,
-        size: Math.random() * 0.9 + 0.15, // Small, fine pin-point stars
-        speed: Math.random() * 2.2 + 0.8,
-        baseAlpha: Math.random() * 0.85 + 0.15,
-        twinkleSpeed: Math.random() * 0.05 + 0.015,
+        size: Math.random() * 1.2 + 0.2, // Crisp pin-point stars
+        speed: Math.random() * 2.5 + 0.8,
+        baseAlpha: Math.random() * 0.9 + 0.2,
+        twinkleSpeed: Math.random() * 0.08 + 0.02,
         twinkleFactor: Math.random() * Math.PI * 2,
         color: starColors[Math.floor(Math.random() * starColors.length)]
       });

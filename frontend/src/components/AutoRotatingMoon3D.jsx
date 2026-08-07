@@ -15,7 +15,7 @@ export default function AutoRotatingMoon3D({ width = '100%', height = '100%' }) 
     // 1. SCENE & CAMERA
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-    camera.position.z = 4.3;
+    camera.position.z = 4.6;
 
     // 2. RENDERER
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -39,7 +39,7 @@ export default function AutoRotatingMoon3D({ width = '100%', height = '100%' }) 
     const textureLoader = new THREE.TextureLoader();
     const moonTexture = textureLoader.load(moonTextureImg);
 
-    const moonGeo = new THREE.SphereGeometry(1.82, 64, 64);
+    const moonGeo = new THREE.SphereGeometry(1.68, 64, 64);
     const moonMat = new THREE.MeshStandardMaterial({
       map: moonTexture,
       bumpMap: moonTexture,
