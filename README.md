@@ -1,35 +1,26 @@
-# 🌕 HImDristi (हिम दृष्टि) — Lunar Water Ice AI Detection & Traversal Platform
+#  HimDristi Lunar Water Ice AI Detection & Traversal Platform
 
-> **Advanced Multi-Modal Deep Learning & 3D Tactical Navigation Platform for Lunar Polar Resource Exploration**
+> 
+##  Overview
 
-![Version](https://img.shields.io/badge/v2.0-Lunar_Mission-00f3ff?style=for-the-badge)
-![PyTorch](https://img.shields.io/badge/PyTorch-UNet_Fusion-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white)
-![React](https://img.shields.io/badge/React-18-61dafb?style=for-the-badge&logo=react&logoColor=black)
-![Three.js](https://img.shields.io/badge/Three.js-3D_Globe-black?style=for-the-badge&logo=three.js&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-API_Backend-000000?style=for-the-badge&logo=flask&logoColor=white)
-
----
-
-## 📌 Overview
-
-**HImDristi** is an end-to-end AI mission control platform designed to identify, quantify, and map permanently shadowed water ice deposits at the Lunar South Pole (Shackleton, Haworth, and Shoemaker craters). 
+**HImDristi** is an end-to-end AI mission control platform designed to identify, quantify, and map permanently shadowed water ice deposits at the Lunar South Pole.
 
 By combining multi-modal satellite remote sensing datasets—including **LROC Optical Albedo**, **DFSAR Circular Polarization Ratio (CPR) Radar**, **LOLA Elevation (DEM)**, and **PSR Shadow Maps**—HImDristi utilizes a custom **PyTorch UNet Fusion Model** to predict subsurface ice presence and compute optimal, safe autonomous rover traversal routes.
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-- **🧠 Multi-Modal PyTorch UNet Model**: Sensor fusion model trained on multi-spectral lunar polar data delivering pixel-level ice probability maps ($93.7\%$ F1 Score, $88.2\%$ IoU).
-- **🛰️ Sensor Preprocessing Pipeline**: Real-time interactive controls for speckle noise reduction, CLAHE contrast enhancement, and PSR binary shadow masking.
-- **🌐 3D Interactive Lunar Globe**: Real-time 3D rendered lunar surface with interactive crater pins, sun lighting angles, and landing site targeting.
-- **🗺️ Sub-Metric 2D Tactical Lunar GPS**: Tactical map with layer switching (Satellite, Topography DEM, SAR Radar, Hybrid Slope), waypoint navigation, and ice deposit inventory.
-- **📊 Executive Telemetry & Confusion Matrix**: Real-time KPI cards tracking estimated ice mass (million tonnes), peak confidence, slope safety, and confusion matrix metrics.
-- **📄 One-Click Mission Exports**: Instant PDF Mission Assessment Reports, GeoJSON Rover Traversal Routes, and CSV Telemetry Data.
+-  Multi-Modal PyTorch UNet Model**: Sensor fusion model trained on multi-spectral lunar polar data delivering pixel-level ice probability maps ($93.7\%$ F1 Score, $88.2\%$ IoU).
+-  Sensor Preprocessing Pipeline**: Real-time interactive controls for speckle noise reduction, CLAHE contrast enhancement, and PSR binary shadow masking.
+-  3D Interactive Lunar Globe**: Real-time 3D rendered lunar surface with interactive crater pins, sun lighting angles, and landing site targeting.
+- Sub-Metric 2D Tactical Lunar GPS**: Tactical map with layer switching (Satellite, Topography DEM, SAR Radar, Hybrid Slope), waypoint navigation, and ice deposit inventory.
+-  Executive Telemetry & Confusion Matrix**: Real-time KPI cards tracking estimated ice mass (million tonnes), peak confidence, slope safety, and confusion matrix metrics.
+-  One-Click Mission Exports**: Instant PDF Mission Assessment Reports, GeoJSON Rover Traversal Routes, and CSV Telemetry Data.
 
 ---
 
-## 🏗️ Architecture & Stack
+## Architecture & Stack
 
 ```
 HImDristi/
@@ -58,7 +49,7 @@ HImDristi/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Prerequisites
 - **Python 3.9+**
@@ -90,7 +81,7 @@ npm run dev
 
 ---
 
-## 📊 AI Model Benchmarks
+##  AI Model Benchmarks
 
 | Metric | Benchmark Score |
 | :--- | :--- |
@@ -99,10 +90,9 @@ npm run dev
 | **IoU (Intersection over Union)** | **88.2%** |
 | **Precision** | **94.8%** |
 | **Recall** | **92.6%** |
-| **Primary Target** | Shackleton Crater ($89.9^\circ\text{S}, 0^\circ\text{E}$) |
 
 ---
 
-## 📜 License
+##  License
 
 Distributed under the **MIT License**. See `LICENSE` for more information.
