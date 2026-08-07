@@ -6,9 +6,7 @@ frontend/node_modules/
 dist/
 frontend/dist/
 
-# Large binary datasets & model weights (regenerated via scripts)
-*.npy
-*.pth
+# Large binary compressed archives
 *.tar.gz
 *.zip
 
