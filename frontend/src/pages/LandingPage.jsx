@@ -12,6 +12,7 @@ import Moon3DViewer from '../components/Moon3DViewer';
 import LunarGPSMap from '../components/LunarGPSMap';
 import TelemetryDashboard from '../components/TelemetryDashboard';
 import { API_BASE } from '../config';
+import { REAL_LUNAR_DATASETS } from '../assets/realLunarDatasets';
 
 export default function LandingPage({ isAuthenticated }) {
   const navigate = useNavigate();
@@ -26,62 +27,6 @@ export default function LandingPage({ isAuthenticated }) {
   const [analysisData, setAnalysisData] = useState(null);
   const [expandedImage, setExpandedImage] = useState(null);
 
-  const createLunarCanvasDataUrl = (type) => {
-    try {
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 512;
-      const ctx = canvas.getContext('2d');
-
-      const grad = ctx.createRadialGradient(256, 256, 15, 256, 256, 250);
-      if (type === 'optical') {
-        grad.addColorStop(0, '#0a0f1d');
-        grad.addColorStop(0.5, '#2e3a4e');
-        grad.addColorStop(1, '#111827');
-      } else if (type === 'radar') {
-        grad.addColorStop(0, '#7c3aed');
-        grad.addColorStop(0.35, '#dc2626');
-        grad.addColorStop(0.7, '#d97706');
-        grad.addColorStop(1, '#047857');
-      } else if (type === 'dem') {
-        grad.addColorStop(0, '#1e3a8a');
-        grad.addColorStop(0.4, '#0284c7');
-        grad.addColorStop(0.75, '#10b981');
-        grad.addColorStop(1, '#eab308');
-      } else if (type === 'shadow') {
-        grad.addColorStop(0, '#000000');
-        grad.addColorStop(0.55, '#020617');
-        grad.addColorStop(1, '#1e293b');
-      } else if (type === 'ice_confidence') {
-        grad.addColorStop(0, '#00f3ff');
-        grad.addColorStop(0.4, '#0284c7');
-        grad.addColorStop(0.7, 'rgba(15, 23, 42, 0)');
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-      } else {
-        grad.addColorStop(0, '#10b981');
-        grad.addColorStop(0.5, '#0284c7');
-        grad.addColorStop(1, '#0f172a');
-      }
-
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 512, 512);
-
-      for (let i = 0; i < 250; i++) {
-        const nx = Math.random() * 512;
-        const ny = Math.random() * 512;
-        const nr = Math.random() * 3 + 1;
-        ctx.fillStyle = type === 'ice_confidence' ? 'rgba(0,243,255,0.2)' : 'rgba(255,255,255,0.08)';
-        ctx.beginPath();
-        ctx.arc(nx, ny, nr, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      return canvas.toDataURL('image/png');
-    } catch (e) {
-      return null;
-    }
-  };
-
   const getFallbackAnalysisData = (target = 'shackleton') => {
     const targetMap = {
       shackleton: { id: 'shackleton', name: 'Shackleton Crater', coordinates: { lat: -89.9, lon: 0.0 }, diameter_km: 21.0, depth_km: 4.2 },
@@ -91,11 +36,13 @@ export default function LandingPage({ isAuthenticated }) {
       cabeus: { id: 'cabeus', name: 'Cabeus Crater', coordinates: { lat: -84.9, lon: -35.5 }, diameter_km: 100.0, depth_km: 4.0 }
     };
     const targetInfo = targetMap[target] || targetMap.shackleton;
-    const optImg = createLunarCanvasDataUrl('optical');
-    const radImg = createLunarCanvasDataUrl('radar');
-    const demImg = createLunarCanvasDataUrl('dem');
-    const shdImg = createLunarCanvasDataUrl('shadow');
-    const iceImg = createLunarCanvasDataUrl('ice_confidence');
+    const craterDs = REAL_LUNAR_DATASETS[target] || REAL_LUNAR_DATASETS.shackleton;
+
+    const optImg = craterDs.optical;
+    const radImg = craterDs.radar;
+    const demImg = craterDs.dem;
+    const shdImg = craterDs.shadow;
+    const iceImg = craterDs.radar;
 
     return {
       status: 'success',
